@@ -47,8 +47,10 @@ Route::post('/setting/update/{id}', [ProfileController::class, 'updateuser'])->n
 
 //event
 Route::get('/event', [EventFormController::class, 'index'])->name('event.index');
+Route::post('event-store', [EventFormController::class, 'store']);
+Route::get('/event-data', [EventFormController::class, 'show'])->name('event.data');
+Route::post('update-status', [EventFormController::class, 'updateStatus'])->name('status.update');
 
-Route::get('/event/data-kegiatan', [EventDataController::class, 'index'])->name('data-kegiatan.index');
 
 
 //magazine

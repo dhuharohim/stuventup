@@ -29,6 +29,14 @@ data-template="vertical-menu-template-no-customizer">
     <!-- Vendors CSS -->
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/bundle/ijabo/ijaboCropTool.min.css') }}" />
+    <script src="https://cdn.tiny.cloud/1/zin9ldpsb6vcx5wlmc5mcuyu27a66e8r96voqx247balahs1/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+        
+    <script>
+         tinymce.init({
+           selector: 'textarea#editor', });
+    </script>
+
+    <link rel="stylesheet" href="https://cdn.tutorialjinni.com/izitoast/1.4.0/css/iziToast.min.css">
 
 
     <!-- Helpers -->
@@ -133,8 +141,8 @@ data-template="vertical-menu-template-no-customizer">
                                           <div class="d-flex">
                                               <div class="flex-shrink-0 me-3">
                                                   <div class="avatar avatar-online">
-                                                      <img src="/assets/img/himpunan/himakom.jpeg" alt
-                                                          class="w-px-40 h-auto rounded-circle" />
+                                                    <img src="/assets/img/profile/{{ $profile['photo'] =='' ? 'default.png' : $profile['photo'] }}" alt
+                                          class="w-px-40 h-auto rounded-circle" />
                                                   </div>
                                               </div>
                                               <div class="flex-grow-1">
@@ -223,7 +231,6 @@ data-template="vertical-menu-template-no-customizer">
     <script src="{{ asset('assets/vendor/libs/popper/popper.js') }}"></script>
     <script src="{{ asset('assets/vendor/js/bootstrap.js') }}"></script>
     <script src="{{ asset('assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js') }}"></script>
-    <script src="{{ asset('assets/bundle/ijabo/ijaboCropTool.min.js') }}"></script>
     {{-- <script src="assets/vendor/libs/hammer/hammer.js"></script> --}}
     <script src="{{ asset('assets/vendor/js/menu.js') }}"></script>
     <!-- endbuild -->
@@ -231,6 +238,12 @@ data-template="vertical-menu-template-no-customizer">
     <!-- Main JS -->
     <script src="{{ asset('assets/js/mainAdmin.js') }}"></script>
     <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <script src="https://cdn.tutorialjinni.com/izitoast/1.4.0/js/iziToast.min.js" type="text/javascript"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.6.0/umd/popper.min.js" integrity="sha512-BmM0/BQlqh02wuK5Gz9yrbe7VyIVwOzD1o40yi1IsTjriX/NGF37NyXHfmFzIlMmoSIBXgqDiG1VNU6kB5dBbA==" crossorigin="anonymous"></script>
+    <script src="{{ asset('assets/bundle/ijabo/ijaboCropTool.min.js') }}"></script>
+    
     @yield('custom_js')
 
 </body>

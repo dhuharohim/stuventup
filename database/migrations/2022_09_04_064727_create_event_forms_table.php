@@ -25,10 +25,17 @@ return new class extends Migration
             $table->string('name_activity');
             $table->string('desc_activity');
             $table->date('date_activity');
+            $table->time('time_start_activity');
+            $table->time('time_end_activity')->nullable();
+            $table->string('place_activity');
             $table->string('img_activity');
-            $table->string('ticket')->default('no');
+            $table->string('ticket');
             $table->integer('price_ticket')->nullable();
-            $table->string('contact_pic')->nullable();
+            $table->string('name_pic');
+            $table->string('contact_pic');
+            $table->enum('type_activity',['seminar','pelatihan','olahraga','pameran','nasional','lainnya']);
+            $table->string('other_type')->nullable();
+            $table->enum('status_activity', ['akan datang','berlangsung','selesai'])->default('akan datang')->index();
             $table->timestamps();
         });
     }

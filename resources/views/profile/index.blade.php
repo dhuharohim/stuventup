@@ -121,6 +121,9 @@
        $(document).on('click','#reset', function(){
             $.ajax({
                 type: 'POST',
+                data: {
+                        "_token": "{{ csrf_token() }}",
+                },
                 url: "{{ route('reset.image') }}"
             });
         });
