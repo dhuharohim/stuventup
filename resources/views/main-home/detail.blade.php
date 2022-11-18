@@ -1,0 +1,1 @@
+{{$eventDetail->name_activity}}

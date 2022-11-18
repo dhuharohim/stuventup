@@ -86,6 +86,32 @@
 
         </div>
     </div>
+    {{-- <div class="modal" id="uploadPoster" role="dialog" aria-labelledby="exampleModalLabel" >
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Upload Poster/Flyer</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="img" class="form-label">{{ __('Poster/Flyer Kegiatan') }}</label>
+                        <br>
+                        <a class="btn btn-info text-white" id="upload_img" style="cursor: pointer;">Upload gambar</a>
+                        <input class="form-control" type="file" id="img_activity" name="img_activity" autofocus
+                            hidden />
+                    </div>
+    
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div> --}}
     <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasEnd" aria-labelledby="offcanvasEndLabel"
         style="visibility: visible;" aria-modal="true" role="dialog">
         <div class="offcanvas-header">
@@ -94,7 +120,8 @@
         </div>
         <div class="offcanvas-body my-auto mx-0 flex-grow-0">
             <div class="">
-                <form id="eventForm" class="form-group">
+                <form id="eventForm" class="form-group" enctype="multipart/form-data">
+                    @csrf
                     <div class="row">
                         <div class="mb-4 col-md-12 form-group">
                             <label for="name" class="form-label">{{ __('Nama Kegiatan') }}</label>
@@ -113,14 +140,14 @@
                         </div>
                         <div class="mb-4 col-md-3 form-group">
                             <label for="time-start" class="form-label">{{ __('Waktu Mulai') }}</label>
-                            <input class="form-control" type="time" id="time_start_activity" name="time_start_activity" required
-                                autofocus />
+                            <input class="form-control" type="time" id="time_start_activity" name="time_start_activity"
+                                required autofocus />
                         </div>
                         <div class="mb-4 col-md-3 form-group">
-                                <label for="time-end" class="form-label">{{ __('Waktu Selesai') }}</label>
-                                <input class="form-control" type="time" id="time_end_activity" name="time_end_activity" required
-                                    autofocus />
-                            </div>
+                            <label for="time-end" class="form-label">{{ __('Waktu Selesai') }}</label>
+                            <input class="form-control" type="time" id="time_end_activity" name="time_end_activity"
+                                required autofocus />
+                        </div>
                         <div class="mb-4 col-md-6 form-group">
                             <label for="type" class="form-label">{{ __('Jenis Kegiatan') }}</label>
                             <select name="type_activity" class="form-control text-capitalize" id="type" required>
@@ -144,10 +171,16 @@
                             <input class="form-control" type="text" id="place_activity" name="place_activity"
                                 autofocus required />
                         </div>
-                        <div class="mb-4 col-md-12 form-group">
+                        <div class="mb-4 col-md-6 form-group">
                             <label for="img" class="form-label">{{ __('Poster/Flyer Kegiatan') }}</label>
-                            <input class="form-control" type="file" id="img_activity" name="img_activity"
-                                autofocus />
+                            <br>
+                            <a class="btn btn-info text-white" id="upload_img" style="cursor: pointer;">Upload gambar</a>
+                            <input class="form-control" type="file" id="img_activity" name="img_activity" autofocus
+                                hidden />
+                        </div>
+                        <div class="mb-4 col-md-6 form-group" id="posterName" style="display: none;">
+                            <input type="text" name="file_name" id="file_name" class="form-control"
+                                style="margin-top: 1.7rem">
                         </div>
                         <div class="mb-4 col-md-6 form-group">
                             <label for="ticket" class="form-label">{{ __('Apakah terdapat tiket?') }}</label>
@@ -188,11 +221,17 @@
             </div>
         </div>
     </div>
+
     <!-- / Layout wrapper -->
 @endsection
 
 @section('custom_js')
     <script>
+        // $('#img_activity').click(function){
+        //     var img = $('#img_activity').val();
+        //     console.log(img);
+        //     $('#posterName').show();
+        // }
         //activity types
         $("#type").change(function() {
             if ($(this).val() == 'lainnya') {
@@ -215,10 +254,20 @@
 
         });
         $(document).ready(function() {
+            $('#upload_img').click(function() {
+                $('input#img_activity').click();
+            });
+            $('input#img_activity').change(function() {
+                let img = $(this).val().replace("C:", '').replace('fakepath', '').replace('\\\\', '');
+                $('#posterName').show();
+                $('#file_name').val(img);
+
+            });
             $('#save').click(function(e) {
                 tinymce.triggerSave();
                 e.preventDefault();
-                var tinyRichText = (((tinyMCE.get('desc_activity').getContent()).replace(/(&nbsp;)*/g, "")).replace(/(<p>)*/g, "")).replace(/<(\/)?p[^>]*>/g, "");
+                var tinyRichText = (((tinyMCE.get('desc_activity').getContent()).replace(/(&nbsp;)*/g, ""))
+                    .replace(/(<p>)*/g, "")).replace(/<(\/)?p[^>]*>/g, "");
                 $.ajax({
                     url: '/event-store',
                     type: "post",
@@ -227,9 +276,10 @@
                         'name_activity': $('#name_activity').val(),
                         'desc_activity': tinyRichText,
                         'date_activity': $('#date_activity').val(),
-                        'type_activity': $('#type').val(),
-                        'other_type': $('#other_type').val(),
+                        'type_activity': $('#type').find('option:selected').val(),
                         'img_activity': $('#img_activity').val(),
+                        'other_type': $('#other_type').val(),
+                        'file_name': $('#file_name').val(),
                         'name_activity': $('#name_activity').val(),
                         'ticket': $('#isTicket').val(),
                         'price_ticket': $('#price_ticket').val(),
@@ -247,6 +297,7 @@
                             message: 'Berhasil membuat event',
                             color: 'green'
                         })
+                        // $('#uploadPoster').show();
                     },
                     error: function(res) {
                         iziToast.show({

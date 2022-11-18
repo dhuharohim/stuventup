@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\EventForm;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,10 +18,19 @@ class MagazineController extends Controller
     {
         $user = Auth::user();
         
-        $date = Carbon::now()->setTimezone('Asia/Jakarta')->translatedFormat('l, F Y');
+        $date = Carbon::now()->setTimezone('Asia/Jakarta')->translatedFormat('l, d F Y');
+        $eventData = EventForm::with('profile')->get();
+        $eventPop = EventForm::orderBy('view_count', 'desc')->take(6)->get();
+        $eventNew = EventForm::orderBy('created_at', 'desc')->take(4)->get();
+        // dd($eventData);
+
+
         return view('main-home.home', [
             'date'=> $date,
-            'user' => $user
+            'user' => $user,
+            'eventData' => $eventData,
+            'eventNew' => $eventNew,
+            'eventPop' => $eventPop,
         ]);
 
     }
@@ -48,13 +58,19 @@ class MagazineController extends Controller
 
     /**
      * Display the specified resource.
-     *
      * @param  int  $id
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($name_activity)
     {
-        //
+        $eventDetail = EventForm::where('name_activity', $name_activity)->first();
+        // panggil data berdasarkan id
+
+        $eventDetail->view_count =  (int) ++$eventDetail->view_count;
+        $eventDetail->save();
+        return view('main-home.detail', ['eventDetail'=>$eventDetail]);
+
     }
 
     /**

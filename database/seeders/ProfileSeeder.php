@@ -23,9 +23,11 @@ class ProfileSeeder extends Seeder
         $faker = Faker::create();
         DB::table('profile')->insert([
             'user_id' => $faker->randomElement($user),
+            'name_himpunan' => 'Himpunan Mahasiswa Ilmu Komputer'
         ]);
         DB::table('profile')->insert([
             'user_id' => $faker->randomElement($user1),
+            'name_himpunan' => 'Himpunan Mahasiswa Teknik Mesin'
         ]);
     }
 }

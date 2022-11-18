@@ -4,10 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Profile;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class EventDataController extends Controller
+class DataRegistController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -18,8 +19,9 @@ class EventDataController extends Controller
     {
         $user_id = Auth::user()->id;
         $user = User::where('id', $user_id)->first();
-        $profile = Profile::where('user_id', $user_id)->first();
-        return view('event.data-kegiatan.index', ['profile'=>$profile, 'user'=>$user] );
+        $today = Carbon::today()->format('Y-m-d');
+        $profile = Profile::where('user_id', $user_id)->first();  
+        return view('event.data-kegiatan.registrasi', ['profile'=>$profile, 'user'=>$user, 'today'=>$today]);
     }
 
     /**

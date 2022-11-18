@@ -26,4 +26,7 @@ class EventForm extends Model
         'contact_pic',
         'other_type'
     ];
+    public function profile(){
+        return $this->belongsTo(Profile::class, 'profile_id', 'id');
+    }
 }

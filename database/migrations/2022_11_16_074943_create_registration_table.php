@@ -13,19 +13,25 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('profile', function (Blueprint $table) {
+        Schema::create('registration', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')
+            $table->foreignId('profile_mhs_id')
             ->constrained()
             ->unique()
             ->reference('id')
-            ->on('users')
+            ->on('profile_mhs')
             ->onUpdate('cascade')
             ->onDelete('cascade');
-            $table->string('name_himpunan')->nullable();
-            $table->string('email')->nullable();
-            $table->string('handphone')->nullable();
-            $table->string('photo')->nullable();
+            $table->foreignId('event_id')
+            ->constrained()
+            ->unique()
+            ->reference('id')
+            ->on('event_forms')
+            ->onUpdate('cascade')
+            ->onDelete('cascade');
+            $table->enum('status_regist', 
+            ['telah daftar','terkonfirmasi'])
+            ->default('telah daftar')->index();
             $table->timestamps();
         });
     }
@@ -37,6 +43,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('profile');
+        Schema::dropIfExists('registration');
     }
 };

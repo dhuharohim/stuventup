@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\DataRegistController;
 use App\Http\Controllers\EventDataController;
 use App\Http\Controllers\EventFormController;
 use App\Http\Controllers\HomeController;
@@ -47,13 +48,20 @@ Route::post('/setting/update/{id}', [ProfileController::class, 'updateuser'])->n
 
 //event
 Route::get('/event', [EventFormController::class, 'index'])->name('event.index');
-Route::post('event-store', [EventFormController::class, 'store']);
+Route::post('upload-poster', [EventFormController::class,'uploadPoster'])->name('upload.poster');
+Route::post('event-store', [EventFormController::class, 'store'])->name('event.store');
 Route::get('/event-data', [EventFormController::class, 'show'])->name('event.data');
 Route::post('update-status', [EventFormController::class, 'updateStatus'])->name('status.update');
+Route::post('update-event', [EventFormController::class, 'edit'])->name('event.update');
+Route::post('delete-event', [EventFormController::class, 'destroy'])->name('delete.event');
+
+//registrasi
+Route::get('/data-registrasi', [DataRegistController::class, 'index'])->name('regist.index');
 
 
 
 //magazine
 Route::get('/news', [MagazineController::class, 'index'])->name('magazine.index');
+Route::get('/news-detail/{name_activity}', [MagazineController::class, 'show'])->name('news.detail');
 
 
