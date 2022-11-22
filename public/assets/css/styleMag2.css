@@ -1164,7 +1164,7 @@ section {
 }
 .post .thumb.circle .inner {
   overflow: hidden;
-  border-radius: 50%;
+  border-radius: 10%;
 }
 .post .thumb.top-rounded .inner {
   overflow: hidden;

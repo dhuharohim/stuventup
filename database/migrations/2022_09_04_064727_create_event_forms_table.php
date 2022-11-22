@@ -36,6 +36,7 @@ return new class extends Migration
             $table->enum('type_activity',['seminar','pelatihan','olahraga','pameran','nasional','lainnya']);
             $table->string('other_type')->nullable();
             $table->enum('status_activity', ['akan datang','berlangsung','selesai'])->default('akan datang')->index();
+            $table->integer('view_count')->nullable();
             $table->timestamps();
         });
     }

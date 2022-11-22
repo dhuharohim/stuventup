@@ -1,626 +1,3 @@
-{{-- <!DOCTYPE html>
-<html lang="zxx">
-
-<head>
-    <!-- Required meta tags -->
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    @section('title')
-        News Event
-    @endsection
-    <title>stuventup - @yield('title')</title>
-    <!-- plugin css for this page -->
-    <link rel="stylesheet" href="{{ asset('assets/vendor/mdi/css/materialdesignicons.min.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/vendor/aos/dist/aos.css/aos.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/vendor/owl.carousel/dist/assets/owl.carousel.min.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/vendor/owl.carousel/dist/assets/owl.theme.default.min.css') }}" />
-    <!-- End plugin css for this page -->
-    <link rel="shortcut icon" href="{{ asset('assets/img/stuvent.png') }}" />
-    <!-- inject:css -->
-    <link rel="stylesheet" href="{{ asset('assets/css/styleMag.css') }}">
-    <!-- endinject -->
-</head>
-
-<body>
-    <div class="container-scroller">
-        <div class="main-panel">
-            <header id="header">
-                <div class="container">
-                    <!-- partial:partials/_navbar.html -->
-                    <nav class="navbar navbar-expand-lg navbar-light">
-                        <div class="d-flex justify-content-between align-items-center navbar-top">
-                            <div>
-                                <a class="navbar-brand" href="#"><img src="assets/img/stuventText.png"
-                                        style="width: 50%;" alt="" /></a>
-                            </div>
-                            <div>
-                                <div class="navbar-right" style="justify-content: right">
-                                    @if ($user == null)
-                                        <a href="{{ route('login') }}" style="color:inherit;">Login | </a>
-                                        <a href="{{ route('register') }}"
-                                            style="color:inherit; margin-left:0.25rem">Register</a>
-                                    @elseif($user->role == 'user')
-                                        <p>Halo, {{ $user->name }}!</p>
-                                    @elseif($user->role == 'admin')
-                                        <p>Halo, admin {{ $user->username }}!</p>
-                                    @endif
-                                </div>
-
-                                <ul class="navbar-right">
-                                    <li>{{ $date }}</li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="navbar-bottom-menu">
-                            <button class="navbar-toggler" type="button" data-target="#navbarSupportedContent"
-                                aria-controls="navbarSupportedContent" aria-expanded="false"
-                                aria-label="Toggle navigation">
-                                <span class="navbar-toggler-icon"></span>
-                            </button>
-
-                            <div class="navbar-collapse justify-content-center collapse" id="navbarSupportedContent">
-                                <ul class="navbar-nav d-lg-flex justify-content-between align-items-center">
-                                    <li>
-                                        <button class="navbar-close">
-                                            <i class="mdi mdi-close"></i>
-                                        </button>
-                                    </li>
-                                    <li class="nav-item active">
-                                        <a class="nav-link active" href="#">Home</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="pages/world.html">Seminar/Webinar</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="pages/author.html">Pelatihan</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="pages/news-post.html">Olahraga</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="pages/business.html">Pameran/Festival</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="pages/sports.html">Hari Nasional</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="pages/sports.html">Lainnya</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="#"><i class="mdi mdi-magnify"></i></a>
-                                    </li>
-                                    <div class="nav-hide">
-                                        @if ($user == null)
-                                            <a href="{{ route('login') }}" style="color:inherit;">Login</a> |
-                                            <a href="{{ route('register') }}" style="color:inherit;">Register</a>
-                                        @elseif($user->role == 'user')
-                                            <p>Halo, {{ $user->name }}!</p>
-                                        @elseif($user->role == 'admin')
-                                            <p>Halo, admin {{ $user->username }}!</p>
-                                        @endif
-                                        <p> {{ $date }}</p>
-                                    </div>
-
-
-                                </ul>
-                            </div>
-                        </div>
-                    </nav>
-
-                    <!-- partial -->
-                </div>
-            </header>
-            <div class="container">
-                <div class="row mt-4">
-                    <div class="col-lg-8">
-                        <h3>Event Baru</h3>
-                        <div class="owl-carousel owl-theme" id="main-banner-carousel">
-                            @foreach ($eventNew as $event)
-                                <a href="{{ route('news.detail', $event->name_activity) }}">
-                                    <div class="item">
-                                        <div class="carousel-content-wrapper mb-2">
-                                            <div class="carousel-content">
-                                                <div style="background: black;">
-                                                    @if ($event->type_activity == 'olahraga')
-                                                    <p style="font-size:12px; line-height:0;">Olahraga</p>
-                                                    @elseif($event->type_activity == 'seminar')
-                                                    <p style="font-size:12px; line-height:0;">Seminar</p>
-                                                    @elseif($event->type_activity == 'pameran')
-                                                    <p style="font-size:12px; line-height:0;">Pameran</p>
-
-                                                    @elseif($event->type_activity == 'nasional')
-                                                    <p style="font-size:12px; line-height:0;">Hari Nasional</p>
-
-                                                    @elseif($event->type_activity == 'pelatihan')
-                                                    <p style="font-size:12px; line-height:0;">Pelatihan</p>
-
-                                                    @elseif($event->type_activity == 'lainnya')
-                                                    <p style="font-size:12px; line-height:0;">Lainnya : {{ $event->other_type }}</p>
-                                                    @endif
-                                                    
-                                                </div>
-                                                <h1 class="font-weight-bold" style="margin-bottom: 0;">
-                                                    {{ $event->name_activity }}
-                                                </h1>
-
-                                                <p class="text-color m-0 pt-2 d-flex align-items-center" >
-                                                    <span class="fs-10 mr-1">{{ $event->profile->name_himpunan }}
-                                                        | {{ $event->created_at->diffForHumans() }} <i
-                                                            class="mdi mdi-calendar-clock mr-3"></i></span>
-
-                                                </p>
-                                            </div>
-                                            <div class="carousel-image">
-                                                <img src="assets/img/dashboard/banner.jpg" alt="" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </a>
-                            @endforeach
-                        </div>
-                    </div>
-                    <div class="col-lg-4">
-                        <h3>Event populer</h3>
-                        <div class="row">
-                            @foreach ($eventPop as $eventPop)
-                                @if ($eventPop->view_count > 10)
-                                    <div class="col-sm-6">
-                                        <div class="py-3 border-bottom">
-                                            @if ($eventPop->type_activity == 'olahraga')
-                                                <p style="font-size: 10px; margin-bottom:0;">Olahraga</p>
-                                            @elseif($eventPop->type_activity == 'seminar')
-                                                <p style="font-size: 10px; margin-bottom:0;">Seminar</p>
-                                            @elseif($eventPop->type_activity == 'nasional')
-                                                <p style="font-size: 10px; margin-bottom:0;">Nasional</p>
-                                            @elseif($eventPop->type_activity == 'pameran')
-                                                <p style="font-size: 10px; margin-bottom:0;">Pameran</p>
-                                            @elseif($eventPop->type_activity == 'pelatihan')
-                                                <p style="font-size: 10px; margin-bottom:0;">Pelatihan</p>
-                                            @elseif($eventPop->type_activity == 'lainnya')
-                                                <p style="font-size: 10px; margin-bottom:0;">Lainnya :
-                                                    {{ $eventPop->other_type }}</p>
-                                            @endif
-                                            <div class="d-flex align-items-center pb-2">
-
-                                                <a href="{{ route('news.detail', $eventPop->name_activity) }}"
-                                                    class="fs-14 m-0 font-weight-medium line-height-sm"
-                                                    style="color:inherit;">
-                                                    {{ $eventPop->name_activity }}
-                                                </a>
-                                            </div>
-                                            <span class="fs-12 text-muted">{{ $eventPop->profile->name_himpunan }} |
-                                                {{ $eventPop->view_count }} kali dilihat.</span>
-                                        </div>
-                                    </div>
-                                @endif
-                            @endforeach
-                        </div>
-                    </div>
-                </div>
-                <div class="world-news">
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <div class="d-flex position-relative  float-left">
-                                <h3 class="section-title">World News</h3>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-3 col-sm-6 grid-margin mb-5 mb-sm-2">
-                            <div class="position-relative image-hover">
-                                <img src="assets/img/dashboard/travel.jpg" class="img-fluid" alt="world-news" />
-                                <span class="thumb-title">TRAVEL</span>
-                            </div>
-                            <h5 class="font-weight-bold mt-3">
-                                Refugees flood Turkey's border with Greece
-                            </h5>
-                            <p class="fs-15 font-weight-normal">
-                                Lorem Ipsum has been the industry's standard dummy text
-                            </p>
-                            <a href="#" class="font-weight-bold text-dark pt-2">Read Article</a>
-                        </div>
-                        <div class="col-lg-3 col-sm-6 mb-5 mb-sm-2">
-                            <div class="position-relative image-hover">
-                                <img src="assets/img/dashboard/news.jpg" class="img-fluid" alt="world-news" />
-                                <span class="thumb-title">NEWS</span>
-                            </div>
-                            <h5 class="font-weight-bold mt-3">
-                                South Korea’s Moon Jae-in sworn in vowing address
-                            </h5>
-                            <p class="fs-15 font-weight-normal">
-                                Lorem Ipsum has been the industry's standard dummy text
-                            </p>
-                            <a href="#" class="font-weight-bold text-dark pt-2">Read Article</a>
-                        </div>
-                        <div class="col-lg-3 col-sm-6 mb-5 mb-sm-2">
-                            <div class="position-relative image-hover">
-                                <img src="assets/img/dashboard/art.jpg" class="img-fluid" alt="world-news" />
-                                <span class="thumb-title">ART</span>
-                            </div>
-                            <h5 class="font-weight-bold mt-3">
-                                These puppies are training to assist in avalanche rescue
-                            </h5>
-                            <p class="fs-15 font-weight-normal">
-                                Lorem Ipsum has been the industry's standard dummy text
-                            </p>
-                            <a href="#" class="font-weight-bold text-dark pt-2">Read Article</a>
-                        </div>
-                        <div class="col-lg-3 col-sm-6 mb-5 mb-sm-2">
-                            <div class="position-relative image-hover">
-                                <img src="assets/img/dashboard/business.jpg" class="img-fluid" alt="world-news" />
-                                <span class="thumb-title">BUSINESS</span>
-                            </div>
-                            <h5 class="font-weight-bold mt-3">
-                                'Love Is Blind' couple opens up about their first year
-                            </h5>
-                            <p class="fs-15 font-weight-normal">
-                                Lorem Ipsum has been the industry's standard dummy text
-                            </p>
-                            <a href="#" class="font-weight-bold text-dark pt-2">Read Article</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="editors-news">
-                    <div class="row">
-                        <div class="col-lg-3">
-                            <div class="d-flex position-relative float-left">
-                                <h3 class="section-title">Popular News</h3>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-6  mb-5 mb-sm-2">
-                            <div class="position-relative image-hover">
-                                <img src="assets/img/dashboard/glob.jpg" class="img-fluid" alt="world-news" />
-                                <span class="thumb-title">NEWS</span>
-                            </div>
-                            <h1 class="font-weight-600 mt-3">
-                                Melania Trump speaks about courage at State Department
-                            </h1>
-                            <p class="fs-15 font-weight-normal">
-                                Lorem Ipsum has been the industry's standard dummy text ever
-                                since the 1500s, when an unknown printer took a galley of type
-                                and
-                            </p>
-                        </div>
-                        <div class="col-lg-6  mb-5 mb-sm-2">
-                            <div class="row">
-                                <div class="col-sm-6  mb-5 mb-sm-2">
-                                    <div class="position-relative image-hover">
-                                        <img src="assets/img/dashboard/star-magazine-5.jpg" class="img-fluid"
-                                            alt="world-news" />
-                                        <span class="thumb-title">POLITICS</span>
-                                    </div>
-                                    <h5 class="font-weight-600 mt-3">
-                                        A look at California's eerie plane graveyards
-                                    </h5>
-                                    <p class="fs-15 font-weight-normal">
-                                        Lorem Ipsum has been the industry's standard dummy text
-                                    </p>
-                                </div>
-                                <div class="col-sm-6  mb-5 mb-sm-2">
-                                    <div class="position-relative image-hover">
-                                        <img src="assets/img/dashboard/star-magazine-6.jpg" class="img-fluid"
-                                            alt="world-news" />
-                                        <span class="thumb-title">TRAVEL</span>
-                                    </div>
-                                    <h5 class="font-weight-600 mt-3">
-                                        The world's most beautiful racecourses
-                                    </h5>
-                                    <p class="fs-15 font-weight-normal">
-                                        Lorem Ipsum has been the industry's standard dummy text
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="row mt-3">
-                                <div class="col-sm-6  mb-5 mb-sm-2">
-                                    <div class="position-relative image-hover">
-                                        <img src="assets/img/dashboard/star-magazine-7.jpg" class="img-fluid"
-                                            alt="world-news" />
-                                        <span class="thumb-title">POLITICS</span>
-                                    </div>
-                                    <h5 class="font-weight-600 mt-3">
-                                        Japan cancels cherry blossom festivals over virus fears
-                                    </h5>
-                                    <p class="fs-15 font-weight-normal">
-                                        Lorem Ipsum has been the industry's standard dummy text
-                                    </p>
-                                </div>
-                                <div class="col-sm-6">
-                                    <div class="position-relative image-hover">
-                                        <img src="assets/img/dashboard/star-magazine-8.jpg" class="img-fluid"
-                                            alt="world-news" />
-                                        <span class="thumb-title">TRAVEL</span>
-                                    </div>
-                                    <h5 class="font-weight-600 mt-3">
-                                        Classic cars reborn as electric vehicles
-                                    </h5>
-                                    <p class="fs-15 font-weight-normal">
-                                        Lorem Ipsum has been the industry's standard dummy text
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="popular-news">
-                    <div class="row">
-                        <div class="col-lg-3">
-                            <div class="d-flex position-relative float-left">
-                                <h3 class="section-title">Editor choice</h3>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-9">
-                            <div class="row">
-                                <div class="col-sm-4  mb-5 mb-sm-2">
-                                    <div class="position-relative image-hover">
-                                        <img src="assets/img/dashboard/star-magazine-9.jpg" class="img-fluid"
-                                            alt="world-news" />
-                                        <span class="thumb-title">LIFESTYLE</span>
-                                    </div>
-                                    <h5 class="font-weight-600 mt-3">
-                                        The island country that gave Mayor Pete his name
-                                    </h5>
-                                </div>
-                                <div class="col-sm-4 mb-5 mb-sm-2">
-                                    <div class="position-relative image-hover">
-                                        <img src="assets/img/dashboard/star-magazine-10.jpg" class="img-fluid"
-                                            alt="world-news" />
-                                        <span class="thumb-title">SPORTS</span>
-                                    </div>
-                                    <h5 class="font-weight-600 mt-3">
-                                        Disney parks expand (good) vegan food options
-                                    </h5>
-                                </div>
-                                <div class="col-sm-4 mb-5 mb-sm-2">
-                                    <div class="position-relative image-hover">
-                                        <img src="assets/img/dashboard/star-magazine-11.jpg" class="img-fluid"
-                                            alt="world-news" />
-                                        <span class="thumb-title">INTERNET</span>
-                                    </div>
-                                    <h5 class="font-weight-600 mt-3">
-                                        A hot springs where clothing is optional after dark
-                                    </h5>
-                                </div>
-                            </div>
-                            <div class="row mt-3">
-                                <div class="col-sm-4 mb-5 mb-sm-2">
-                                    <div class="position-relative image-hover">
-                                        <img src="assets/img/dashboard/star-magazine-12.jpg" class="img-fluid"
-                                            alt="world-news" />
-                                        <span class="thumb-title">NEWS</span>
-                                    </div>
-                                    <h5 class="font-weight-600 mt-3">
-                                        Japanese chef carves food into incredible pieces of art
-                                    </h5>
-                                </div>
-                                <div class="col-sm-4 mb-5 mb-sm-2">
-                                    <div class="position-relative image-hover">
-                                        <img src="assets/img/dashboard/star-magazine-13.jpg" class="img-fluid"
-                                            alt="world-news" />
-                                        <span class="thumb-title">NEWS</span>
-                                    </div>
-                                    <h5 class="font-weight-600 mt-3">
-                                        The Misanthrope Society: A Taipei bar for people who
-                                    </h5>
-                                </div>
-                                <div class="col-sm-4 mb-5 mb-sm-2">
-                                    <div class="position-relative image-hover">
-                                        <img src="assets/img/dashboard/star-magazine-14.jpg" class="img-fluid"
-                                            alt="world-news" />
-                                        <span class="thumb-title">TOURISM</span>
-                                    </div>
-                                    <h5 class="font-weight-600 mt-3">
-                                        From Pakistan to the Caribbean: Curry's journey
-                                    </h5>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-3">
-                            <div class="position-relative mb-3">
-                                <img src="assets/img/dashboard/star-magazine-15.jpg" class="img-fluid"
-                                    alt="world-news" />
-                                <div class="video-thumb text-muted">
-                                    <span><i class="mdi mdi-menu-right"></i></span>LIVE
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    <div class="d-flex position-relative float-left">
-                                        <h3 class="section-title">Latest News</h3>
-                                    </div>
-                                </div>
-                                <div class="col-sm-12">
-                                    <div class="border-bottom pb-3">
-                                        <h5 class="font-weight-600 mt-0 mb-0">
-                                            South Korea’s Moon Jae-in sworn in vowing address
-                                        </h5>
-                                        <p class="text-color m-0 d-flex align-items-center">
-                                            <span class="fs-10 mr-1">2 hours ago</span>
-                                            <i class="mdi mdi-bookmark-outline mr-3"></i>
-                                            <span class="fs-10 mr-1">126</span>
-                                            <i class="mdi mdi-comment-outline"></i>
-                                        </p>
-                                    </div>
-                                </div>
-                                <div class="col-sm-12">
-                                    <div class="border-bottom pt-4 pb-3">
-                                        <h5 class="font-weight-600 mt-0 mb-0">
-                                            South Korea’s Moon Jae-in sworn in vowing address
-                                        </h5>
-                                        <p class="text-color m-0 d-flex align-items-center">
-                                            <span class="fs-10 mr-1">2 hours ago</span>
-                                            <i class="mdi mdi-bookmark-outline mr-3"></i>
-                                            <span class="fs-10 mr-1">126</span>
-                                            <i class="mdi mdi-comment-outline"></i>
-                                        </p>
-                                    </div>
-                                </div>
-                                <div class="col-sm-12">
-                                    <div class="border-bottom pt-4 pb-3">
-                                        <h5 class="font-weight-600 mt-0 mb-0">
-                                            South Korea’s Moon Jae-in sworn in vowing address
-                                        </h5>
-                                        <p class="text-color m-0 d-flex align-items-center">
-                                            <span class="fs-10 mr-1">2 hours ago</span>
-                                            <i class="mdi mdi-bookmark-outline mr-3"></i>
-                                            <span class="fs-10 mr-1">126</span>
-                                            <i class="mdi mdi-comment-outline"></i>
-                                        </p>
-                                    </div>
-                                </div>
-                                <div class="col-sm-12">
-                                    <div class="pt-4">
-                                        <h5 class="font-weight-600 mt-0 mb-0">
-                                            South Korea’s Moon Jae-in sworn in vowing address
-                                        </h5>
-                                        <p class="text-color m-0 d-flex align-items-center">
-                                            <span class="fs-10 mr-1">2 hours ago</span>
-                                            <i class="mdi mdi-bookmark-outline mr-3"></i>
-                                            <span class="fs-10 mr-1">126</span>
-                                            <i class="mdi mdi-comment-outline"></i>
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- main-panel ends -->
-            <!-- container-scroller ends -->
-
-            <!-- partial:partials/_footer.html -->
-            <footer>
-                <div class="container">
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <div class="border-top"></div>
-                        </div>
-                        <div class="col-sm-3 col-lg-3">
-                            <ul class="footer-vertical-nav">
-                                <li class="menu-title"><a href="pages/news-post.html">News</a></li>
-                                <li><a href="index.html">Home</a></li>
-                                <li><a href="pages/world.html">World</a></li>
-                                <li><a href="pages/author.html">Magazine</a></li>
-                                <li><a href="pages/business.html">Business</a></li>
-                                <li><a href="pages/politics.html">Politics</a></li>
-                            </ul>
-                        </div>
-                        <div class="col-sm-3 col-lg-3">
-                            <ul class="footer-vertical-nav">
-                                <li class="menu-title"><a href="pages/world.html">World</a></li>
-                                <li><a href="pages/sports.html">Sports</a></li>
-                                <li><a href="pages/art.html">Art</a></li>
-                                <li><a href="#">Magazine</a></li>
-                                <li><a href="pages/real-estate.html">Real estate</a></li>
-                                <li><a href="pages/travel.html">Travel</a></li>
-                                <li><a href="pages/author.html">Author</a></li>
-                            </ul>
-                        </div>
-                        <div class="col-sm-3 col-lg-3">
-                            <ul class="footer-vertical-nav">
-                                <li class="menu-title"><a href="#">Features</a></li>
-                                <li><a href="#">Photography</a></li>
-                                <li><a href="#">Video</a></li>
-                                <li><a href="pages/news-post.html">Newsletters</a></li>
-                                <li><a href="#">Live Events</a></li>
-                                <li><a href="#">Stores</a></li>
-                                <li><a href="#">Jobs</a></li>
-                            </ul>
-                        </div>
-                        <div class="col-sm-3 col-lg-3">
-                            <ul class="footer-vertical-nav">
-                                <li class="menu-title"><a href="#">More</a></li>
-                                <li><a href="#">RSS</a></li>
-                                <li><a href="#">FAQ</a></li>
-                                <li><a href="#">User Agreement</a></li>
-                                <li><a href="#">Privacy</a></li>
-                                <li><a href="pages/aboutus.html">About us</a></li>
-                                <li><a href="pages/contactus.html">Contact</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <div class="d-flex justify-content-between">
-                                <img src="assets/img/logo.svg" class="footer-logo" alt="" />
-
-                                <div class="d-flex justify-content-end footer-social">
-                                    <h5 class="m-0 font-weight-600 mr-3 d-none d-lg-flex">Follow on</h5>
-                                    <ul class="social-media">
-                                        <li>
-                                            <a href="#">
-                                                <i class="mdi mdi-instagram"></i>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="#">
-                                                <i class="mdi mdi-facebook"></i>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="#">
-                                                <i class="mdi mdi-youtube"></i>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="#">
-                                                <i class="mdi mdi-linkedin"></i>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="#">
-                                                <i class="mdi mdi-twitter"></i>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <div
-                                class="d-lg-flex justify-content-between align-items-center border-top mt-5 footer-bottom">
-                                <ul class="footer-horizontal-menu">
-                                    <li><a href="#">Terms of Use.</a></li>
-                                    <li><a href="#">Privacy Policy.</a></li>
-                                    <li><a href="#">Accessibility & CC.</a></li>
-                                    <li><a href="#">AdChoices.</a></li>
-                                    <li><a href="#">Advertise with us Transcripts.</a></li>
-                                    <li><a href="#">License.</a></li>
-                                    <li><a href="#">Sitemap</a></li>
-                                </ul>
-                                <p class="font-weight-medium">
-                                    © 2020 <a href="https://www.bootstrapdash.com/" target="_blank"
-                                        class="text-dark">@ BootstrapDash</a>, Inc.All Rights Reserved.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </footer>
-
-            <!-- partial -->
-        </div>
-    </div>
-    <!-- inject:js -->
-    <script src="{{ asset('assets/vendor/js/vendor.bundle.base.js') }}"></script>
-    <!-- endinject -->
-    <!-- plugin js for this page -->
-    <script src="{{ asset('assets/vendor/owl.carousel/dist/owl.carousel.min.js') }}"></script>
-    <!-- End plugin js for this page -->
-    <!-- Custom js for this page-->
-    <script src="{{ asset('assets/js/jsMag.js') }}"></script>
-    <!-- End custom js for this page-->
-</body>
-
-</html> --}}
-
 <!DOCTYPE html>
 <html lang="en-US">
 
@@ -629,7 +6,7 @@
     <title>stuvent up - news</title>
     <meta name="description" content="Stuvent UP">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <link rel="shortcut icon" type="image/x-icon" href="images/favicon.png">
+    <link rel="shortcut icon" href="{{ asset('assets/img/stuvent.png') }}" />
 
     <!-- STYLES -->
     <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}" type="text/css" media="all">
@@ -637,18 +14,17 @@
     <link rel="stylesheet" href="{{ asset('assets/css/slick.css') }}" type="text/css" media="all">
     <link rel="stylesheet" href="{{ asset('assets/css/simple-line-icons.css') }}" type="text/css" media="all">
     <link rel="stylesheet" href="{{ asset('assets/css/styleMag2.css') }}" type="text/css" media="all">
-
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
+      {{-- <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script> --}}
+      
+    
 
 </head>
 
 <body>
 
     <!-- preloader -->
-    <div id="preloader">
+    {{-- <div id="preloader">
         <div class="book">
             <div class="inner">
                 <div class="left"></div>
@@ -676,7 +52,7 @@
                 <li></li>
             </ul>
         </div>
-    </div>
+    </div> --}}
 
     <!-- site wrapper -->
     <div class="site-wrapper">
@@ -688,7 +64,7 @@
             <nav class="navbar navbar-expand-lg">
                 <div class="container-xl">
                     <!-- site logo -->
-                  <img src="assets/img/stuvent.png" alt="logo" style="width:7%;"/>
+                    <img src="assets/img/stuvent.png" alt="logo" style="width:5%;" />
 
                     <div class="collapse navbar-collapse">
                         <!-- menus -->
@@ -743,23 +119,64 @@
                     <div class="col-lg-8">
 
                         <!-- featured post large -->
-                        <div class="post featured-post-lg">
-                            <div class="details clearfix">
-                                <a href="" class="category-badge">Inspiration</a>
-                                <h2 class="post-title"><a href="blog-single.html">5 Easy Ways You Can Turn Future Into
-                                        Success</a></h2>
-                                <ul class="meta list-inline mb-0">
-                                    <li class="list-inline-item"><a href="#">Katen Doe</a></li>
-                                    <li class="list-inline-item">29 March 2021</li>
-                                </ul>
-                            </div>
-                            <a href="blog-single.html">
-                                <div class="thumb rounded">
-                                    <div class="inner data-bg-image" data-bg-image="images/posts/featured-lg.jpg">
+                        <div id="myCarousel" class="carousel slide" data-ride="carousel">
+                            <ol class="carousel-indicators">
+                                <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+                      
+
+                            </ol>
+                            <div class="carousel-inner">
+                                @foreach ($eventNew as $key => $event)
+                                <div class="carousel-item {{$key == 0 ? 'active' : '' }}" >
+                                        <div class="post featured-post-lg">
+                                            <div class="details clearfix">
+                                                @if ($event->type_activity == 'olahraga')
+                                                    <a href="{{ route('news.detail', $event->name_activity) }}" class="category-badge">Olahraga</a>
+                                                @elseif($event->type_activity == 'seminar')
+                                                    <a href="{{ route('news.detail', $event->name_activity) }}" class="category-badge">Seminar</a>
+                                                @elseif($event->type_activity == 'pameran')
+                                                    <a href="{{ route('news.detail', $event->name_activity) }}" class="category-badge">Pameran</a>
+                                                @elseif($event->type_activity == 'nasional')
+                                                    <a href="{{ route('news.detail', $event->name_activity) }}" class="category-badge">Nasional</a>
+                                                @elseif($event->type_activity == 'pelatihan')
+                                                    <a href="{{ route('news.detail', $event->name_activity) }}" class="category-badge">Pelatihan</a>
+                                                @elseif($event->type_activity == 'lainnya')
+                                                    <a href="{{ route('news.detail', $event->name_activity) }}" class="category-badge">Lainnya :
+                                                        {{ $event->other_type }}</a>
+                                                @endif
+                                                <h2 class="post-title"><a
+                                                        href="{{ route('news.detail', $event->name_activity) }}">{{ $event->name_activity }}</a>
+                                                </h2>
+                                                <ul class="meta list-inline mb-0">
+                                                    <li class="list-inline-item"><a
+                                                            href="#">{{ $event->profile->name_himpunan }}</a>
+                                                    </li>
+                                                    <li class="list-inline-item">
+                                                        {{ $event->created_at->diffForHumans() }}</li>
+                                                </ul>
+                                            </div>
+                                            <a href="{{ route('news.detail', $event->name_activity) }}">
+                                                <div class="thumb rounded">
+                                                    <div class="inner data-bg-image"
+                                                        data-bg-image="assets/img/bg.jpg">
+                                                    </div>
+                                                </div>
+                                            </a>
+
+                                        </div>
                                     </div>
-                                </div>
+                                    @endforeach
+                            </div>
+                            <a class="carousel-control-prev" href="#myCarousel" role="button"  data-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true">     </span>
+                                <span class="sr-only">Previous</span>
+                            </a>
+                            <a class="carousel-control-next" href="#myCarousel" role="button" data-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="sr-only">Next</span>
                             </a>
                         </div>
+
 
                     </div>
 
@@ -772,11 +189,11 @@
                                 <li class="nav-item" role="presentation"><button aria-controls="popular"
                                         aria-selected="true" class="nav-link active" data-bs-target="#popular"
                                         data-bs-toggle="tab" id="popular-tab" role="tab"
-                                        type="button">Popular</button></li>
+                                        type="button">Populer</button></li>
                                 <li class="nav-item" role="presentation"><button aria-controls="recent"
                                         aria-selected="false" class="nav-link" data-bs-target="#recent"
                                         data-bs-toggle="tab" id="recent-tab" role="tab"
-                                        type="button">Recent</button></li>
+                                        type="button">Terbaru</button></li>
                             </ul>
                             <!-- tab contents -->
                             <div class="tab-content" id="postsTabContent">
@@ -786,145 +203,48 @@
                                 <div aria-labelledby="popular-tab" class="tab-pane fade show active" id="popular"
                                     role="tabpanel">
                                     <!-- post -->
+                                    @foreach($eventPop as $event)
+                                        @if($event->view_count > 10)
                                     <div class="post post-list-sm circle">
                                         <div class="thumb circle">
-                                            <a href="blog-single.html">
+                                            <a href="{{ route('news.detail', $event->name_activity) }}">
                                                 <div class="inner">
-                                                    <img src="images/posts/tabs-1.jpg" alt="post-title" />
+                                                    <img src="assets/img/bg.jpg" alt="post-title" />
                                                 </div>
                                             </a>
                                         </div>
                                         <div class="details clearfix">
-                                            <h6 class="post-title my-0"><a href="blog-single.html">3 Easy Ways To Make
-                                                    Your iPhone Faster</a></h6>
+                                            <h6 class="post-title my-0"><a href="{{ route('news.detail', $event->name_activity) }}">{{ $event->name_activity }}</a></h6>
                                             <ul class="meta list-inline mt-1 mb-0">
-                                                <li class="list-inline-item">29 March 2021</li>
+                                                <li class="list-inline-item"> {{ $event->created_at->diffForHumans() }}</li>
                                             </ul>
                                         </div>
                                     </div>
-                                    <!-- post -->
-                                    <div class="post post-list-sm circle">
-                                        <div class="thumb circle">
-                                            <a href="blog-single.html">
-                                                <div class="inner">
-                                                    <img src="images/posts/tabs-2.jpg" alt="post-title" />
-                                                </div>
-                                            </a>
-                                        </div>
-                                        <div class="details clearfix">
-                                            <h6 class="post-title my-0"><a href="blog-single.html">An Incredibly Easy
-                                                    Method That Works For All</a></h6>
-                                            <ul class="meta list-inline mt-1 mb-0">
-                                                <li class="list-inline-item">29 March 2021</li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <!-- post -->
-                                    <div class="post post-list-sm circle">
-                                        <div class="thumb circle">
-                                            <a href="blog-single.html">
-                                                <div class="inner">
-                                                    <img src="images/posts/tabs-3.jpg" alt="post-title" />
-                                                </div>
-                                            </a>
-                                        </div>
-                                        <div class="details clearfix">
-                                            <h6 class="post-title my-0"><a href="blog-single.html">10 Ways To
-                                                    Immediately Start Selling Furniture</a></h6>
-                                            <ul class="meta list-inline mt-1 mb-0">
-                                                <li class="list-inline-item">29 March 2021</li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <!-- post -->
-                                    <div class="post post-list-sm circle">
-                                        <div class="thumb circle">
-                                            <a href="blog-single.html">
-                                                <div class="inner">
-                                                    <img src="images/posts/tabs-4.jpg" alt="post-title" />
-                                                </div>
-                                            </a>
-                                        </div>
-                                        <div class="details clearfix">
-                                            <h6 class="post-title my-0"><a href="blog-single.html">15 Unheard Ways To
-                                                    Achieve Greater Walker</a></h6>
-                                            <ul class="meta list-inline mt-1 mb-0">
-                                                <li class="list-inline-item">29 March 2021</li>
-                                            </ul>
-                                        </div>
-                                    </div>
+                                        @endif
+                                    @endforeach
+                                    
                                 </div>
                                 <!-- recent posts -->
                                 <div aria-labelledby="recent-tab" class="tab-pane fade" id="recent"
                                     role="tabpanel">
                                     <!-- post -->
+                                    @foreach($eventNew as $event)
                                     <div class="post post-list-sm circle">
                                         <div class="thumb circle">
                                             <a href="blog-single.html">
                                                 <div class="inner">
-                                                    <img src="images/posts/tabs-2.jpg" alt="post-title" />
+                                                    <img src="assets/img/bg.jpg" alt="post-title" />
                                                 </div>
                                             </a>
                                         </div>
                                         <div class="details clearfix">
-                                            <h6 class="post-title my-0"><a href="blog-single.html">An Incredibly Easy
-                                                    Method That Works For All</a></h6>
+                                            <h6 class="post-title my-0"><a href="blog-single.html">{{ $event->name_activity }}</a></h6>
                                             <ul class="meta list-inline mt-1 mb-0">
-                                                <li class="list-inline-item">29 March 2021</li>
+                                                <li class="list-inline-item">{{ $event->created_at->diffForHumans() }}</li>
                                             </ul>
                                         </div>
                                     </div>
-                                    <!-- post -->
-                                    <div class="post post-list-sm circle">
-                                        <div class="thumb circle">
-                                            <a href="blog-single.html">
-                                                <div class="inner">
-                                                    <img src="images/posts/tabs-1.jpg" alt="post-title" />
-                                                </div>
-                                            </a>
-                                        </div>
-                                        <div class="details clearfix">
-                                            <h6 class="post-title my-0"><a href="blog-single.html">3 Easy Ways To Make
-                                                    Your iPhone Faster</a></h6>
-                                            <ul class="meta list-inline mt-1 mb-0">
-                                                <li class="list-inline-item">29 March 2021</li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <!-- post -->
-                                    <div class="post post-list-sm circle">
-                                        <div class="thumb circle">
-                                            <a href="blog-single.html">
-                                                <div class="inner">
-                                                    <img src="images/posts/tabs-4.jpg" alt="post-title" />
-                                                </div>
-                                            </a>
-                                        </div>
-                                        <div class="details clearfix">
-                                            <h6 class="post-title my-0"><a href="blog-single.html">15 Unheard Ways To
-                                                    Achieve Greater Walker</a></h6>
-                                            <ul class="meta list-inline mt-1 mb-0">
-                                                <li class="list-inline-item">29 March 2021</li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <!-- post -->
-                                    <div class="post post-list-sm circle">
-                                        <div class="thumb circle">
-                                            <a href="blog-single.html">
-                                                <div class="inner">
-                                                    <img src="images/posts/tabs-3.jpg" alt="post-title" />
-                                                </div>
-                                            </a>
-                                        </div>
-                                        <div class="details clearfix">
-                                            <h6 class="post-title my-0"><a href="blog-single.html">10 Ways To
-                                                    Immediately Start Selling Furniture</a></h6>
-                                            <ul class="meta list-inline mt-1 mb-0">
-                                                <li class="list-inline-item">29 March 2021</li>
-                                            </ul>
-                                        </div>
-                                    </div>
+                                    @endforeach
                                 </div>
                             </div>
                         </div>
