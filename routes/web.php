@@ -52,6 +52,8 @@ Route::post('upload-poster', [EventFormController::class,'uploadPoster'])->name(
 Route::post('event-store', [EventFormController::class, 'store'])->name('event.store');
 Route::get('/event-data', [EventFormController::class, 'show'])->name('event.data');
 Route::post('update-status', [EventFormController::class, 'updateStatus'])->name('status.update');
+Route::post('update-berlangsung', [EventFormController::class, 'updateBerlangsung'])->name('status.berlangsung');
+
 Route::post('update-event', [EventFormController::class, 'edit'])->name('event.update');
 Route::post('delete-event', [EventFormController::class, 'destroy'])->name('delete.event');
 
@@ -63,5 +65,6 @@ Route::get('/data-registrasi', [DataRegistController::class, 'index'])->name('re
 //magazine
 Route::get('/news', [MagazineController::class, 'index'])->name('magazine.index');
 Route::get('/news-detail/{name_activity}', [MagazineController::class, 'show'])->name('news.detail');
+Route::post('regist-event', [DataRegistController::class, 'store'])->name('regist.event');
 
 

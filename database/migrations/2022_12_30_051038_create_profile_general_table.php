@@ -13,25 +13,20 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('registration', function (Blueprint $table) {
+        Schema::create('profile_general', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('profile_mhs_id')
+            $table->foreignId('user_id')
             ->constrained()
             ->unique()
             ->reference('id')
-            ->on('profile_mhs')
+            ->on('users')
             ->onUpdate('cascade')
             ->onDelete('cascade');
-            $table->foreignId('event_id')
-            ->constrained()
-            ->unique()
-            ->reference('id')
-            ->on('event_forms')
-            ->onUpdate('cascade')
-            ->onDelete('cascade');
-            $table->enum('status_regist', 
-            ['telah daftar','terkonfirmasi'])
-            ->default('telah daftar')->index();
+            $table->string('first_name')->nullable();
+            $table->string('last_name')->nullable();
+            $table->string('email')->nullable();
+            $table->string('handphone')->nullable();
+            $table->string('photo')->nullable();
             $table->timestamps();
         });
     }
@@ -43,6 +38,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('registration');
+        Schema::dropIfExists('profile_general');
     }
 };

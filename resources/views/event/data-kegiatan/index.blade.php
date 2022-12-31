@@ -78,6 +78,35 @@
                         </div>
                     @endif
                 </div>
+                <div class="col-md-12">
+                    @if($nowEvent->status_activity == 'akan datang')
+                    <div class="card text-white mb-4">
+                        <div class="card-header bg-primary"
+                            style="height: 1rem;
+                        display: flex;
+                        align-items: center;
+                        font-weight:bold;">
+                            Notifikasi
+                        </div>
+                        <div class="card-body text-black"
+                            style="display: flex;
+                        justify-content: space-between;
+                        padding: 1rem;
+                        align-items: center;">
+                            <div style="width: 70%">
+                                Acara <span style="font-weight: bold">{{ $nowEvent->name_activity }} </span> telah
+                                berlangsung
+                            </div>
+                            <form>
+                                @csrf
+                                <input type="hidden" name="id" id="confirm2" value="{{ $nowEvent->id }}">
+                                <button type="submit" class="btn btn-outline-primary"
+                                    id="confirmBerlangsung">Konfirmasi</button>
+                            </form>
+                        </div>
+                    </div>
+                    @endif
+                </div>
             @endforeach
 
 
@@ -179,7 +208,7 @@
                     <form id="eventForm" class="form-group">
                         <div class="row">
                             <div class="mb-4 col-md-12 form-group">
-                                <input type="text" name="idEventEdit" id="idEventEdit" value="{{ $events->id }}">
+                                {{-- <input type="text" name="idEventEdit" id="idEventEdit" value="{{ $events->id }}"> --}}
                                 <label for="name" class="form-label">{{ __('Nama Kegiatan') }}</label>
                                 <input class="form-control" type="text" id="name_activity" name="name_activity" autofocus
                                     required value="{{ $events->name_activity }}" />
@@ -310,6 +339,7 @@
     <script>
         $(document).ready(function() {
             console.log('test')
+            //acara selesai
             $('#confirmNow').click(function(e) {
                 e.preventDefault();
                 $.ajax({
@@ -340,6 +370,39 @@
                     },
                 });
             });
+
+            //acara berlangsung
+            $('#confirmBerlangsung').click(function(e) {
+                e.preventDefault();
+                $.ajax({
+                    url: '/update-berlangsung',
+                    type: "post",
+                    data: {
+                        "_token": "{{ csrf_token() }}",
+                        'id': $('#confirm2').val(),
+                    },
+                    success: function(res) {
+                        iziToast.show({
+                                title: "Sukses",
+                                position: 'topCenter',
+                                color: 'green',
+                                message: 'Berhasil konfirmasi acara berlangsung'
+                            }),
+                            setTimeout(() => {
+                                window.location.href = "/event-data"
+                            }, 3000);
+                    },
+                    error: function(res) {
+                        iziToast.show({
+                            title: "Error",
+                            position: 'topCenter',
+                            color: 'red',
+                            message: "Gagal konfirmasi acara berlangsung"
+                        })
+                    },
+                });
+            });
+
             //activity types
             $("select#type").on('change', function() {
                 if ($(this).find('option:selected').val() == 'lainnya') {

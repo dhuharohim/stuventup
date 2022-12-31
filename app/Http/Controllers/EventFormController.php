@@ -51,6 +51,7 @@ class EventFormController extends Controller
         $user = User::where('id', $user_id)->first();
         $eventForm = new EventForm();
         $today = Carbon::today()->format('Y-m-d');
+        $now = Carbon::now()->format('H:i');
 
         $eventForm->profile_id = $profile->id;
 
@@ -58,23 +59,35 @@ class EventFormController extends Controller
         $eventForm->desc_activity = $request->desc_activity;
         $eventForm->date_activity = $request->date_activity;
 
-
+        if(strtotime($request->time_end_activity) < strtotime($request->time_start_activity)){
+            return response()->json([
+                'error' =>  true,
+                'message' => 'Mohon isi waktu mulai dan waktu selesai dengan benar.'
+            ]);
+        }
         $eventForm->time_start_activity = $request->time_start_activity;
         $eventForm->time_end_activity = $request->time_end_activity;
 
         $eventForm->place_activity = $request->place_activity;
 
-        if ($request->date_activity == $today) {
+        if ($request->date_activity == $today && strtotime($request->time_start_activity) >= time()) {
             $eventForm->status_activity = 'berlangsung';
         } else {
             $eventForm->status_activity = 'akan datang';
         }
 
-        $path = 'assets/img/poster/' . $user->name;
-        $file = $request->file('upload_img');
-        $image_name = $request->file_name;
-        $eventForm->img_activity = $image_name;
+        // $path = 'assets/img/poster/' . $user->name;
+        // $file = $request->file('upload_img');
 
+     
+        // dd($request->hasFile('img_activity'));
+        if($request->hasFile('img_activity')) {
+            $file = $request->file('img_activity');
+            $path = 'assets/img/poster/' . $user->name;
+            $file->move(public_path($path), $request->file_name);
+        }
+        
+        $eventForm->img_activity = $request->file_name;
 
         $eventForm->type_activity = $request->type_activity;
         if ($request->type_activity == 'lainnya') {
@@ -131,6 +144,7 @@ class EventFormController extends Controller
         $today = Carbon::today()->format('Y-m-d');
         $time = Carbon::now()->format('H:i:s');
         $todayEvent = EventForm::where('date_activity', $today)->get();
+        $changeStatus = EventForm::where('status_activity', 'akan datang')->where('date_activity', $today)->get();
         return view('event.data-kegiatan.index', [
             'dataEvent' => $dataEvent,
             'profile' => $profile,
@@ -138,7 +152,8 @@ class EventFormController extends Controller
             'today' => $today,
             'time' => $time,
             'todayEvent' => $todayEvent,
-            'eventForm' => $eventForm
+            'eventForm' => $eventForm,
+            'changeStatus' => $changeStatus
         ]);
     }
 
@@ -149,13 +164,19 @@ class EventFormController extends Controller
 
     public function updateStatus(Request $request)
     {
-
         $status = EventForm::where('id', $request->id)->first();
         $status->status_activity = 'selesai';
         $status->save();
         return redirect()->back();
     }
 
+    public function updateBerlangsung(Request $request)
+    {
+        $status = EventForm::where('id', $request->id)->first();
+        $status->status_activity = 'berlangsung';
+        $status->save();
+        return redirect()->back();
+    }
     /**
      * Show the form for editing the specified resource.
      *

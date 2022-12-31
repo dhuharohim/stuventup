@@ -2,7 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\EventForm;
 use App\Models\Profile;
+use App\Models\ProfileMahasiswa;
+use App\Models\ProfileUmum;
+use App\Models\Registration;
+use App\Models\RegistrationEvent;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -42,7 +47,25 @@ class DataRegistController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $user = Auth::user();
+        $event = EventForm::where('name_activity', $request->name_activity)->first();
+        $profileMhs = ProfileMahasiswa::where('user_id', $user->id)->first();
+        $profileUmum = ProfileUmum::where('user_id', $user->id)->first();
+        if($user->role = 'user'){
+            $dataMhs = new RegistrationEvent();
+            $dataMhs->user_id = $user->id;
+            $dataMhs->profile_mhs_id = $profileMhs->id;
+            $dataMhs->event_id = $event->id;
+            $dataMhs->status_regist = "telah daftar";
+            $dataMhs->save();
+        } else {
+            $dataUmum = new RegistrationEvent();
+            $dataUmum->user_id = $user->id;
+            $dataUmum->profile_general_id = $profileUmum->id;
+            $dataUmum->event_id = $event->id;
+            $dataUmum->status_regist = "telah daftar";
+            $dataUmum->save();
+        }
     }
 
     /**

@@ -86,32 +86,7 @@
 
         </div>
     </div>
-    {{-- <div class="modal" id="uploadPoster" role="dialog" aria-labelledby="exampleModalLabel" >
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Upload Poster/Flyer</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="img" class="form-label">{{ __('Poster/Flyer Kegiatan') }}</label>
-                        <br>
-                        <a class="btn btn-info text-white" id="upload_img" style="cursor: pointer;">Upload gambar</a>
-                        <input class="form-control" type="file" id="img_activity" name="img_activity" autofocus
-                            hidden />
-                    </div>
-    
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
-                </div>
-            </div>
-        </div>
-    </div> --}}
+ 
     <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasEnd" aria-labelledby="offcanvasEndLabel"
         style="visibility: visible;" aria-modal="true" role="dialog">
         <div class="offcanvas-header">
@@ -120,8 +95,7 @@
         </div>
         <div class="offcanvas-body my-auto mx-0 flex-grow-0">
             <div class="">
-                <form id="eventForm" class="form-group" enctype="multipart/form-data">
-                    @csrf
+                <form id="eventForm" class="form-group" enctype="multipart/form-data" method="POST">
                     <div class="row">
                         <div class="mb-4 col-md-12 form-group">
                             <label for="name" class="form-label">{{ __('Nama Kegiatan') }}</label>
@@ -133,7 +107,7 @@
                             <textarea name="desc_activity" id="desc_activity" class="form-control" onkeyup="adjust(this)" style="overflow: hidden;"
                                 required></textarea>
                         </div>
-                        <div class="mb-4 col-md-6 form-group">
+                        <div class="mb-4 col-md-4 form-group">
                             <label for="date" class="form-label">{{ __('Tanggal Kegiatan') }}</label>
                             <input class="form-control" type="date" id="date_activity" name="date_activity"
                                 min="{{ $today }}" required autofocus />
@@ -147,6 +121,26 @@
                             <label for="time-end" class="form-label">{{ __('Waktu Selesai') }}</label>
                             <input class="form-control" type="time" id="time_end_activity" name="time_end_activity"
                                 required autofocus />
+                        </div>
+                        <div class="col-md-2" style="display: flex; align-items:center;">
+                            <button type="button" class="btn btn-info d-grid w-100" id="checkTime">
+                                Cek
+                            </button>
+                        </div>
+                        <div id="validate-time"
+                            style="display:none; justify-content: end;
+                        margin-top: -1rem;
+                        color: red;
+                        font-size: 11px;"
+                            class="col-md-12">
+                            Tolong isi waktu mulai dan waktu selesai dengan benar
+                        </div>
+                        <div id="validate-success"
+                            style="display:none; justify-content: end;
+                        margin-top: -1rem;
+                        color: green;
+                        font-size: 11px;">
+                            Waktu telah sesuai
                         </div>
                         <div class="mb-4 col-md-6 form-group">
                             <label for="type" class="form-label">{{ __('Jenis Kegiatan') }}</label>
@@ -206,8 +200,9 @@
                             <label for="contact" class="form-label">{{ __('Kontak Penanggung Jawab') }}</label>
                             <div class="input-group input-group-merge">
                                 <span class="input-group-text">ID (+62)</span>
-                                <input type="text" id="contact_pic" name="contact_pic" class="form-control"
-                                    placeholder="81234567891" />
+                                <input type="number" id="contact_pic" name="contact_pic" class="form-control"
+                                    placeholder="81234567891" maxlength="13"
+                                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" />
                             </div>
                         </div>
                     </div>
@@ -253,42 +248,83 @@
             }
 
         });
+
         $(document).ready(function() {
+            //validate start time and end time
+            $('#checkTime').click(function() {
+                var start = $('#time_start_activity').val();
+                var end = $('#time_end_activity').val();
+                if (end < start) {
+                    $('#validate-time').show().css({
+                        "display": "flex"
+                    });
+                    $('#save').prop('disabled', true);
+                    $('#eventForm input[type="text"]').prop('disabled', true);
+                } else {
+                    $('#validate-success').show().css({
+                        "display": "flex"
+                    });
+                    setTimeout(() => {
+                        $('#validate-success').hide();
+                    }, 2000);
+                    $('#validate-time').hide();
+                    $('#save').prop('disabled', false);
+                    $('#eventForm input[type="text"]').prop('disabled', false);
+                }
+            });
+
             $('#upload_img').click(function() {
                 $('input#img_activity').click();
             });
-            $('input#img_activity').change(function() {
+            $('#img_activity').change(function() {
                 let img = $(this).val().replace("C:", '').replace('fakepath', '').replace('\\\\', '');
                 $('#posterName').show();
                 $('#file_name').val(img);
-
+                console.log($(this).prop('files')[0]);
             });
             $('#save').click(function(e) {
+                console.log($('input#img_activity')[0].files);
+                var start = $('#time_start_activity').val();
+                var end = $('#time_end_activity').val();
+                if (end < start) {
+                    iziToast.show({
+                        title: "Error",
+                        position: 'topLeft',
+                        message: "Mohon isi waktu mulai dan waktu selesai dengan benar.",
+                        color: 'red'
+                    })
+                    return;
+                }
                 tinymce.triggerSave();
                 e.preventDefault();
+                var CSRF_TOKEN = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
                 var tinyRichText = (((tinyMCE.get('desc_activity').getContent()).replace(/(&nbsp;)*/g, ""))
                     .replace(/(<p>)*/g, "")).replace(/<(\/)?p[^>]*>/g, "");
+                var fd = new FormData();
+                fd.append("_token", CSRF_TOKEN);
+                fd.append('name_activity', $('#name_activity').val());
+                fd.append('desc_activity', tinyRichText);
+                fd.append('date_activity', $('#date_activity').val());
+                fd.append('type_activity', $('#type').find('option:selected').val());
+                fd.append('img_activity', $('input#img_activity').prop('files')[0]);
+                fd.append('other_type', $('#other_type').val())
+                fd.append('file_name', $('#file_name').val())
+                fd.append('name_activity', $('#name_activity').val())
+                fd.append('ticket', $('#isTicket').val())
+                fd.append('price_ticket', $('#price_ticket').val())
+                fd.append('name_pic', $('#name_pic').val())
+                fd.append('contact_pic', $('#contact_pic').val())
+                fd.append('time_start_activity', $('#time_start_activity').val())
+                fd.append('time_end_activity', $('#time_end_activity').val())
+                fd.append('place_activity', $('#place_activity').val())
+
                 $.ajax({
                     url: '/event-store',
                     type: "post",
-                    data: {
-                        "_token": "{{ csrf_token() }}",
-                        'name_activity': $('#name_activity').val(),
-                        'desc_activity': tinyRichText,
-                        'date_activity': $('#date_activity').val(),
-                        'type_activity': $('#type').find('option:selected').val(),
-                        'img_activity': $('#img_activity').val(),
-                        'other_type': $('#other_type').val(),
-                        'file_name': $('#file_name').val(),
-                        'name_activity': $('#name_activity').val(),
-                        'ticket': $('#isTicket').val(),
-                        'price_ticket': $('#price_ticket').val(),
-                        'name_pic': $('#name_pic').val(),
-                        'contact_pic': $('#contact_pic').val(),
-                        'time_start_activity': $('#time_start_activity').val(),
-                        'time_end_activity': $('#time_end_activity').val(),
-                        'place_activity': $('#place_activity').val(),
-                    },
+                    data: fd,
+                    cache: false,
+                    contentType: false, //tell jquery to avoid some checks
+                    processData: false,
                     success: function(res) {
                         $('#eventForm').trigger('reset');
                         iziToast.show({
@@ -303,7 +339,7 @@
                         iziToast.show({
                             title: "Error",
                             position: 'topLeft',
-                            message: "Tolong isi semua field",
+                            message: "Tolong isi semua field dengan benar",
                             color: 'red'
                         })
                     }

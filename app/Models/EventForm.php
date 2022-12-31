@@ -24,7 +24,8 @@ class EventForm extends Model
         'price_ticket',
         'name_pic',
         'contact_pic',
-        'other_type'
+        'other_type',
+        'profile_id'
     ];
     public function profile(){
         return $this->belongsTo(Profile::class, 'profile_id', 'id');

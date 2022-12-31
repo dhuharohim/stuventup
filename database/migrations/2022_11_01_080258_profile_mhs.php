@@ -22,9 +22,10 @@ return new class extends Migration
             ->on('users')
             ->onUpdate('cascade')
             ->onDelete('cascade');
-            $table->string('fullname')->nullable();
+            $table->string('first_name')->nullable();
+            $table->string('last_name')->nullable();
             $table->string('study_program')->nullable();
-            $table->string('nim')->nullable();
+            // $table->string('nim')->nullable();
             $table->string('email')->nullable();
             $table->string('handphone')->nullable();
             $table->string('photo')->nullable();
