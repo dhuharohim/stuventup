@@ -31,8 +31,10 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-//register
-Route::post('/', [RegisterController::class, 'register'])->name('register.store');
+Route::get('/register/{page}', [RegisterController::class, 'registIndex'])->name('registerIndex');
+Route::post('/register/{type}', [RegisterController::class, 'registStore'])->name('register.store');
+
+
 
 //profile
 Route::get('/profile',[ProfileController::class, 'index'])->name('profile.index');
@@ -58,13 +60,17 @@ Route::post('update-event', [EventFormController::class, 'edit'])->name('event.u
 Route::post('delete-event', [EventFormController::class, 'destroy'])->name('delete.event');
 
 //registrasi
-Route::get('/data-registrasi', [DataRegistController::class, 'index'])->name('regist.index');
-
+Route::get('/data-registrasi/{name_activity}', [DataRegistController::class, 'index'])->name('regist.index');
+Route::post('/konfirmasi-pembayaran',[DataRegistController::class, 'confirmPayment']);
 
 
 //magazine
 Route::get('/news', [MagazineController::class, 'index'])->name('magazine.index');
 Route::get('/news-detail/{name_activity}', [MagazineController::class, 'show'])->name('news.detail');
 Route::post('regist-event', [DataRegistController::class, 'store'])->name('regist.event');
+
+//ticket invoice
+Route::post('/ticket-invoice', [MagazineController::class, 'invoiceTicket'])->name('ticket.invoice');
+Route::get('/invoice/{name_activity}', [MagazineController::class, 'indexInvoice'])->name('invoice.index');
 
 

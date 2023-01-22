@@ -123,14 +123,14 @@
                                 @foreach($eventNew as $event)
                                 <div class="post post-list-sm circle">
                                     <div class="thumb circle">
-                                        <a href="blog-single.html">
+                                        <a href="{{ route('news.detail', $event->name_activity) }}">
                                             <div class="inner">
                                                 <img src="assets/img/bg.jpg" alt="post-title" />
                                             </div>
                                         </a>
                                     </div>
                                     <div class="details clearfix">
-                                        <h6 class="post-title my-0"><a href="blog-single.html">{{ $event->name_activity }}</a></h6>
+                                        <h6 class="post-title my-0"><a href="{{ route('news.detail', $event->name_activity) }}">{{ $event->name_activity }}</a></h6>
                                         <ul class="meta list-inline mt-1 mb-0">
                                             <li class="list-inline-item">{{ $event->created_at->diffForHumans() }}</li>
                                         </ul>

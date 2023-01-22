@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\ProfileMahasiswa;
+use App\Models\ProfileUmum;
 use App\Providers\RouteServiceProvider;
 use App\Models\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
@@ -54,7 +55,7 @@ class RegisterController extends Controller
     {
         return Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
-            'username' => ['required','max:8'],
+            'username' => ['required', 'max:8'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
     }
@@ -86,12 +87,72 @@ class RegisterController extends Controller
         $user->password = Hash::make($request->password);
         $user->role = 'user';
         $user->save();
-        
+
         $profileMhs = new ProfileMahasiswa();
         $profileMhs->user_id = $user->id;
         $profileMhs->save();
 
         Auth::login($user);
         return view('dashboard.index');
+    }
+
+    public function registIndex(Request $request)
+    {
+        if($request->page == 'mhs'){
+            return view('auth.mhs');
+        } else {
+            return view('auth.umum');
+        };
+    }
+    public function registUmum()
+    {
+    }
+
+    public function registStore(Request $request)
+    {
+        // dd($request->hasFile('mhs_upload'));
+        $user = new User();
+        $user->name = $request->firstname . ' ' . $request->lastname;
+        $user->username = $request->username;
+        $user->password = Hash::make($request->password);
+        if($request->type_reg == 'mhs'){
+            $user->role = 'user';
+            $user->save();
+            $profileMhs = new ProfileMahasiswa();
+            $profileMhs->user_id = $user->id;
+            $profileMhs->first_name = $request->firstname;
+            $profileMhs->last_name = $request->lastname;
+            $profileMhs->email = $request->email;
+            $profileMhs->handphone = $request->handphone;
+            $profileMhs->study_program = $request->study_program;
+            if ($request->hasFile('mhs_upload')) {
+                $path = 'assets/img/user/mahasiswa/' . $request->study_program;
+                $file = $request->file('mhs_upload');
+                $new_image_name =  $user->name . '.jpg';
+                $file->move(public_path($path), $new_image_name);
+                $profileMhs->photo = $new_image_name;
+            }
+            $profileMhs->save();
+        } else {
+            $user->role = 'umum';
+            $user->save();
+            $profileUmum = new ProfileUmum();
+            $profileUmum->user_id = $user->id;
+            $profileUmum->first_name = $request->firstname;
+            $profileUmum->last_name = $request->lastname;
+            $profileUmum->email = $request->email;
+            $profileUmum->handphone = $request->handphone;
+            if ($request->hasFile('umum_upload')) {
+                $path = 'assets/img/user/umum/';
+                $file = $request->file('umum_upload');
+                $new_image_name =  $user->name . '.jpg';
+                $file->move(public_path($path), $new_image_name);
+                $profileUmum->photo = $new_image_name;
+            }
+            $profileUmum->save();
+        };
+        
+        Auth::login($user);
+        return redirect()->route('landing');
     }
 }

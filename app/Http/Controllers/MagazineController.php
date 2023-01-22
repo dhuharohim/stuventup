@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\EventForm;
+use App\Models\ProfileMahasiswa;
+use App\Models\ProfileUmum;
 use App\Models\RegistrationEvent;
 use App\Models\User;
 use Carbon\Carbon;
@@ -69,19 +71,23 @@ class MagazineController extends Controller
      */
     public function show($name_activity)
     {
-        $user = Auth::user();
-        $userRole = Auth::user()->role;
         $eventDetail = EventForm::where('name_activity', $name_activity)
         ->with('profile')->first();
-        // dd($eventDetail);
-        $dataRegist = RegistrationEvent::where('user_id', $user->id)->with('profile_mhs_id','profile_general_id')->first();
-        // dd($dataRegist);
         $eventDetail->view_count =  (int) ++$eventDetail->view_count;
         $createdAt = Carbon::create($eventDetail->created_at)->setTimezone('Asia/Jakarta')->translatedFormat('l, d F Y');
         $dateAct = Carbon::create($eventDetail->date_activity)->setTimezone('Asia/Jakarta')->translatedFormat('l, d F Y');
         $today = Carbon::today()->format('Y-m-d');
         $eventDetail->save();
-        // dd($descEvent);
+
+        // user not logged in
+        if(empty(auth()->user()->role)){
+            return view('main-home.detail', ['eventDetail'=>$eventDetail, 'createdAt'=>$createdAt, 'dateAct'=> $dateAct, 'today'=>$today]);
+        }
+        $userRole = Auth::user()->role;
+        $user = Auth::user();
+        $dataRegist = RegistrationEvent::where('user_id', $user->id)->where('event_id', $eventDetail->id)->with('profileMahasiswa','profileGeneral')->first();
+        // dd($dataRegist);
+
         return view('main-home.detail', ['eventDetail'=>$eventDetail, 'createdAt'=>$createdAt, 'dateAct'=> $dateAct, 'today'=>$today, 'dataRegist'=>$dataRegist, 'userRole'=>$userRole]);
 
     }
@@ -110,13 +116,59 @@ class MagazineController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     *  Show invoice ticket information
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function invoiceTicket(Request $request)
     {
-        //
+        $user = Auth::user();
+        $userRole = Auth::user()->role;
+
+        $eventDetail = EventForm::where('name_activity', $request->name_activity)
+        ->with('profile')->first();
+        if(empty($user)){
+            return response()->json([
+                'error' => true,
+                'success' => false,
+                'message' => 'Mohon login sebelum mendaftar'
+            ]);
+        }
+        $profileMhs = ProfileMahasiswa::where('user_id', $user->id)->first();
+        $profileUmum = ProfileUmum::where('user_id', $user->id)->first();
+        if($userRole == 'user'){
+            $dataMhs = new RegistrationEvent();
+            $dataMhs->user_id = $user->id;
+            $dataMhs->profile_mhs_id = $profileMhs->id;
+            $dataMhs->event_id = $eventDetail->id;
+            $dataMhs->status_regist = "telah daftar";
+            $dataMhs->save();
+        } else {
+            $dataUmum = new RegistrationEvent();
+            $dataUmum->user_id = $user->id;
+            $dataUmum->profile_general_id = $profileUmum->id;
+            $dataUmum->event_id = $eventDetail->id;
+            $dataUmum->status_regist = "telah daftar";
+            $dataUmum->save();
+        }
+    }
+    
+    public function indexInvoice($name_activity){
+        $user = Auth::user();
+        $eventDetail = EventForm::where('name_activity', $name_activity)
+        ->with('profile')->first();
+        if(empty($user)){
+            return response()->json([
+                'error' => true,
+                'success' => false,
+                'message' => 'Mohon login sebelum mendaftar'
+            ]);
+        }
+        $profileMhs = ProfileMahasiswa::where('user_id', $user->id)->first();
+        $profileUmum = ProfileUmum::where('user_id', $user->id)->first();
+        $dataRegist = RegistrationEvent::where('user_id', $user->id)->where('event_id', $eventDetail->id)->with('profileMahasiswa','profileGeneral')->first();
+        $dateAct = Carbon::create($dataRegist->created_at)->setTimezone('Asia/Jakarta')->translatedFormat('l, d F Y');
+        return view('main-home.event-ticket.confirmation', ['user'=>$user, 'eventDetail'=> $eventDetail, 'profileMhs'=>$profileMhs, 'profileUmum'=>$profileUmum, 'dataRegist'=>$dataRegist,'date'=>$dateAct]);
     }
 }

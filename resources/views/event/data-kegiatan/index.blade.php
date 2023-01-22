@@ -176,8 +176,8 @@
                                     <li><a class="showEventDrawer" data-bs-toggle="offcanvas"
                                             data-bs-target="#offcanvasEnd-{{ $event->id }}"
                                             style="cursor: pointer; color: green">Edit</a></li>
-                                    <li><a href="{{route('regist.index')}}">Data Registrasi</a></li>
-                                    <li><a id="deleteEvent" style="cursor: pointer;">Delete</a></li>
+                                    <li><a href="{{route('regist.index', $event->name_activity)}}">Data Registrasi</a></li>
+                                    <li><a onclick="deleteEvent($event->id)" id="deleteEvent" style="cursor: pointer;">Delete</a></li>
                                 </ul>
                             </td>
                             </tr>
@@ -478,14 +478,13 @@
                 });
             });
 
-            $('#deleteEvent').click(function(e){
+            function deleteEvent(idEvent){
                 $.ajax({
                     url: 'delete-event',
                     type: 'post',
                     data : {
                         "_token": "{{ csrf_token() }}",
                         "id": $('#idEvent').val()
-
                     },
                     success: function(res) {
                         iziToast.show({
@@ -494,7 +493,6 @@
                             message: 'Berhasil delete event',
                             color: 'green'
                         })
-
                         setTimeout(() => {
                             window.location.href = "/event-data"
                         }, 3000);
@@ -508,8 +506,7 @@
                         })
                     }
                 })
-            });
-
+            }
         });
     </script>
     <script>

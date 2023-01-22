@@ -9,7 +9,6 @@ class RegistrationEvent extends Model
 {
     use HasFactory;
     protected $table = "registration";
-    public $timestamps = false;
     protected $fillable = [
         'user_id',
         'profile_mhs_id',
@@ -17,10 +16,10 @@ class RegistrationEvent extends Model
         'event_id',
         'status_regist'
     ];
-    public function profile_mhs_id(){
+    public function profileMahasiswa(){
         return $this->belongsTo(ProfileMahasiswa::class, 'profile_mhs_id', 'id');
     }
-    public function profile_general_id(){
+    public function profileGeneral(){
         return $this->belongsTo(ProfileUmum::class, 'profile_general_id', 'id');
     }
     public function event_id(){

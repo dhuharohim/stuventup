@@ -61,58 +61,92 @@
                                         <tbody>
                                             <tr>
                                                 <td>Tanggal</td>
-                                                <td style="text-align:right;">{{ $dateAct }}</td>
+                                                <td style="text-align:left">{{ $dateAct }}</td>
                                             </tr>
                                             <tr>
                                                 <td>Lokasi</td>
-                                                <td style="text-align:right;">{{ $eventDetail->place_activity }}</td>
+                                                <td style="text-align:left">{{ $eventDetail->place_activity }}</td>
                                             </tr>
                                             @if (empty($eventDetail->time_end_activity))
                                                 <tr>
                                                     <td>Waktu</td>
-                                                    <td style="text-align:right;">
-                                                        {{ date('H:i', strtotime($eventDetail->time_start_activity)) }}
+                                                    <td style="text-align:left">
+                                                        {{ date('H:i', strtotime($eventDetail->time_start_activity)) }} - selesai
                                                     </td>
                                                 </tr>
                                             @else
                                                 <tr>
-                                                    <td>Waktu Mulai</td>
-                                                    <td style="text-align:right;">
-                                                        {{ date('H:i', strtotime($eventDetail->time_start_activity)) }}
+                                                    <td>Waktu</td>
+                                                    <td style="text-align:left">
+                                                        {{ date('H:i', strtotime($eventDetail->time_start_activity)) }} - {{ date('H:i', strtotime($eventDetail->time_end_activity)) }}
                                                     </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Waktu Selesai</td>
-                                                    <td style="text-align:right;">
-                                                        {{ date('H:i', strtotime($eventDetail->time_end_activity)) }}</td>
                                                 </tr>
                                             @endif
                                             @if ($eventDetail->ticket == 'yes')
                                                 <tr>
                                                     <td>Harga tiket</td>
-                                                    <td style="text-align:right;">Rp {{ $eventDetail->price_ticket }}</td>
+                                                    <td style="text-align:left">Rp {{ $eventDetail->price_ticket }}</td>
                                                 </tr>
                                             @endif
                                             <tr>
                                                 <td>Kontak penanggung jawab</td>
-                                                <td style="text-align:right;">(+62) {{ $eventDetail->contact_pic }}
+                                                <td style="text-align:left">(+62) {{ $eventDetail->contact_pic }}
                                                     <span style="font-weight: bold">({{ $eventDetail->name_pic }})</span></td>
                                             </tr>
                                         </tbody>
                                     </table>
                                 </div>
-                                @if ($eventDetail->date_activity > $today && $userRole !== 'admin' && $dataRegist == null)
-                                    <div class="card-footer" id="card-footer">
-                                        <a id="button-regist" class="btn btn-success btn-block" style="border-radius: 6px;
-										width: 100%;"> Daftar sekarang </a>
-                                    </div>
-                                @endif
-								@if(! empty($dataRegist))
+								@if(empty($userRole))
+									<div class="card-footer" id="card-footer" style="text-align:center; font-size:12px;">
+										<p style="border-radius: 6px;
+										width: 100%; "> Mohon <a href="{{ route('login') }}">login disini</a> untuk melakukan registrasi acara.</p>
+										<span>Belum punya akun? <a href="{{ route('register') }}"> daftar sekarang </a></span>
+									</div>
+								@endif
+								@if(!empty($userRole))
+									@if ($eventDetail->date_activity > $today && $userRole == 'user' || $userRole == 'umum' && empty($dataRegist) && $eventDetail->ticket == 'no')
+										<div class="card-footer" id="card-footer">
+											<a id="button-regist" class="btn btn-success btn-block" style="border-radius: 6px;
+											width: 100%;"> Daftar sekarang </a>
+										</div>
+									@endif
+                                    @if(empty($dataRegist) )
+                                        @if($eventDetail->ticket== 'yes' && $userRole == 'user' || $userRole == 'umum')
+										<div class="card-footer" id="card-footer">
+                                            <form>
+                                                <a id="button-regist-ticket" class="btn btn-success btn-block" style="border-radius: 6px;
+                                                width: 100%;"> Daftar sekarang </a>
+                                            </form>
+                                        </div>
+                                        @endif
+                                    @endif  
+                                    @if(! empty($dataRegist))
+                                        @if($dataRegist->status_regist == 'telah daftar' && $eventDetail->ticket== 'yes' && $userRole == 'user' || $userRole == 'umum')
+                                            <div class="card-footer" id="card-footer">
+                                                <a href="{{ route('invoice.index', $eventDetail->name_activity) }}" class="btn btn-primary btn-block" style="border-radi us: 6px;
+                                                width: 100%;"> Mohon selesaikan pembayaran, klik disini untuk menampilkan invoice  </a>
+                                            </div>
+                                        @else
+                                            <div class="card-footer" id="card-footer">
+                                                <p class="btn btn-info btn-block" style="border-radius: 6px;
+                                                width: 100%;"> Anda telah berhasil daftar dalam acara ini  </p>
+                                            </div>
+                                        @endif
+								    @endif
+								@endif
+								@if(! empty($dataRegist && $eventDetail->ticket== 'no'))
 									<div class="card-footer" id="card-footer">
 										<p class="btn btn-info btn-block" style="border-radius: 6px;
 										width: 100%;"> Anda telah berhasil daftar dalam acara ini </p>
 									</div>
 								@endif
+                                @if ($eventDetail->date_activity < $today)
+                                <div class="card-footer" id="card-footer">
+                                    <a id="button-regist" class="btn btn-success btn-block" style="border-radius: 6px;
+                                    width: 100%;"> Event ini telah selesai </a>
+                                </div>
+                                @endif
+                             
                             </div>
                         </div>
                         <!-- post bottom section -->
@@ -595,7 +629,6 @@
 			
 			const nameAct = $('#name_act').val()
             $('#button-regist').click(function(e) {
-				console.log('halo');
                 $.ajax({
                     url: '{{url('/regist-event')}}',
                     type: 'post',
@@ -626,8 +659,36 @@
                     }
                 })
             });
-
-
+            $('#button-regist-ticket').click(function(e) {
+                $.ajax({
+                    url: '/ticket-invoice',
+                    type: 'post',
+                    data: {
+						"_token": "{{ csrf_token() }}",
+                        "name_activity": nameAct
+                    },
+                    success: function(res) {
+                        iziToast.show({
+                            title: "Sukses",
+                            position: 'topLeft',
+                            message: 'Berhasil daftar acara',
+                            color: 'green'
+                        })
+						$('#card-footer').css('display', 'none');
+                        setTimeout(() => {
+							window.location = '/invoice/'+ nameAct;
+						}, 3000);
+                    },
+                    error: function(res) {
+                        iziToast.show({
+                            title: "Error",
+                            position: 'topLeft',
+                            message: "Gagal daftar acara",
+                            color: 'red'
+                        })
+                    }
+                })
+            });
         })
     </script>
 @endsection

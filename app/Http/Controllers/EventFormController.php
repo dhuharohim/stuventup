@@ -76,11 +76,6 @@ class EventFormController extends Controller
             $eventForm->status_activity = 'akan datang';
         }
 
-        // $path = 'assets/img/poster/' . $user->name;
-        // $file = $request->file('upload_img');
-
-     
-        // dd($request->hasFile('img_activity'));
         if($request->hasFile('img_activity')) {
             $file = $request->file('img_activity');
             $path = 'assets/img/poster/' . $user->name;

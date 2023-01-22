@@ -10,6 +10,7 @@ use App\Models\Registration;
 use App\Models\RegistrationEvent;
 use App\Models\User;
 use Carbon\Carbon;
+use Error;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -20,13 +21,21 @@ class DataRegistController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($name_activity)
     {
         $user_id = Auth::user()->id;
         $user = User::where('id', $user_id)->first();
         $today = Carbon::today()->format('Y-m-d');
         $profile = Profile::where('user_id', $user_id)->first();  
-        return view('event.data-kegiatan.registrasi', ['profile'=>$profile, 'user'=>$user, 'today'=>$today]);
+        $event = EventForm::where('name_activity', $name_activity)->first();
+        $registMhs = RegistrationEvent::where('event_id', $event->id)->where('profile_general_id', null)->with('profileMahasiswa')->paginate(5);
+        $registUmum = RegistrationEvent::where('event_id', $event->id)->where('profile_mhs_id', null)->with('profileGeneral')->paginate(5);
+
+        $totalRegisMhs = RegistrationEvent::where('event_id', $event->id)->where('status_regist','terkonfirmasi')->where('profile_general_id', null)->get();
+        $totalRegisUmum = RegistrationEvent::where('event_id', $event->id)->where('status_regist','terkonfirmasi')->where('profile_mhs_id', null)->get();
+
+
+        return view('event.data-kegiatan.registrasi', ['event'=> $event ,'profile'=>$profile, 'user'=>$user, 'today'=>$today, 'registMhs'=> $registMhs, 'registUmum'=> $registUmum, 'totalRegisMhs'=>$totalRegisMhs,'totalRegisUmum'=>$totalRegisUmum]);
     }
 
     /**
@@ -48,6 +57,14 @@ class DataRegistController extends Controller
     public function store(Request $request)
     {
         $user = Auth::user();
+        if(empty($user)){
+            
+            return response()->json([
+                'error' => true,
+                'success' => false,
+                'message' => 'Mohon login sebelum mendaftar'
+            ]);
+        }
         $event = EventForm::where('name_activity', $request->name_activity)->first();
         $profileMhs = ProfileMahasiswa::where('user_id', $user->id)->first();
         $profileUmum = ProfileUmum::where('user_id', $user->id)->first();
@@ -97,9 +114,17 @@ class DataRegistController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function confirmPayment(Request $request)
     {
-        //
+        if($request->type == 'paymentMhs'){
+            $registMhs = RegistrationEvent::where('profile_mhs_id', $request->id)->first();
+            $registMhs->status_regist = 'terkonfirmasi';
+            $registMhs->save();
+        } else{
+            $registUmum = RegistrationEvent::where('profile_general_id', $request->id)->first();
+            $registUmum->status_regist = 'terkonfirmasi';
+            $registUmum->save();
+        }
     }
 
     /**
