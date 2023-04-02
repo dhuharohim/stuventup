@@ -30,6 +30,9 @@ class MagazineController extends Controller
 
         $eventPop = EventForm::orderBy('view_count', 'desc')->take(4)->get();
         $eventNew = EventForm::orderBy('created_at', 'desc')->take(4)->get();
+        $eventPopLarge = EventForm::orderBy('view_count', 'desc')->take(2)->get();
+        $eventPopSmall = EventForm::orderBy('view_count', 'asc')->take(2)->get();
+
         // dd($eventComing);
         return view('main-home.home', [
             'date'=> $date,
@@ -38,6 +41,8 @@ class MagazineController extends Controller
             'comingDate'=> $comingDate,
             'eventNew' => $eventNew,
             'eventPop' => $eventPop,
+            'eventPopLarge' => $eventPopLarge,
+            'eventPopSmall' => $eventPopSmall,
         ]);
 
     }
@@ -170,5 +175,9 @@ class MagazineController extends Controller
         $dataRegist = RegistrationEvent::where('user_id', $user->id)->where('event_id', $eventDetail->id)->with('profileMahasiswa','profileGeneral')->first();
         $dateAct = Carbon::create($dataRegist->created_at)->setTimezone('Asia/Jakarta')->translatedFormat('l, d F Y');
         return view('main-home.event-ticket.confirmation', ['user'=>$user, 'eventDetail'=> $eventDetail, 'profileMhs'=>$profileMhs, 'profileUmum'=>$profileUmum, 'dataRegist'=>$dataRegist,'date'=>$dateAct]);
+    }
+
+    public function email(){
+        return view('mail.payment-ticket');
     }
 }

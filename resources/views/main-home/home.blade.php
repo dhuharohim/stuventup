@@ -5,27 +5,60 @@
 @endsection
 
 @section('content-portal')
-      <!-- hero section -->
-      <section id="hero">
+    <!-- hero section -->
+    <section id="hero">
         <div class="container-xl">
 
             <div class="row gy-4">
 
                 <div class="col-lg-8">
-
                     <!-- featured post large -->
-                    <div id="myCarousel" class="carousel slide" data-ride="carousel">
-                        <ol class="carousel-indicators">
-                            <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
-                  
+                    <div class="post-carousel-widget carousel-item">
+                        @foreach ($eventComing as $event)
+                            <!-- post -->
+                            <div class="post featured-post-lg"
+                                style="background: url('/assets/img/poster/{{ $event->profile['name_himpunan'] }}/{{ $event['img_activity'] == '' ? 'default.png' : $event['img_activity'] }}')">
+                                <a href="{{ route('news.detail', $event->name_activity) }}">
+                                    <div class="">
+                                        <div class="details clearfix">
+                                            @if ($event->type_activity == 'lainnya')
+                                                <a href="{{ route('news.detail', $event->name_activity) }}"
+                                                    class="category-badge">Lainnya :
+                                                    {{ $event->other_type }}</a>
+                                            @else
+                                                <a style="text-transform: capitalize;"
+                                                    href="{{ route('news.detail', $event->name_activity) }}"
+                                                    class="category-badge">
+                                                    {{ $event->type_activity }}</a>
+                                            @endif
+                                            <h2 class="post-title"><a
+                                                    href="{{ route('news.detail', $event->name_activity) }}">{{ $event->name_activity }}</a>
+                                            </h2>
+                                            <ul class="meta list-inline mb-0">
+                                                <li class="list-inline-item"><a
+                                                        href="{{ route('news.detail', $event->name_activity) }}">{{ $event->profile->name_himpunan }}</a>
+                                                </li>
+                                                <li class="list-inline-item">
+                                                    {{ $comingDate }}</li>
+                                            </ul>
+                                        </div>
+                                        <div class="thumb rounded">
+                                            <div class="inner data-bg-image"
+                                                data-bg-image="/assets/img/poster/{{ $event->profile['name_himpunan'] }}/{{ $event['img_activity'] == '' ? 'default.png' : $event['img_activity'] }}">
+                                            </div>
+                                        </div>
 
-                        </ol>
-                        <div class="carousel-inner">
-                            @foreach ($eventComing as $key => $event)
+                                    </div>
+                                </a>
+                            </div>
+                        @endforeach
+                    </div>
+
+                    {{-- @foreach ($eventComing as $key => $event)
                             <div class="carousel-item {{$key == 0 ? 'active' : '' }}" >
                                     <div class="post featured-post-lg">
                                         <div class="details clearfix">
-                                            @if($event->type_activity == 'lainnya')
+                                            @if ($event->type_activity == 'lainnya')
                                                 <a href="{{ route('news.detail', $event->name_activity) }}" class="category-badge">Lainnya :
                                                     {{ $event->other_type }}</a>
 
@@ -54,19 +87,7 @@
 
                                     </div>
                                 </div>
-                                @endforeach
-                        </div>
-                        <a class="carousel-control-prev" href="#myCarousel" role="button"  data-slide="prev">
-                            <span class="carousel-control-prev-icon" aria-hidden="true">     </span>
-                            <span class="sr-only">Previous</span>
-                        </a>
-                        <a class="carousel-control-next" href="#myCarousel" role="button" data-slide="next">
-                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                            <span class="sr-only">Next</span>
-                        </a>
-                    </div>
-
-
+                            @endforeach --}}
                 </div>
 
                 <div class="col-lg-4">
@@ -75,14 +96,12 @@
                     <div class="post-tabs rounded bordered">
                         <!-- tab navs -->
                         <ul class="nav nav-tabs nav-pills nav-fill" id="postsTab" role="tablist">
-                            <li class="nav-item" role="presentation"><button aria-controls="popular"
-                                    aria-selected="true" class="nav-link active" data-bs-target="#popular"
-                                    data-bs-toggle="tab" id="popular-tab" role="tab"
-                                    type="button">Populer</button></li>
-                            <li class="nav-item" role="presentation"><button aria-controls="recent"
-                                    aria-selected="false" class="nav-link" data-bs-target="#recent"
-                                    data-bs-toggle="tab" id="recent-tab" role="tab"
-                                    type="button">Terbaru</button></li>
+                            <li class="nav-item" role="presentation"><button aria-controls="popular" aria-selected="true"
+                                    class="nav-link active" data-bs-target="#popular" data-bs-toggle="tab" id="popular-tab"
+                                    role="tab" type="button">Populer</button></li>
+                            <li class="nav-item" role="presentation"><button aria-controls="recent" aria-selected="false"
+                                    class="nav-link" data-bs-target="#recent" data-bs-toggle="tab" id="recent-tab"
+                                    role="tab" type="button">Terbaru</button></li>
                         </ul>
                         <!-- tab contents -->
                         <div class="tab-content" id="postsTabContent">
@@ -92,50 +111,56 @@
                             <div aria-labelledby="popular-tab" class="tab-pane fade show active" id="popular"
                                 role="tabpanel">
                                 <!-- post -->
-                                @foreach($eventPop as $event)
-                                    @if($event->view_count > 10)
-                                <div class="post post-list-sm circle">
-                                    <div class="thumb circle">
-                                        <a href="{{ route('news.detail', $event->name_activity) }}">
-                                            <div class="inner">
-                                                <img src="/assets/img/poster/{{ $event->profile['name_himpunan'] }}/{{ $event['img_activity'] == '' ? 'default.png' : $event['img_activity'] }}" alt="post-title" />
+                                @foreach ($eventPop as $event)
+                                    @if ($event->view_count > 10)
+                                        <div class="post post-list-sm circle">
+                                            <div class="thumb circle">
+                                                <a href="{{ route('news.detail', $event->name_activity) }}">
+                                                    <div class="inner">
+                                                        <img src="/assets/img/poster/{{ $event->profile['name_himpunan'] }}/{{ $event['img_activity'] == '' ? 'default.png' : $event['img_activity'] }}"
+                                                            alt="post-title" />
+                                                    </div>
+                                                </a>
                                             </div>
-                                        </a>
-                                    </div>
-                                    <div class="details clearfix">
-                                        <h6 class="post-title my-0"><a href="{{ route('news.detail', $event->name_activity) }}">{{ $event->name_activity }}</a></h6>
-                                        <div class="meta list-inline mt-1 mb-0">
-                                            <p class="list-inline-item"> 
-                                                {{ $event->profile->name_himpunan }} <span style="margin-left: 1rem;" class="list-inline-item"> <i class="icon-eye"></i> {{ $event->view_count }} </span>
-                                            </p>
-                                         
+                                            <div class="details clearfix">
+                                                <h6 class="post-title my-0"><a
+                                                        href="{{ route('news.detail', $event->name_activity) }}">{{ $event->name_activity }}</a>
+                                                </h6>
+                                                <div class="meta list-inline mt-1 mb-0">
+                                                    <p class="list-inline-item">
+                                                        {{ $event->profile->name_himpunan }} <span
+                                                            style="margin-left: 1rem;" class="list-inline-item"> <i
+                                                                class="icon-eye"></i> {{ $event->view_count }} </span>
+                                                    </p>
+
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
-                                </div>
                                     @endif
                                 @endforeach
-                                
+
                             </div>
                             <!-- recent posts -->
-                            <div aria-labelledby="recent-tab" class="tab-pane fade" id="recent"
-                                role="tabpanel">
+                            <div aria-labelledby="recent-tab" class="tab-pane fade" id="recent" role="tabpanel">
                                 <!-- post -->
-                                @foreach($eventNew as $event)
-                                <div class="post post-list-sm circle">
-                                    <div class="thumb circle">
-                                        <a href="{{ route('news.detail', $event->name_activity) }}">
-                                            <div class="inner">
-                                                <img src="assets/img/bg.jpg" alt="post-title" />
-                                            </div>
-                                        </a>
+                                @foreach ($eventNew as $event)
+                                    <div class="post post-list-sm circle">
+                                        <div class="thumb circle">
+                                            <a href="{{ route('news.detail', $event->name_activity) }}">
+                                                <div class="inner">
+                                                    <img src="assets/img/bg.jpg" alt="post-title" />
+                                                </div>
+                                            </a>
+                                        </div>
+                                        <div class="details clearfix">
+                                            <h6 class="post-title my-0"><a
+                                                    href="{{ route('news.detail', $event->name_activity) }}">{{ $event->name_activity }}</a>
+                                            </h6>
+                                            <ul class="meta list-inline mt-1 mb-0">
+                                                <li class="list-inline-item">{{ $event->created_at->diffForHumans() }}</li>
+                                            </ul>
+                                        </div>
                                     </div>
-                                    <div class="details clearfix">
-                                        <h6 class="post-title my-0"><a href="{{ route('news.detail', $event->name_activity) }}">{{ $event->name_activity }}</a></h6>
-                                        <ul class="meta list-inline mt-1 mb-0">
-                                            <li class="list-inline-item">{{ $event->created_at->diffForHumans() }}</li>
-                                        </ul>
-                                    </div>
-                                </div>
                                 @endforeach
                             </div>
                         </div>
@@ -155,273 +180,104 @@
             <div class="row gy-4">
 
                 <div class="col-lg-8">
-
                     <!-- section header -->
                     <div class="section-header">
-                        <h3 class="section-title">Editor’s Pick</h3>
-                        <img src="images/wave.svg" class="wave" alt="wave" />
+                        <h3 class="section-title">Trending</h3>
+                        <img src="{{ asset('assets/images/wave.svg') }}" class="wave" alt="wave" />
                     </div>
 
                     <div class="padding-30 rounded bordered">
                         <div class="row gy-5">
+                            @foreach($eventPopLarge as $eventPopLarge)
                             <div class="col-sm-6">
-                                <!-- post -->
+                                <!-- post large -->
                                 <div class="post">
                                     <div class="thumb rounded">
-                                        <a href="category.html"
-                                            class="category-badge position-absolute">Lifestyle</a>
+                                        @if ($eventPopLarge->type_activity == 'lainnya')
+                                                <a href="{{ route('news.detail', $eventPopLarge->name_activity) }}"
+                                                    class="category-badge position-absolute">Lainnya :
+                                                    {{ $eventPopLarge->other_type }}</a>
+                                            @else
+                                                <a style="text-transform: capitalize;"
+                                                    href="{{ route('news.detail', $eventPopLarge->name_activity) }}"
+                                                    class="category-badge position-absolute">
+                                                    {{ $eventPopLarge->type_activity }}</a>
+                                            @endif
                                         <span class="post-format">
                                             <i class="icon-picture"></i>
                                         </span>
-                                        <a href="blog-single.html">
+                                        <a href="{{ route('news.detail', $eventPopLarge->name_activity) }}">
                                             <div class="inner">
-                                                <img src="images/posts/editor-lg.jpg" alt="post-title" />
+                                                <img style="height: 10rem;
+                                                object-fit: cover;" src="/assets/img/poster/{{ $eventPopLarge->profile['name_himpunan'] }}/{{ $eventPopLarge['img_activity'] == '' ? 'default.png' : $eventPopLarge['img_activity'] }}" alt="post-title" />
                                             </div>
                                         </a>
                                     </div>
                                     <ul class="meta list-inline mt-4 mb-0">
-                                        <li class="list-inline-item"><a href="#"><img
-                                                    src="images/other/author-sm.png" class="author"
-                                                    alt="author" />Katen Doe</a></li>
-                                        <li class="list-inline-item">29 March 2021</li>
+                                        <li class="list-inline-item"><a href="#"><img style="width: 20px;
+                                            border-radius: 100%;"
+                                                    src="/assets/img/profile/{{ $eventPopLarge->profile['photo'] == '' ? 'default.png' : $eventPopLarge->profile['photo'] }}" class="author"
+                                                    alt="author" />{{ $eventPopLarge->profile['name_himpunan'] }}</a></li>
                                     </ul>
-                                    <h5 class="post-title mb-3 mt-3"><a href="blog-single.html">15 Unheard Ways To
-                                            Achieve Greater Walker</a></h5>
-                                    <p class="excerpt mb-0">A wonderful serenity has taken possession of my entire
-                                        soul, like these sweet mornings of spring which I enjoy</p>
+                                    <h5 class="post-title mb-3 mt-3"><a href="blog-single.html">{{ $eventPopLarge->name_activity }}</a></h5>
+                                    <input type="text" id="data-fetch" value="{{ $eventPopLarge->desc_activity }}" hidden>
+                                    <div id="output" style="overflow: hidden;
+                                    text-overflow: ellipsis;
+                                    display: -webkit-box;
+                                    -webkit-line-clamp: 3;
+                                            line-clamp: 3; 
+                                    -webkit-box-orient: vertical;
+                                    text-align:justify;"></div>
+                                    <a href="{{ route('news.detail', $eventPopLarge->name_activity) }}">Lihat selengkapnya</a>
+                                
                                 </div>
                             </div>
+                            @endforeach
+                            @foreach($eventPopSmall as $eventPopSmall)
                             <div class="col-sm-6">
                                 <!-- post -->
-                                <div class="post post-list-sm square">
+                                <div class="post post-list-sm square before-seperator">
                                     <div class="thumb rounded">
-                                        <a href="blog-single.html">
+                                        <a href="{{ route('news.detail', $eventPopSmall->name_activity) }}">
                                             <div class="inner">
-                                                <img src="images/posts/editor-sm-1.jpg" alt="post-title" />
+                                                <img style="
+                                                object-fit: cover;" src="/assets/img/poster/{{ $eventPopSmall->profile['name_himpunan'] }}/{{ $eventPopSmall['img_activity'] == '' ? 'default.png' : $eventPopSmall['img_activity'] }}" alt="post-title" />
                                             </div>
                                         </a>
                                     </div>
                                     <div class="details clearfix">
-                                        <h6 class="post-title my-0"><a href="blog-single.html">3 Easy Ways To Make
-                                                Your iPhone Faster</a></h6>
+                                        <h6 class="post-title my-0"><a href="blog-single.html">{{ $eventPopSmall->name_activity }}</a></h6>
                                         <ul class="meta list-inline mt-1 mb-0">
-                                            <li class="list-inline-item">29 March 2021</li>
-                                        </ul>
-                                    </div>
-                                </div>
-                                <!-- post -->
-                                <div class="post post-list-sm square">
-                                    <div class="thumb rounded">
-                                        <a href="blog-single.html">
-                                            <div class="inner">
-                                                <img src="images/posts/editor-sm-2.jpg" alt="post-title" />
-                                            </div>
-                                        </a>
-                                    </div>
-                                    <div class="details clearfix">
-                                        <h6 class="post-title my-0"><a href="blog-single.html">An Incredibly Easy
-                                                Method That Works For All</a></h6>
-                                        <ul class="meta list-inline mt-1 mb-0">
-                                            <li class="list-inline-item">29 March 2021</li>
-                                        </ul>
-                                    </div>
-                                </div>
-                                <!-- post -->
-                                <div class="post post-list-sm square">
-                                    <div class="thumb rounded">
-                                        <a href="blog-single.html">
-                                            <div class="inner">
-                                                <img src="images/posts/editor-sm-3.jpg" alt="post-title" />
-                                            </div>
-                                        </a>
-                                    </div>
-                                    <div class="details clearfix">
-                                        <h6 class="post-title my-0"><a href="blog-single.html">10 Ways To
-                                                Immediately Start Selling Furniture</a></h6>
-                                        <ul class="meta list-inline mt-1 mb-0">
-                                            <li class="list-inline-item">29 March 2021</li>
-                                        </ul>
-                                    </div>
-                                </div>
-                                <!-- post -->
-                                <div class="post post-list-sm square">
-                                    <div class="thumb rounded">
-                                        <a href="blog-single.html">
-                                            <div class="inner">
-                                                <img src="images/posts/editor-sm-4.jpg" alt="post-title" />
-                                            </div>
-                                        </a>
-                                    </div>
-                                    <div class="details clearfix">
-                                        <h6 class="post-title my-0"><a href="blog-single.html">15 Unheard Ways To
-                                                Achieve Greater Walker</a></h6>
-                                        <ul class="meta list-inline mt-1 mb-0">
-                                            <li class="list-inline-item">29 March 2021</li>
+                                            <li class="list-inline-item">{{ $eventPopSmall->date_activity, "D M Y" }}</li>
                                         </ul>
                                     </div>
                                 </div>
                             </div>
+                            @endforeach
+
                         </div>
                     </div>
 
                     <div class="spacer" data-height="50"></div>
-
                     <!-- horizontal ads -->
                     <div class="ads-horizontal text-md-center">
                         <span class="ads-title">- Sponsored Ad -</span>
                         <a href="#">
-                            <img src="images/ads/ad-750.png" alt="Advertisement" />
+                            <img style="border-radius: 10px;" src="{{ asset('assets/images/adv3.jpg') }}"
+                                alt="Advertisement" />
                         </a>
                     </div>
 
                     <div class="spacer" data-height="50"></div>
-
-                    <!-- section header -->
-                    <div class="section-header">
-                        <h3 class="section-title">Trending</h3>
-                        <img src="images/wave.svg" class="wave" alt="wave" />
-                    </div>
-
-                    <div class="padding-30 rounded bordered">
-                        <div class="row gy-5">
-                            <div class="col-sm-6">
-                                <!-- post large -->
-                                <div class="post">
-                                    <div class="thumb rounded">
-                                        <a href="category.html"
-                                            class="category-badge position-absolute">Culture</a>
-                                        <span class="post-format">
-                                            <i class="icon-picture"></i>
-                                        </span>
-                                        <a href="blog-single.html">
-                                            <div class="inner">
-                                                <img src="images/posts/trending-lg-1.jpg" alt="post-title" />
-                                            </div>
-                                        </a>
-                                    </div>
-                                    <ul class="meta list-inline mt-4 mb-0">
-                                        <li class="list-inline-item"><a href="#"><img
-                                                    src="images/other/author-sm.png" class="author"
-                                                    alt="author" />Katen Doe</a></li>
-                                        <li class="list-inline-item">29 March 2021</li>
-                                    </ul>
-                                    <h5 class="post-title mb-3 mt-3"><a href="blog-single.html">Facts About
-                                            Business That Will Help You Success</a></h5>
-                                    <p class="excerpt mb-0">A wonderful serenity has taken possession of my entire
-                                        soul, like these sweet mornings of spring which I enjoy</p>
-                                </div>
-                                <!-- post -->
-                                <div class="post post-list-sm square before-seperator">
-                                    <div class="thumb rounded">
-                                        <a href="blog-single.html">
-                                            <div class="inner">
-                                                <img src="images/posts/trending-sm-1.jpg" alt="post-title" />
-                                            </div>
-                                        </a>
-                                    </div>
-                                    <div class="details clearfix">
-                                        <h6 class="post-title my-0"><a href="blog-single.html">3 Easy Ways To Make
-                                                Your iPhone Faster</a></h6>
-                                        <ul class="meta list-inline mt-1 mb-0">
-                                            <li class="list-inline-item">29 March 2021</li>
-                                        </ul>
-                                    </div>
-                                </div>
-                                <!-- post -->
-                                <div class="post post-list-sm square before-seperator">
-                                    <div class="thumb rounded">
-                                        <a href="blog-single.html">
-                                            <div class="inner">
-                                                <img src="images/posts/trending-sm-2.jpg" alt="post-title" />
-                                            </div>
-                                        </a>
-                                    </div>
-                                    <div class="details clearfix">
-                                        <h6 class="post-title my-0"><a href="blog-single.html">An Incredibly Easy
-                                                Method That Works For All</a></h6>
-                                        <ul class="meta list-inline mt-1 mb-0">
-                                            <li class="list-inline-item">29 March 2021</li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-6">
-                                <!-- post large -->
-                                <div class="post">
-                                    <div class="thumb rounded">
-                                        <a href="category.html"
-                                            class="category-badge position-absolute">Inspiration</a>
-                                        <span class="post-format">
-                                            <i class="icon-earphones"></i>
-                                        </span>
-                                        <a href="blog-single.html">
-                                            <div class="inner">
-                                                <img src="images/posts/trending-lg-2.jpg" alt="post-title" />
-                                            </div>
-                                        </a>
-                                    </div>
-                                    <ul class="meta list-inline mt-4 mb-0">
-                                        <li class="list-inline-item"><a href="#"><img
-                                                    src="images/other/author-sm.png" class="author"
-                                                    alt="author" />Katen Doe</a></li>
-                                        <li class="list-inline-item">29 March 2021</li>
-                                    </ul>
-                                    <h5 class="post-title mb-3 mt-3"><a href="blog-single.html">5 Easy Ways You
-                                            Can Turn Future Into Success</a></h5>
-                                    <p class="excerpt mb-0">A wonderful serenity has taken possession of my entire
-                                        soul, like these sweet mornings of spring which I enjoy</p>
-                                </div>
-                                <!-- post -->
-                                <div class="post post-list-sm square before-seperator">
-                                    <div class="thumb rounded">
-                                        <a href="blog-single.html">
-                                            <div class="inner">
-                                                <img src="images/posts/trending-sm-3.jpg" alt="post-title" />
-                                            </div>
-                                        </a>
-                                    </div>
-                                    <div class="details clearfix">
-                                        <h6 class="post-title my-0"><a href="blog-single.html">Here Are 8 Ways To
-                                                Success Faster</a></h6>
-                                        <ul class="meta list-inline mt-1 mb-0">
-                                            <li class="list-inline-item">29 March 2021</li>
-                                        </ul>
-                                    </div>
-                                </div>
-                                <!-- post -->
-                                <div class="post post-list-sm square before-seperator">
-                                    <div class="thumb rounded">
-                                        <a href="blog-single.html">
-                                            <div class="inner">
-                                                <img src="images/posts/trending-sm-4.jpg" alt="post-title" />
-                                            </div>
-                                        </a>
-                                    </div>
-                                    <div class="details clearfix">
-                                        <h6 class="post-title my-0"><a href="blog-single.html">Master The Art Of
-                                                Nature With These 7 Tips</a></h6>
-                                        <ul class="meta list-inline mt-1 mb-0">
-                                            <li class="list-inline-item">29 March 2021</li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="spacer" data-height="50"></div>
-
                     <!-- section header -->
                     <div class="section-header">
                         <h3 class="section-title">Inspiration</h3>
                         <img src="images/wave.svg" class="wave" alt="wave" />
                         <div class="slick-arrows-top">
-                            <button type="button" data-role="none"
-                                class="carousel-topNav-prev slick-custom-buttons" aria-label="Previous"><i
-                                    class="icon-arrow-left"></i></button>
-                            <button type="button" data-role="none"
-                                class="carousel-topNav-next slick-custom-buttons" aria-label="Next"><i
-                                    class="icon-arrow-right"></i></button>
+                            <button type="button" data-role="none" class="carousel-topNav-prev slick-custom-buttons"
+                                aria-label="Previous"><i class="icon-arrow-left"></i></button>
+                            <button type="button" data-role="none" class="carousel-topNav-next slick-custom-buttons"
+                                aria-label="Next"><i class="icon-arrow-right"></i></button>
                         </div>
                     </div>
 
@@ -710,25 +566,13 @@
                     <div class="sidebar">
                         <!-- widget about -->
                         <div class="widget rounded">
-                            <div class="widget-about data-bg-image text-center" data-bg-image="images/map-bg.png">
-                                <img src="images/logo.svg" alt="logo" class="mb-4" />
-                                <p class="mb-4">Hello, We’re content writer who is fascinated by content fashion,
-                                    celebrity and lifestyle. We helps clients bring the right content to the right
-                                    people.</p>
-                                <ul class="social-icons list-unstyled list-inline mb-0">
-                                    <li class="list-inline-item"><a href="#"><i
-                                                class="fab fa-facebook-f"></i></a></li>
-                                    <li class="list-inline-item"><a href="#"><i
-                                                class="fab fa-twitter"></i></a></li>
-                                    <li class="list-inline-item"><a href="#"><i
-                                                class="fab fa-instagram"></i></a></li>
-                                    <li class="list-inline-item"><a href="#"><i
-                                                class="fab fa-pinterest"></i></a></li>
-                                    <li class="list-inline-item"><a href="#"><i
-                                                class="fab fa-medium"></i></a></li>
-                                    <li class="list-inline-item"><a href="#"><i
-                                                class="fab fa-youtube"></i></a></li>
-                                </ul>
+                            <div class="widget-about data-bg-image text-center"
+                                data-bg-image="{{ asset('assets/images/map-bg.png') }}">
+                                <img src="{{ asset('assets/img/stuventlogo.png') }}" alt="logo" class="mb-4"
+                                    style="max-width:70px;" />
+                                <p class="mb-4">Sebuah aplikasi berbasis website, yang berguna untuk mengetahui seluruh
+                                    informasi dari setiap kegiatan atau acara yang diadakan oleh masing-masing himpunan yang
+                                    terdapat di Universitas Pertamina</p>
                             </div>
                         </div>
 
@@ -850,8 +694,7 @@
                                                 to</a>
                                             <a href="blog-single.html">
                                                 <div class="inner">
-                                                    <img src="images/widgets/widget-carousel-1.jpg"
-                                                        alt="post-title" />
+                                                    <img src="images/widgets/widget-carousel-1.jpg" alt="post-title" />
                                                 </div>
                                             </a>
                                         </div>
@@ -865,12 +708,10 @@
                                     <!-- post -->
                                     <div class="post post-carousel">
                                         <div class="thumb rounded">
-                                            <a href="category.html"
-                                                class="category-badge position-absolute">Trending</a>
+                                            <a href="category.html" class="category-badge position-absolute">Trending</a>
                                             <a href="blog-single.html">
                                                 <div class="inner">
-                                                    <img src="images/widgets/widget-carousel-2.jpg"
-                                                        alt="post-title" />
+                                                    <img src="images/widgets/widget-carousel-2.jpg" alt="post-title" />
                                                 </div>
                                             </a>
                                         </div>
@@ -888,8 +729,7 @@
                                                 to</a>
                                             <a href="blog-single.html">
                                                 <div class="inner">
-                                                    <img src="images/widgets/widget-carousel-1.jpg"
-                                                        alt="post-title" />
+                                                    <img src="images/widgets/widget-carousel-1.jpg" alt="post-title" />
                                                 </div>
                                             </a>
                                         </div>
@@ -920,22 +760,6 @@
                                 <img src="images/ads/ad-360.png" alt="Advertisement" />
                             </a>
                         </div>
-
-                        <!-- widget tags -->
-                        <div class="widget rounded">
-                            <div class="widget-header text-center">
-                                <h3 class="widget-title">Tag Clouds</h3>
-                                <img src="images/wave.svg" class="wave" alt="wave" />
-                            </div>
-                            <div class="widget-content">
-                                <a href="#" class="tag">#Trending</a>
-                                <a href="#" class="tag">#Video</a>
-                                <a href="#" class="tag">#Featured</a>
-                                <a href="#" class="tag">#Gallery</a>
-                                <a href="#" class="tag">#Celebrities</a>
-                            </div>
-                        </div>
-
                     </div>
 
                 </div>
@@ -945,82 +769,33 @@
         </div>
     </section>
 
-    <!-- instagram feed -->
-    <div class="instagram">
-        <div class="container-xl">
-            <!-- button -->
-            <a href="#" class="btn btn-default btn-instagram">@Katen on Instagram</a>
-            <!-- images -->
-            <div class="instagram-feed d-flex flex-wrap">
-                <div class="insta-item col-sm-2 col-6 col-md-2">
-                    <a href="#">
-                        <img src="images/insta/insta-1.jpg" alt="insta-title" />
-                    </a>
-                </div>
-                <div class="insta-item col-sm-2 col-6 col-md-2">
-                    <a href="#">
-                        <img src="images/insta/insta-2.jpg" alt="insta-title" />
-                    </a>
-                </div>
-                <div class="insta-item col-sm-2 col-6 col-md-2">
-                    <a href="#">
-                        <img src="images/insta/insta-3.jpg" alt="insta-title" />
-                    </a>
-                </div>
-                <div class="insta-item col-sm-2 col-6 col-md-2">
-                    <a href="#">
-                        <img src="images/insta/insta-4.jpg" alt="insta-title" />
-                    </a>
-                </div>
-                <div class="insta-item col-sm-2 col-6 col-md-2">
-                    <a href="#">
-                        <img src="images/insta/insta-5.jpg" alt="insta-title" />
-                    </a>
-                </div>
-                <div class="insta-item col-sm-2 col-6 col-md-2">
-                    <a href="#">
-                        <img src="images/insta/insta-6.jpg" alt="insta-title" />
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- footer -->
     <footer>
         <div class="container-xl">
             <div class="footer-inner">
                 <div class="row d-flex align-items-center gy-4">
                     <!-- copyright text -->
-                    <div class="col-md-4">
-                        <span class="copyright">© 2021 Katen. Template by ThemeGer.</span>
-                    </div>
-
-                    <!-- social icons -->
-                    <div class="col-md-4 text-center">
-                        <ul class="social-icons list-unstyled list-inline mb-0">
-                            <li class="list-inline-item"><a href="#"><i class="fab fa-facebook-f"></i></a>
-                            </li>
-                            <li class="list-inline-item"><a href="#"><i class="fab fa-twitter"></i></a>
-                            </li>
-                            <li class="list-inline-item"><a href="#"><i class="fab fa-instagram"></i></a>
-                            </li>
-                            <li class="list-inline-item"><a href="#"><i class="fab fa-pinterest"></i></a>
-                            </li>
-                            <li class="list-inline-item"><a href="#"><i class="fab fa-medium"></i></a></li>
-                            <li class="list-inline-item"><a href="#"><i class="fab fa-youtube"></i></a>
-                            </li>
-                        </ul>
+                    <div class="col-md-6">
+                        <span class="copyright">© 2023 Stuvent UP</span>
                     </div>
 
                     <!-- go to top button -->
-                    <div class="col-md-4">
-                        <a href="#" id="return-to-top" class="float-md-end"><i
-                                class="icon-arrow-up"></i>Back to Top</a>
+                    <div class="col-md-6">
+                        <a href="#" id="return-to-top" class="float-md-end"><i class="icon-arrow-up"></i>Back to
+                            Top</a>
                     </div>
                 </div>
             </div>
         </div>
     </footer>
+@endsection
 
+@section('custom_js')
+    <script>
+        $(document).ready(function() {
+			const text = $('#data-fetch').val();
+            const output = document.getElementById('output');
+            output.innerHTML = text;
+        })
+    </script>
 @endsection

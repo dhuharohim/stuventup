@@ -70,12 +70,18 @@
                                             <i class='bx bx-dots-vertical-rounded'></i>
                                         </button>
                                         <ul class="dropdown-menu dropdown-menu-end px-4" aria-labelledby="dropdownMenu">
-                                            <li>
-                                                <a onclick="getData({{ $reg->profileMahasiswa->id }})" id="confirm-payment"
-                                                    class="showEventDrawer" style="cursor: pointer; color: green">Konfirmasi
-                                                    pembayaran</a>
-                                            </li>
-                                        </ul>
+                                                @if ($event->ticket == 'yes' && $reg->status_regist == 'telah daftar')
+                                                <li>
+                                                    <a onclick="getData({{ $reg->profileMahasiswa->id }})"
+                                                        id="confirm-payment" class="showEventDrawer"
+                                                        style="cursor: pointer; color: green">Konfirmasi
+                                                        pembayaran</a>
+                                                </li>
+                                                @endif
+                                                <li>
+                                                    
+                                                </li>
+                                            </ul>
                                     </td>
                                 </tr>
                             @endforeach
@@ -159,7 +165,8 @@
 
 @section('custom_js')
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.22/pdfmake.min.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js">
+    </script>
     <script>
         $("body").on("click", "#btn-pdf-mhs", function() {
             html2canvas($('#table-mahasiswa')[0], {

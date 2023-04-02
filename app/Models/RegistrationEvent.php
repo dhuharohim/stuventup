@@ -22,10 +22,10 @@ class RegistrationEvent extends Model
     public function profileGeneral(){
         return $this->belongsTo(ProfileUmum::class, 'profile_general_id', 'id');
     }
-    public function event_id(){
+    public function event(){
         return $this->belongsTo(EventForm::class, 'event_id', 'id');
     }
-    public function user_id(){
+    public function user(){
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
 }

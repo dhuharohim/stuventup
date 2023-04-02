@@ -104,23 +104,23 @@
 									</div>
 								@endif
 								@if(!empty($userRole))
-									@if ($eventDetail->date_activity > $today && $userRole == 'user' || $userRole == 'umum' && empty($dataRegist) && $eventDetail->ticket == 'no')
-										<div class="card-footer" id="card-footer">
-											<a id="button-regist" class="btn btn-success btn-block" style="border-radius: 6px;
-											width: 100%;"> Daftar sekarang </a>
-										</div>
-									@endif
                                     @if(empty($dataRegist) )
-                                        @if($eventDetail->ticket== 'yes' && $userRole == 'user' || $userRole == 'umum')
+                                        @if($eventDetail->ticket == 'no' && $eventDetail->date_activity > $today)
+                                        <div class="card-footer" id="card-footer">
+											<a id="button-regist" class="btn btn-success btn-block" style="border-radius: 6px;
+											width: 100%;"> Daftar sekarang</a>
+										</div>
+                                        @endif
+                                        @if($eventDetail->ticket == 'yes' && $eventDetail->date_activity > $today)
 										<div class="card-footer" id="card-footer">
                                             <form>
                                                 <a id="button-regist-ticket" class="btn btn-success btn-block" style="border-radius: 6px;
-                                                width: 100%;"> Daftar sekarang </a>
+                                                width: 100%;"> Daftar sekarang</a>
                                             </form>
                                         </div>
                                         @endif
                                     @endif  
-                                    @if(! empty($dataRegist))
+                                    @if(!empty($dataRegist))
                                         @if($dataRegist->status_regist == 'telah daftar' && $eventDetail->ticket== 'yes' && $userRole == 'user' || $userRole == 'umum')
                                             <div class="card-footer" id="card-footer">
                                                 <a href="{{ route('invoice.index', $eventDetail->name_activity) }}" class="btn btn-primary btn-block" style="border-radi us: 6px;
@@ -133,12 +133,6 @@
                                             </div>
                                         @endif
 								    @endif
-								@endif
-								@if(! empty($dataRegist && $eventDetail->ticket== 'no'))
-									<div class="card-footer" id="card-footer">
-										<p class="btn btn-info btn-block" style="border-radius: 6px;
-										width: 100%;"> Anda telah berhasil daftar dalam acara ini </p>
-									</div>
 								@endif
                                 @if ($eventDetail->date_activity < $today)
                                 <div class="card-footer" id="card-footer">
@@ -545,47 +539,6 @@
 
         </div>
     </section>
-
-    <!-- instagram feed -->
-    <div class="instagram">
-        <div class="container-xl">
-            <!-- button -->
-            <a href="#" class="btn btn-default btn-instagram">@Katen on Instagram</a>
-            <!-- images -->
-            <div class="instagram-feed d-flex flex-wrap">
-                <div class="insta-item col-sm-2 col-6 col-md-2">
-                    <a href="#">
-                        <img src="images/insta/insta-1.jpg" alt="insta-title" />
-                    </a>
-                </div>
-                <div class="insta-item col-sm-2 col-6 col-md-2">
-                    <a href="#">
-                        <img src="images/insta/insta-2.jpg" alt="insta-title" />
-                    </a>
-                </div>
-                <div class="insta-item col-sm-2 col-6 col-md-2">
-                    <a href="#">
-                        <img src="images/insta/insta-3.jpg" alt="insta-title" />
-                    </a>
-                </div>
-                <div class="insta-item col-sm-2 col-6 col-md-2">
-                    <a href="#">
-                        <img src="images/insta/insta-4.jpg" alt="insta-title" />
-                    </a>
-                </div>
-                <div class="insta-item col-sm-2 col-6 col-md-2">
-                    <a href="#">
-                        <img src="images/insta/insta-5.jpg" alt="insta-title" />
-                    </a>
-                </div>
-                <div class="insta-item col-sm-2 col-6 col-md-2">
-                    <a href="#">
-                        <img src="images/insta/insta-6.jpg" alt="insta-title" />
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <!-- footer -->
     <footer>

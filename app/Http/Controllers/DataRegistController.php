@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\StuventEmail;
 use App\Models\EventForm;
 use App\Models\Profile;
 use App\Models\ProfileMahasiswa;
@@ -13,6 +14,7 @@ use Carbon\Carbon;
 use Error;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 class DataRegistController extends Controller
 {
@@ -73,14 +75,14 @@ class DataRegistController extends Controller
             $dataMhs->user_id = $user->id;
             $dataMhs->profile_mhs_id = $profileMhs->id;
             $dataMhs->event_id = $event->id;
-            $dataMhs->status_regist = "telah daftar";
+            $dataMhs->status_regist = "terkonfirmasi";
             $dataMhs->save();
         } else {
             $dataUmum = new RegistrationEvent();
             $dataUmum->user_id = $user->id;
             $dataUmum->profile_general_id = $profileUmum->id;
             $dataUmum->event_id = $event->id;
-            $dataUmum->status_regist = "telah daftar";
+            $dataUmum->status_regist = "terkonfirmasi";
             $dataUmum->save();
         }
     }
@@ -120,10 +122,31 @@ class DataRegistController extends Controller
             $registMhs = RegistrationEvent::where('profile_mhs_id', $request->id)->first();
             $registMhs->status_regist = 'terkonfirmasi';
             $registMhs->save();
+
+            if($registMhs->save()){
+                Mail::to('dhuhacmd@gmail.com')->send(new StuventEmail('registMhs', $registMhs->id));
+                try{
+                } catch(Error $e){
+                    return response()->json([
+                        'error' => true,
+                        'message' => 'Maaf email gagal untuk dikirim'
+                    ]);
+                }
+            }
         } else{
             $registUmum = RegistrationEvent::where('profile_general_id', $request->id)->first();
             $registUmum->status_regist = 'terkonfirmasi';
             $registUmum->save();
+            if($registUmum->save()){
+                Mail::to('dhuhacmd@gmail.com')->send(new StuventEmail('registUmum', $registUmum->id));
+                try{
+                } catch(Error $e){
+                    return response()->json([
+                        'error' => true,
+                        'message' => 'Maaf email gagal untuk dikirim'
+                    ]);
+                }
+            }
         }
     }
 

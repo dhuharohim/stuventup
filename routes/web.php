@@ -73,4 +73,7 @@ Route::post('regist-event', [DataRegistController::class, 'store'])->name('regis
 Route::post('/ticket-invoice', [MagazineController::class, 'invoiceTicket'])->name('ticket.invoice');
 Route::get('/invoice/{name_activity}', [MagazineController::class, 'indexInvoice'])->name('invoice.index');
 
+//styling email
+Route::get('/style-email', [MagazineController::class, 'email'])->name('style.email');
+
 

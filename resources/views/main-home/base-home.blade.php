@@ -98,8 +98,8 @@
                     <div class="header-right">
                         <!-- header buttons -->
                         <div class="header-buttons">
-                            <button class="search icon-button">
-                                <i class="icon-magnifier"></i>
+                            <button  class="search icon-button">
+                                <img src="{{ asset('assets/img/person.svg') }}" alt="">
                             </button>
                             <button class="burger-menu icon-button">
                                 <span class="burger-icon"></span>
@@ -121,7 +121,7 @@
         <!-- content -->
         <div class="search-content">
             <div class="text-center">
-                <h3 class="mb-4 mt-0">Press ESC to close</h3>
+                <h3 class="mb-4 mt-0">My Profile</h3>
             </div>
             <!-- form -->
             <form class="d-flex search-form">
@@ -138,48 +138,33 @@
         <button type="button" class="btn-close" aria-label="Close"></button>
 
         <!-- logo -->
-        <div class="logo">
-            <img src="images/logo.svg" alt="Katen" />
+        <div style="display: flex;
+        align-self: center;
+        margin: 2rem 0;">
+            <img style="width:60px;" src="{{ asset('assets/img/stuvent.png') }}" alt="stuvent" />
         </div>
 
         <!-- menu -->
         <nav>
             <ul class="vertical-menu">
-                <li class="active">
-                    <a href="index.html">Home</a>
-                    <ul class="submenu">
-                        <li><a href="index.html">Magazine</a></li>
-                        <li><a href="personal.html">Personal</a></li>
-                        <li><a href="personal-alt.html">Personal Alt</a></li>
-                        <li><a href="minimal.html">Minimal</a></li>
-                        <li><a href="classic.html">Classic</a></li>
-                    </ul>
-                </li>
-                <li><a href="category.html">Lifestyle</a></li>
-                <li><a href="category.html">Inspiration</a></li>
-                <li>
-                    <a href="#">Pages</a>
-                    <ul class="submenu">
-                        <li><a href="category.html">Category</a></li>
-                        <li><a href="blog-single.html">Blog Single</a></li>
-                        <li><a href="blog-single-alt.html">Blog Single Alt</a></li>
-                        <li><a href="about.html">About</a></li>
-                        <li><a href="contact.html">Contact</a></li>
-                    </ul>
-                </li>
-                <li><a href="contact.html">Contact</a></li>
+                <li><a href="category.html">Home</a></li>
+                <li><a href="category.html">Seminar/Webinar</a></li>
+                <li><a href="contact.html">Pelatihan</a></li>
+                <li><a href="contact.html">Olahraga</a></li>
+                <li><a href="contact.html">Pameran</a></li>
+                <li><a href="contact.html">Hari Nasional</a></li>
+                <li><a href="contact.html">Lainnya</a></li>
             </ul>
         </nav>
-
-        <!-- social icons -->
-        <ul class="social-icons list-unstyled list-inline mb-0 mt-auto w-100">
-            <li class="list-inline-item"><a href="#"><i class="fab fa-facebook-f"></i></a></li>
-            <li class="list-inline-item"><a href="#"><i class="fab fa-twitter"></i></a></li>
-            <li class="list-inline-item"><a href="#"><i class="fab fa-instagram"></i></a></li>
-            <li class="list-inline-item"><a href="#"><i class="fab fa-pinterest"></i></a></li>
-            <li class="list-inline-item"><a href="#"><i class="fab fa-medium"></i></a></li>
-            <li class="list-inline-item"><a href="#"><i class="fab fa-youtube"></i></a></li>
-        </ul>
+        <div style="display: flex;
+        justify-content: space-between;" class="social-icons list-unstyled list-inline mb-0 mt-auto w-100">
+            <a href="/">Menu utama</a>
+            @if(!empty($user))
+            <a href="{{ route('logout') }}">Logout</a>
+            @else
+            <a href="/login">Login</a>
+            @endif
+        </div>
     </div>
 
     <!-- JAVA SCRIPTS -->

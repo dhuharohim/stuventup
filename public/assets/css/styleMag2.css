@@ -804,7 +804,6 @@ body.down .header-default.clone, body.down .header-personal nav.clone, body.down
 }
 .header-right .header-buttons {
   display: inline-block;
-  margin-left: 50px;
 }
 .header-right .header-buttons button {
   margin-left: 10px;

@@ -36,7 +36,7 @@
                         </div>
                     </div>
                     <div class="form-group" style="margin-top:1rem;">
-                        <button type="submit" class="form-control btn btn-success submit px-3">Kembali ke halaman utama</button>
+                        <a href="/" class="form-control btn btn-success submit px-3">Kembali ke halaman utama</a>
                     </div>
                 </form>
             </div>
