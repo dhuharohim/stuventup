@@ -23,6 +23,8 @@ return new class extends Migration
             ->onUpdate('cascade')
             ->onDelete('cascade');
             $table->string('name_himpunan')->nullable();
+            $table->string('nickname_himpunan')->nullable();
+            $table->string('bio_himpunan', 255)->nullable();
             $table->string('email')->nullable();
             $table->string('handphone')->nullable();
             $table->string('photo')->nullable();

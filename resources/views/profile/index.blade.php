@@ -53,46 +53,108 @@
                             @csrf
                             <div class="row">
                                 <div class="mb-3 col-md-6">
-                                    <label for="name" class="form-label">{{ __('Nama Himpunan') }}</label>
-                                    <input class="form-control" type="text" id="name" name="name"
-                                        value="{{ $user->name }}" autofocus readonly />
-                                </div>
-
-                                <div class="mb-3 col-md-6">
-                                    <label for="email" class="form-label">{{ __('E-mail') }}</label>
-                                    <input class="form-control" type="text" id="email" name="email"
-                                        value="{{ $profile->email }}" />
-                                </div>
-
-
-                            </div>
-                            <div class="row">
-                                <div class="mb-3 col-md-6">
-                                    <label class="form-label" for="handphone">{{ __('Nomor Telepon') }}</label>
-                                    <div class="input-group input-group-merge">
-                                        <span class="input-group-text">ID (+62)</span>
-                                        <input type="text" id="handphone" name="handphone" class="form-control"
-                                            placeholder="81234567891" value="{{ $profile->handphone }}" />
+                                    <div class="mb-3">
+                                        <label for="name" class="form-label">{{ __('Nama Himpunan') }}</label>
+                                        <input class="form-control" type="text" id="name" name="name"
+                                            value="{{ $user->name }}" autofocus readonly />
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label" for="handphone">{{ __('Nomor Telepon') }}</label>
+                                        <div class="input-group input-group-merge">
+                                            <span class="input-group-text">ID (+62)</span>
+                                            <input type="text" id="handphone" name="handphone" class="form-control"
+                                                placeholder="81234567891" value="{{ $profile->handphone }}" />
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="email" class="form-label">{{ __('E-mail') }}</label>
+                                        <input class="form-control" type="text" id="email" name="email"
+                                            value="{{ $profile->email }}" />
                                     </div>
                                 </div>
-                                {{-- <div class="mb-3 col-md-6">
-                                    <label for="status" class="form-label">{{ __('Status Pembayaran') }}</label>
-                                    <input class="form-control" type="text" id="status" name="status"
-                                        value="{{ $profile->billing_status }}" readonly />
-                                    @if ($profile->billing_status == 'Belum Bayar')
-                                    <a href="" class=" text-sm p-1 mt-lg-2">{{ __('Konfirmasi pembayaran anda sekarang') }}</a>
-                                    @else
-                                    <p></p>
-                                    @endif
-                                </div>   --}}
+                                <div class="mb-3 col-md-6">
+                                    <div class="mb-3">
+                                        <label for="email" class="form-label">{{ __('Nickname') }}</label>
+                                        <input class="form-control" type="text" id="nickname" name="nickname"
+                                            value="{{ $profile->nickname_himpunan }}" />
+                                        <small id="nickname-validation" class="d-none" style="color:red;">Nickname tidak dapat lebih dari 8 karakter</small>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="email" class="form-label">{{ __('Biografi') }}</label>
+                                        <textarea class="form-control" name="bioHimpunan" id="bioHimpunan" rows="3" value="{{ $profile->bio_himpunan }}">{{ $profile->bio_himpunan }}</textarea>
+                                        <small id="bio-validation" class="d-none" style="color:red;">Bio tidak dapat lebih dari 255 karakter</small>
+                                        <small id="bio-max">Maksimal 255 karakter</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-4">
+                                    <a class="btn btn-info text-white" id="addSocial">
+                                        <i class='bx bx-plus-circle'></i>
+                                            Media sosial
+                                    </a>
+                                </div>
+                            </div>
+                            @php
+                                $platforms = [
+                                    'Instagram',
+                                    'Facebook',
+                                    'Google',
+                                    'Twitter',
+                                    'Youtube',
+                                    'Discord',
+                                    'LinkedIn',
+                                ]
+                            @endphp
+                             
+                            @if(!empty($socials))
+                                @foreach($socials as $social)
+                                <div class="row mt-2" id="platform">
+                                    <div class="col-5">
+                                        <div class="mb-3">
+                                            <label class="form-label" for="platformName">{{ __('Nama platform') }}</label>
+                                            <div class="input-group input-group-merge">
+                                                    
+                                                <select class="form-control" name="platformNameUpdate[]" required id="platformName">
+                                                    @php
+                                                        if (($key = array_search($social->social_name, $platforms)) !== false) {
+                                                            unset($platforms[$key]);
+                                                        }
+                                                    @endphp
+                                                    <option value="{{ $social->social_name }}" selected>{{ $social->social_name }}</option>
+                                                    @foreach($platforms as $platform)
+                                                        <option class="form-control" value="{{ $platform }}">{{ $platform }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-5">
+                                        <div class="mb-3">
+                                            <label class="form-label" for="linkPlatform">{{ __('Link platform') }}</label>
+                                            <div class="input-group input-group-merge">
+                                                <input type="text" id="linkPlatform" name="linkPlatformUpdate[]" class="form-control"
+                                                    value="{{ $social->social_link }}" required/>
+                                            </div>
+                                        </div>
+                                        <input type="hidden" value="{{ $social->id }}" name="socialId[]">
+                                    </div>
+                                    <div class="col-2" style="align-self: center;">
+                                        <a id="removeRow" onclick="deleteRow(this)" style="display: flex; justify-content:center;">
+                                            <i class='bx bxs-minus-circle' style="font-size: 2rem;"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                                @endforeach
+                            @endif
+                            <div class="mt-4" id="platformForm">
                             </div>
                             <div class="mt-2 float-end">
-                                <button type="submit" class="btn btn-primary me-2 ">{{ __('Save changes') }}</button>
-
+                                <button type="submit" class="btn btn-primary me-2 " id="submit">{{ __('Save changes') }}</button>
                             </div>
                         </form>
                     </div>
-                    <!-- /Account -->
                 </div>
             </div>
         </div>
@@ -101,6 +163,79 @@
 
 @section('custom_js')
     <script>
+        var count = 0;
+        $('#addSocial').on('click', function(e) {
+            count += 1;
+            if(count > 7) {
+                iziToast.show({
+                    title: "Error",
+                    position: 'topCenter',
+                    color: 'red',
+                    message: 'Maksimal 7 sosial media'
+                });
+                return;
+            }
+            var html = `<div class="row" id="platform">
+                            <div class="col-5">
+                                <div class="mb-3">
+                                    <label class="form-label" for="platformName">{{ __('Nama platform') }}</label>
+                                    <div class="input-group input-group-merge">
+
+                                        <select class="form-control" name="platformName[]" required id="platformName">
+                                            <option value="" selected disabled>Pilih platform</option>
+                                            @foreach($platforms as $platform)
+                                                <option class="form-control" value="{{ $platform }}">{{ $platform }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-5">
+                                <div class="mb-3">
+                                    <label class="form-label" for="linkPlatform">{{ __('Link platform') }}</label>
+                                    <div class="input-group input-group-merge">
+                                        <input type="url" id="linkPlatform" name="linkPlatform[]" class="form-control"
+                                            value="https://" required/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-2" style="align-self: center;">
+                                <a id="removeRow" onclick="deleteRow(this)" style="display: flex; justify-content:center;">
+                                    <i class='bx bxs-minus-circle' style="font-size: 2rem;"></i>
+                                </a>
+                            </div>
+                        </div>`;
+            $('#platformForm').append(html);
+        });
+
+        function deleteRow(el) {
+            $(el).parent().parent().remove();
+        }
+
+        $( "#bioHimpunan" ).on( "keyup", function(e) {
+            if($(this).val().length >= 255) {
+                $('#submit').prop('disabled', true);
+                $('#bio-validation').removeClass('d-none')
+                $('#bio-max').hide()
+
+            } else {
+                $('#submit').prop('disabled', false);
+                $('#bio-validation').addClass('d-none')
+                $('#bio-max').show()
+            }
+        });
+
+        $( "#nickname" ).on( "keyup", function(e) {
+            if($(this).val().length >= 8) {
+                $('#submit').prop('disabled', true);
+                $('#nickname-validation').removeClass('d-none')
+
+            } else {
+                $('#submit').prop('disabled', false);
+                $('#nickname-validation').addClass('d-none')
+            }
+        });
+
         $(document).on('click', '#change_img', function() {
             $('#profile_img').click();
         });

@@ -21,28 +21,50 @@ class MagazineController extends Controller
     public function index()
     {
         $user = Auth::user();
-        
+        $now = Carbon::now()->translatedFormat('Y-m-d');
         $date = Carbon::now()->setTimezone('Asia/Jakarta')->translatedFormat('l, d F Y');
-        $eventComing = EventForm::orderBy('date_activity','desc')->take(4)->with('profile')->get();
-        foreach($eventComing as $event){
-            $comingDate = Carbon::create($event->date_activity)->setTimezone('Asia/Jakarta')->translatedFormat('l, d F Y');
-        }
+        $mostPopularEvent = EventForm::orderBy('view_count', 'desc')->where('status_activity', 'akan datang')->with('profile')->first();
+        $comingDate = Carbon::create($mostPopularEvent->date_activity)->setTimezone('Asia/Jakarta')->translatedFormat('l, d F Y');
 
-        $eventPop = EventForm::orderBy('view_count', 'desc')->take(4)->get();
-        $eventNew = EventForm::orderBy('created_at', 'desc')->take(4)->get();
-        $eventPopLarge = EventForm::orderBy('view_count', 'desc')->take(2)->get();
-        $eventPopSmall = EventForm::orderBy('view_count', 'asc')->take(2)->get();
+        $eventPop = EventForm::orderBy('view_count', 'desc')->where('status_activity', 'akan datang')->skip(1)->take(4)->get();
+        $eventNew = EventForm::orderBy('created_at', 'desc')->where('status_activity', 'akan datang')->take(4)->get();
+        $eventPopLarge = EventForm::orderBy('view_count', 'desc')->where('status_activity', 'akan datang')->take(2)->get();
+        $eventPopSmall = EventForm::orderBy('view_count', 'asc')->where('status_activity', 'akan datang')->take(2)->get();
 
-        // dd($eventComing);
+        $typeActivity = ['nasional', 'pameran', 'olahraga', 'pelatihan', 'seminar', 'lainnya'];
+        $eventCategoryies = EventForm::whereIn('type_activity', $typeActivity)->where('status_activity', 'akan datang')->orderBy('view_count', 'desc')->take(6)->get();
+        $uniqueEventCategories = $eventCategoryies->unique('type_activity');
+
+ 
+        $eventSeminar = EventForm::where('type_activity', 'seminar')->where('status_activity', 'akan datang')->get();
+        $eventNasional = EventForm::where('type_activity', 'nasional')->where('status_activity', 'akan datang')->get();
+        $eventPameran = EventForm::where('type_activity', 'pameran')->where('status_activity', 'akan datang')->get();
+        $eventOlahraga = EventForm::where('type_activity', 'olahraga')->where('status_activity', 'akan datang')->get();
+        $eventPelatihan = EventForm::where('type_activity', 'pelatihan')->where('status_activity', 'akan datang')->get();
+        $eventLainnya = EventForm::where('type_activity', 'lainnya')->where('status_activity', 'akan datang')->get();
+
+        $eventComingNext = EventForm::where('status_activity', 'akan datang')->orderBy('date_activity', 'desc')->take(3)->get();
+
+        $latestEvent = EventForm::where('status_activity', 'akan datang')->orderBy('created_at', 'desc')->take(4)->get();
+        // dd($uniqueEventCategories);
         return view('main-home.home', [
             'date'=> $date,
             'user' => $user,
-            'eventComing' => $eventComing,
+            'mostPopularEvent' => $mostPopularEvent,
             'comingDate'=> $comingDate,
             'eventNew' => $eventNew,
             'eventPop' => $eventPop,
             'eventPopLarge' => $eventPopLarge,
             'eventPopSmall' => $eventPopSmall,
+            'uniqueEventCategories' => $uniqueEventCategories,
+            'eventSeminar' => $eventSeminar,
+            'eventPameran' => $eventPameran,
+            'eventLainnya' => $eventLainnya,
+            'eventOlahraga' => $eventOlahraga,
+            'eventPelatihan' => $eventPelatihan,
+            'eventNasional' => $eventNasional,
+            'eventComingNext' => $eventComingNext,
+            'latestEvent' => $latestEvent
         ]);
 
     }
@@ -84,16 +106,38 @@ class MagazineController extends Controller
         $today = Carbon::today()->format('Y-m-d');
         $eventDetail->save();
 
+        $mostPopularEvent = EventForm::orderBy('view_count', 'desc')->where('status_activity', 'akan datang')->with('profile')->take(3)->get();
+        $eventComingNext = EventForm::where('status_activity', 'akan datang')->orderBy('date_activity', 'desc')->take(3)->get();
+
+
+
         // user not logged in
         if(empty(auth()->user()->role)){
-            return view('main-home.detail', ['eventDetail'=>$eventDetail, 'createdAt'=>$createdAt, 'dateAct'=> $dateAct, 'today'=>$today]);
+            return view('main-home.detail', [
+            'eventDetail'=>$eventDetail, 
+            'createdAt'=>$createdAt, 
+            'dateAct'=> $dateAct, 
+            'today'=>$today,
+            'mostPopularEvent'=>$mostPopularEvent,
+            'eventComingNext'=>$eventComingNext
+
+        ]);
         }
         $userRole = Auth::user()->role;
         $user = Auth::user();
         $dataRegist = RegistrationEvent::where('user_id', $user->id)->where('event_id', $eventDetail->id)->with('profileMahasiswa','profileGeneral')->first();
         // dd($dataRegist);
 
-        return view('main-home.detail', ['eventDetail'=>$eventDetail, 'createdAt'=>$createdAt, 'dateAct'=> $dateAct, 'today'=>$today, 'dataRegist'=>$dataRegist, 'userRole'=>$userRole]);
+        return view('main-home.detail', [
+            'eventDetail'=>$eventDetail, 
+            'createdAt'=>$createdAt, 
+            'dateAct'=> $dateAct, 
+            'today'=>$today, 
+            'dataRegist'=>$dataRegist, 
+            'userRole'=>$userRole,
+            'mostPopularEvent'=>$mostPopularEvent,
+            'eventComingNext'=>$eventComingNext
+        ]);
 
     }
 

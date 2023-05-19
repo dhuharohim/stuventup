@@ -222,12 +222,6 @@
 
 @section('custom_js')
     <script>
-        // $('#img_activity').click(function){
-        //     var img = $('#img_activity').val();
-        //     console.log(img);
-        //     $('#posterName').show();
-        // }
-        //activity types
         $("#type").change(function() {
             if ($(this).val() == 'lainnya') {
                 $("#showOthers").show();
@@ -237,7 +231,6 @@
             }
 
         });
-
         //ticket
         $("#isTicket").change(function() {
             if ($(this).val() == 'yes') {

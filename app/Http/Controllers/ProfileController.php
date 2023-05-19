@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Profile;
+use App\Models\Social;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -20,7 +21,8 @@ class ProfileController extends Controller
         $user_id = Auth::user()->id;
         $user = User::where('id', $user_id)->first();
         $profile = Profile::where('user_id', $user_id)->first();
-        return view('profile.index', ['user'=>$user, 'profile' =>$profile]);
+        $social = Social::where('profile_id', $profile->id)->get();
+        return view('profile.index', ['user'=>$user, 'profile' =>$profile, 'socials' =>$social]);
     }
 
     public function setting()
@@ -82,16 +84,62 @@ class ProfileController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $this->validate($request,[
-            'email' => 'required',
-            'handphone' => 'required'
-        ]);
+       
         $user_id = Auth::user()->id;
 
         $profile = Profile::where('user_id', $user_id )->first();
         $profile->email = $request->email;
         $profile->handphone = $request->handphone;
+        $profile->nickname_himpunan = $request->nickname;
+        $profile->bio_himpunan = $request->bioHimpunan;
         $profile->save();
+        // dd($profile->id);    
+
+        $platformNames = $request->platformName;
+        $platformLinks = $request->linkPlatform;
+        if(!empty($platformNames) && !empty($platformLinks)) {
+            // dd('nice');
+            $nameArray = [];
+            foreach($platformNames as $platformName => $n ) {
+                $nameArray[] = array(
+                    "profile_id" => $profile->id,
+                    "social_name" => $platformNames[$platformName]
+                );
+            }
+            $linkArray = [];
+            foreach($platformLinks as $platformLink => $m) {
+                $linkArray[] = array(
+                    "profile_id" => $profile->id,
+                    "social_link" => $platformLinks[$platformLink]
+                );
+            }
+            $arrayMerge = array_replace_recursive($nameArray, $linkArray);
+            // Social::insert($arrayMerge);
+        }
+        $platformNamesUpdate = $request->platformNameUpdate;
+        // dd(collect($platformNamesUpdate));
+        $collectionUpdate = collect($platformNamesUpdate);
+
+        
+        
+        $platformLinksUpdate = $request->linkPlatformUpdate;
+        $socialIds = $request->socialId;
+        
+        $socials = Social::whereIn('id', $socialIds)->get();
+        dd(count($collectionUpdate));
+        foreach($collectionUpdate as $objectName) {
+            foreach($socials as $social) { 
+                $updateSocialName = Social::where('id', $social->id)->first();
+                $updateSocialName->social_name = $objectName;
+                // dd($updateSocialName->social_name);
+                $updateSocialName->save();
+
+            }
+        }
+        
+        // dd($updateSocialName);
+      
+  
 
         return redirect()->back();
     }

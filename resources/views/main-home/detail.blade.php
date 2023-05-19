@@ -96,7 +96,7 @@
                                         </tbody>
                                     </table>
                                 </div>
-								@if(empty($userRole))
+								@if(empty($userRole) && $eventDetail->date_activity > $today)
 									<div class="card-footer" id="card-footer" style="text-align:center; font-size:12px;">
 										<p style="border-radius: 6px;
 										width: 100%; "> Mohon <a href="{{ route('login') }}">login disini</a> untuk melakukan registrasi acara.</p>
@@ -136,42 +136,13 @@
 								@endif
                                 @if ($eventDetail->date_activity < $today)
                                 <div class="card-footer" id="card-footer">
-                                    <a id="button-regist" class="btn btn-success btn-block" style="border-radius: 6px;
+                                    <a class="btn btn-success btn-block" style="border-radius: 6px;
                                     width: 100%;"> Event ini telah selesai </a>
                                 </div>
                                 @endif
                              
                             </div>
                         </div>
-                        <!-- post bottom section -->
-                        <div class="post-bottom">
-                            <div class="row d-flex align-items-center">
-                                <div class="col-md-6 col-12 text-center text-md-start">
-                                    <!-- tags -->
-                                    <a href="#" class="tag">#Trending</a>
-                                    <a href="#" class="tag">#Video</a>
-                                    <a href="#" class="tag">#Featured</a>
-                                </div>
-                                <div class="col-md-6 col-12">
-                                    <!-- social icons -->
-                                    <ul class="social-icons list-unstyled list-inline mb-0 float-md-end">
-                                        <li class="list-inline-item"><a href="#"><i class="fab fa-facebook-f"></i></a>
-                                        </li>
-                                        <li class="list-inline-item"><a href="#"><i class="fab fa-twitter"></i></a>
-                                        </li>
-                                        <li class="list-inline-item"><a href="#"><i
-                                                    class="fab fa-linkedin-in"></i></a></li>
-                                        <li class="list-inline-item"><a href="#"><i class="fab fa-pinterest"></i></a>
-                                        </li>
-                                        <li class="list-inline-item"><a href="#"><i
-                                                    class="fab fa-telegram-plane"></i></a></li>
-                                        <li class="list-inline-item"><a href="#"><i class="far fa-envelope"></i></a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-
                     </div>
 
                     <div class="spacer" data-height="50"></div>
@@ -201,7 +172,7 @@
                     <!-- section header -->
                     <div class="section-header">
                         <h3 class="section-title">Comments (3)</h3>
-                        <img src="images/wave.svg" class="wave" alt="wave" />
+                        <img src="{{ asset('assets/images/wave.svg') }}" class="wave" alt="wave" />
                     </div>
                     <!-- post comments -->
                     <div class="comments bordered padding-30 rounded">
@@ -254,7 +225,7 @@
                     <!-- section header -->
                     <div class="section-header">
                         <h3 class="section-title">Leave Comment</h3>
-                        <img src="images/wave.svg" class="wave" alt="wave" />
+                        <img src="{{ asset('assets/images/wave.svg') }}" class="wave" alt="wave" />
                     </div>
                     <!-- comment form -->
                     <div class="comment-form rounded bordered padding-30">
@@ -312,189 +283,92 @@
                     <div class="sidebar">
                         <!-- widget about -->
                         <div class="widget rounded">
-                            <div class="widget-about data-bg-image text-center" data-bg-image="images/map-bg.png">
-                                <img src="images/logo.svg" alt="logo" class="mb-4" />
-                                <p class="mb-4">Hello, We’re content writer who is fascinated by content fashion,
-                                    celebrity and lifestyle. We helps clients bring the right content to the right people.
-                                </p>
-                                <ul class="social-icons list-unstyled list-inline mb-0">
-                                    <li class="list-inline-item"><a href="#"><i class="fab fa-facebook-f"></i></a>
-                                    </li>
-                                    <li class="list-inline-item"><a href="#"><i class="fab fa-twitter"></i></a>
-                                    </li>
-                                    <li class="list-inline-item"><a href="#"><i class="fab fa-instagram"></i></a>
-                                    </li>
-                                    <li class="list-inline-item"><a href="#"><i class="fab fa-pinterest"></i></a>
-                                    </li>
-                                    <li class="list-inline-item"><a href="#"><i class="fab fa-medium"></i></a></li>
-                                    <li class="list-inline-item"><a href="#"><i class="fab fa-youtube"></i></a>
-                                    </li>
-                                </ul>
+                            <div class="widget-about data-bg-image text-center" data-bg-image="{{ asset('assets/images/map-bg.png') }}">
+                                <img src="{{ asset('assets/img/stuventlogo.png') }}" alt="logo" class="mb-4"
+                                style="max-width:70px;" />
+                                <p class="mb-4">Sebuah aplikasi berbasis website, yang berguna untuk mengetahui seluruh
+                                    informasi dari setiap kegiatan atau acara yang diadakan oleh masing-masing himpunan yang
+                                    terdapat di Universitas Pertamina</p>
                             </div>
                         </div>
 
                         <!-- widget popular posts -->
                         <div class="widget rounded">
                             <div class="widget-header text-center">
-                                <h3 class="widget-title">Popular Posts</h3>
-                                <img src="images/wave.svg" class="wave" alt="wave" />
+                                <h3 class="widget-title">Event Populer</h3>
+                                <img src="{{ asset('assets/images/wave.svg') }}" class="wave" alt="wave" />
                             </div>
                             <div class="widget-content">
                                 <!-- post -->
+                                @foreach($mostPopularEvent as $popular)
                                 <div class="post post-list-sm circle">
                                     <div class="thumb circle">
-                                        <span class="number">1</span>
-                                        <a href="blog-single.html">
+                                        <span class="number">{{ $loop->iteration }}</span>
+                                        <a href="{{ route('news.detail', $popular->name_activity) }}">
                                             <div class="inner">
-                                                <img src="images/posts/tabs-1.jpg" alt="post-title" />
+                                                <img src="/assets/img/poster/{{ $popular->profile['name_himpunan'] }}/{{ $popular['img_activity']}}" alt="post-title" />
                                             </div>
                                         </a>
                                     </div>
                                     <div class="details clearfix">
-                                        <h6 class="post-title my-0"><a href="blog-single.html">3 Easy Ways To Make Your
-                                                iPhone Faster</a></h6>
+                                        <h6 class="post-title my-0"><a href="{{ route('news.detail', $popular->name_activity) }}">
+                                            {{ $popular->name_activity }}
+                                        </a></h6>
                                         <ul class="meta list-inline mt-1 mb-0">
-                                            <li class="list-inline-item">29 March 2021</li>
+                                            <li class="list-inline-item">{{ $popular->date_activity }}</li>
                                         </ul>
                                     </div>
                                 </div>
-                                <!-- post -->
-                                <div class="post post-list-sm circle">
-                                    <div class="thumb circle">
-                                        <span class="number">2</span>
-                                        <a href="blog-single.html">
-                                            <div class="inner">
-                                                <img src="images/posts/tabs-2.jpg" alt="post-title" />
-                                            </div>
-                                        </a>
-                                    </div>
-                                    <div class="details clearfix">
-                                        <h6 class="post-title my-0"><a href="blog-single.html">An Incredibly Easy Method
-                                                That Works For All</a></h6>
-                                        <ul class="meta list-inline mt-1 mb-0">
-                                            <li class="list-inline-item">29 March 2021</li>
-                                        </ul>
-                                    </div>
-                                </div>
-                                <!-- post -->
-                                <div class="post post-list-sm circle">
-                                    <div class="thumb circle">
-                                        <span class="number">3</span>
-                                        <a href="blog-single.html">
-                                            <div class="inner">
-                                                <img src="images/posts/tabs-3.jpg" alt="post-title" />
-                                            </div>
-                                        </a>
-                                    </div>
-                                    <div class="details clearfix">
-                                        <h6 class="post-title my-0"><a href="blog-single.html">10 Ways To Immediately
-                                                Start Selling Furniture</a></h6>
-                                        <ul class="meta list-inline mt-1 mb-0">
-                                            <li class="list-inline-item">29 March 2021</li>
-                                        </ul>
-                                    </div>
-                                </div>
+                                @endforeach
                             </div>
                         </div>
 
                         <!-- widget categories -->
                         <div class="widget rounded">
                             <div class="widget-header text-center">
-                                <h3 class="widget-title">Explore Topics</h3>
-                                <img src="images/wave.svg" class="wave" alt="wave" />
+                                <h3 class="widget-title">Kategori</h3>
+                                <img src="{{ asset('assets/images/wave.svg') }}" class="wave" alt="wave" />
                             </div>
                             <div class="widget-content">
                                 <ul class="list">
-                                    <li><a href="#">Lifestyle</a><span>(5)</span></li>
-                                    <li><a href="#">Inspiration</a><span>(2)</span></li>
-                                    <li><a href="#">Fashion</a><span>(4)</span></li>
-                                    <li><a href="#">Politic</a><span>(1)</span></li>
-                                    <li><a href="#">Trending</a><span>(7)</span></li>
-                                    <li><a href="#">Culture</a><span>(3)</span></li>
+                                    <li><a href="#">Seminar</a><span>(5)</span></li>
+                                    <li><a href="#">Pelatiham</a><span>(2)</span></li>
+                                    <li><a href="#">Olahraga</a><span>(4)</span></li>
+                                    <li><a href="#">Pameran</a><span>(1)</span></li>
+                                    <li><a href="#">Hari Nasional</a><span>(7)</span></li>
+                                    <li><a href="#">Lainnya</a><span>(3)</span></li>
                                 </ul>
                             </div>
 
                         </div>
 
-                        <!-- widget newsletter -->
-                        <div class="widget rounded">
-                            <div class="widget-header text-center">
-                                <h3 class="widget-title">Newsletter</h3>
-                                <img src="images/wave.svg" class="wave" alt="wave" />
-                            </div>
-                            <div class="widget-content">
-                                <span class="newsletter-headline text-center mb-3">Join 70,000 subscribers!</span>
-                                <form>
-                                    <div class="mb-2">
-                                        <input class="form-control w-100 text-center" placeholder="Email address…"
-                                            type="email">
-                                    </div>
-                                    <button class="btn btn-default btn-full" type="submit">Sign Up</button>
-                                </form>
-                                <span class="newsletter-privacy text-center mt-3">By signing up, you agree to our <a
-                                        href="#">Privacy Policy</a></span>
-                            </div>
-                        </div>
-
                         <!-- widget post carousel -->
                         <div class="widget rounded">
                             <div class="widget-header text-center">
-                                <h3 class="widget-title">Celebration</h3>
-                                <img src="images/wave.svg" class="wave" alt="wave" />
+                                <h3 class="widget-title">Event Akan Datang</h3>
+                                <img src="{{ asset('assets/images/wave.svg') }}" class="wave" alt="wave" />
                             </div>
                             <div class="widget-content">
                                 <div class="post-carousel-widget">
                                     <!-- post -->
+                                    @foreach($eventComingNext as $next)
                                     <div class="post post-carousel">
                                         <div class="thumb rounded">
-                                            <a href="category.html" class="category-badge position-absolute">How to</a>
-                                            <a href="blog-single.html">
+                                            <a href="{{ route('news.detail', $next->name_activity) }}" class="category-badge position-absolute">{{ $next->type_activity }}</a>
+                                            <a href="{{ route('news.detail', $next->name_activity) }}">
                                                 <div class="inner">
-                                                    <img src="images/widgets/widget-carousel-1.jpg" alt="post-title" />
+                                                    <img src="/assets/img/poster/{{ $next->profile['name_himpunan'] }}/{{ $next['img_activity']}}" alt="post-title" />
                                                 </div>
                                             </a>
                                         </div>
-                                        <h5 class="post-title mb-0 mt-4"><a href="blog-single.html">5 Easy Ways You Can
-                                                Turn Future Into Success</a></h5>
+                                        <h5 class="post-title mb-0 mt-4"><a href="{{ route('news.detail', $next->name_activity) }}">
+                                            {{ $next->name_activity }}
+                                        </a></h5>
                                         <ul class="meta list-inline mt-2 mb-0">
-                                            <li class="list-inline-item"><a href="#">Katen Doe</a></li>
-                                            <li class="list-inline-item">29 March 2021</li>
+                                            <li class="list-inline-item">{{ $next->date_activity }}</li>
                                         </ul>
                                     </div>
-                                    <!-- post -->
-                                    <div class="post post-carousel">
-                                        <div class="thumb rounded">
-                                            <a href="category.html" class="category-badge position-absolute">Trending</a>
-                                            <a href="blog-single.html">
-                                                <div class="inner">
-                                                    <img src="images/widgets/widget-carousel-2.jpg" alt="post-title" />
-                                                </div>
-                                            </a>
-                                        </div>
-                                        <h5 class="post-title mb-0 mt-4"><a href="blog-single.html">Master The Art Of
-                                                Nature With These 7 Tips</a></h5>
-                                        <ul class="meta list-inline mt-2 mb-0">
-                                            <li class="list-inline-item"><a href="#">Katen Doe</a></li>
-                                            <li class="list-inline-item">29 March 2021</li>
-                                        </ul>
-                                    </div>
-                                    <!-- post -->
-                                    <div class="post post-carousel">
-                                        <div class="thumb rounded">
-                                            <a href="category.html" class="category-badge position-absolute">How to</a>
-                                            <a href="blog-single.html">
-                                                <div class="inner">
-                                                    <img src="images/widgets/widget-carousel-1.jpg" alt="post-title" />
-                                                </div>
-                                            </a>
-                                        </div>
-                                        <h5 class="post-title mb-0 mt-4"><a href="blog-single.html">5 Easy Ways You Can
-                                                Turn Future Into Success</a></h5>
-                                        <ul class="meta list-inline mt-2 mb-0">
-                                            <li class="list-inline-item"><a href="#">Katen Doe</a></li>
-                                            <li class="list-inline-item">29 March 2021</li>
-                                        </ul>
-                                    </div>
+                                    @endforeach
                                 </div>
                                 <!-- carousel arrows -->
                                 <div class="slick-arrows-bot">
@@ -515,22 +389,6 @@
                                 <img src="images/ads/ad-360.png" alt="Advertisement" />
                             </a>
                         </div>
-
-                        <!-- widget tags -->
-                        <div class="widget rounded">
-                            <div class="widget-header text-center">
-                                <h3 class="widget-title">Tag Clouds</h3>
-                                <img src="images/wave.svg" class="wave" alt="wave" />
-                            </div>
-                            <div class="widget-content">
-                                <a href="#" class="tag">#Trending</a>
-                                <a href="#" class="tag">#Video</a>
-                                <a href="#" class="tag">#Featured</a>
-                                <a href="#" class="tag">#Gallery</a>
-                                <a href="#" class="tag">#Celebrities</a>
-                            </div>
-                        </div>
-
                     </div>
 
                 </div>
