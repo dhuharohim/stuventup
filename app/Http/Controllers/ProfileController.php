@@ -93,12 +93,10 @@ class ProfileController extends Controller
         $profile->nickname_himpunan = $request->nickname;
         $profile->bio_himpunan = $request->bioHimpunan;
         $profile->save();
-        // dd($profile->id);    
 
         $platformNames = $request->platformName;
         $platformLinks = $request->linkPlatform;
         if(!empty($platformNames) && !empty($platformLinks)) {
-            // dd('nice');
             $nameArray = [];
             foreach($platformNames as $platformName => $n ) {
                 $nameArray[] = array(
@@ -114,33 +112,41 @@ class ProfileController extends Controller
                 );
             }
             $arrayMerge = array_replace_recursive($nameArray, $linkArray);
-            // Social::insert($arrayMerge);
+            Social::insert($arrayMerge);
         }
+
         $platformNamesUpdate = $request->platformNameUpdate;
-        // dd(collect($platformNamesUpdate));
-        $collectionUpdate = collect($platformNamesUpdate);
-
-        
-        
         $platformLinksUpdate = $request->linkPlatformUpdate;
-        $socialIds = $request->socialId;
-        
-        $socials = Social::whereIn('id', $socialIds)->get();
-        dd(count($collectionUpdate));
-        foreach($collectionUpdate as $objectName) {
-            foreach($socials as $social) { 
-                $updateSocialName = Social::where('id', $social->id)->first();
-                $updateSocialName->social_name = $objectName;
-                // dd($updateSocialName->social_name);
-                $updateSocialName->save();
-
-            }
+        $updateName = [];
+        foreach($platformNamesUpdate as $platformNameUpdate => $n ) {
+            $updateName[] = array(
+                "profile_id" => $profile->id,
+                "social_name" => $platformNamesUpdate[$platformNameUpdate]
+            );
         }
-        
-        // dd($updateSocialName);
-      
-  
+        $updateLink = [];
+        foreach($platformLinksUpdate as $platformLinkUpdate => $m) {
+            $updateLink[] = array(
+                "profile_id" => $profile->id,
+                "social_link" => $platformLinksUpdate[$platformLinkUpdate]
+            );
+        }
+        $socialIds = $request->socialId;
+        $updateIds = [];
+        foreach($socialIds as $socialId => $o) {
+            $updateIds[] = array(
+                "social_id" => $socialIds[$socialId]
+            );
+        };
 
+        $arrayUpdate = array_replace_recursive($updateName, $updateLink, $updateIds);
+        $collectionUpdates = $arrayUpdate;
+        foreach($collectionUpdates as $collection) {
+            $updateSocial = Social::where('id', $collection['social_id'])->first();
+            $updateSocial->social_name = $collection['social_name'];
+            $updateSocial->social_link = $collection['social_link'];
+            $updateSocial->save();
+        }
         return redirect()->back();
     }
 
@@ -203,13 +209,22 @@ class ProfileController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function deleteMedia(Request $request)
     {
-        //
+        // dd($request->all());
+        $social = Social::where('id', $request->socialId)->first();
+        $social->delete();
+
+        return redirect()->back();
     }
 
-    
+    public function profileHimpunan($himpunan) {
+        return view('profile.frontend.admin.index');
+    }
+
+    public function profileGeneral($general) {
+        return view('profile.frontend.admin.index');
+    }
 }

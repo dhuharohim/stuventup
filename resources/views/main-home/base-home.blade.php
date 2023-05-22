@@ -71,7 +71,7 @@
                         <!-- menus -->
                         <ul class="navbar-nav mr-auto">
                             <li class="nav-item dropdown active">
-                                <a class="nav-link" href="index.html">Home</a>
+                                <a class="nav-link" href="#">Home</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="category.html">Seminar/Webinar</a>
@@ -98,9 +98,17 @@
                     <div class="header-right">
                         <!-- header buttons -->
                         <div class="header-buttons">
-                            <button  class="search icon-button">
-                                <img src="{{ asset('assets/img/person.svg') }}" alt="">
-                            </button>
+                            @if($user->role == 'admin')
+                                <a href="{{ route('profile.admin', $user->name) }}" class="search icon-button">
+                                    <img src="{{ asset('assets/img/person.svg') }}" alt="">
+                                </a>
+                            @elseif($user->role == 'masyarakat' || $user->role == 'umum')
+                                <a href="{{ route('profile.general') }}" class="search icon-button">
+                                    <img src="{{ asset('assets/img/person.svg') }}" alt="">
+                                </a>
+                            @elseif (empty($user))
+                                <a href="/login">Login sekarang</a>
+                            @endif
                             <button class="burger-menu icon-button">
                                 <span class="burger-icon"></span>
                             </button>

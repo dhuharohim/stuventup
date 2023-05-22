@@ -6,6 +6,7 @@ use App\Models\EventForm;
 use App\Models\ProfileMahasiswa;
 use App\Models\ProfileUmum;
 use App\Models\RegistrationEvent;
+use App\Models\Social;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -26,16 +27,15 @@ class MagazineController extends Controller
         $mostPopularEvent = EventForm::orderBy('view_count', 'desc')->where('status_activity', 'akan datang')->with('profile')->first();
         $comingDate = Carbon::create($mostPopularEvent->date_activity)->setTimezone('Asia/Jakarta')->translatedFormat('l, d F Y');
 
-        $eventPop = EventForm::orderBy('view_count', 'desc')->where('status_activity', 'akan datang')->skip(1)->take(4)->get();
+        $eventPop = EventForm::orderBy('view_count', 'desc')->where('status_activity', 'akan datang')->take(4)->get();
         $eventNew = EventForm::orderBy('created_at', 'desc')->where('status_activity', 'akan datang')->take(4)->get();
-        $eventPopLarge = EventForm::orderBy('view_count', 'desc')->where('status_activity', 'akan datang')->take(2)->get();
+        $eventPopLarge = EventForm::orderBy('view_count', 'desc')->where('status_activity', 'akan datang')->with('profile')->take(2)->get();
         $eventPopSmall = EventForm::orderBy('view_count', 'asc')->where('status_activity', 'akan datang')->take(2)->get();
 
         $typeActivity = ['nasional', 'pameran', 'olahraga', 'pelatihan', 'seminar', 'lainnya'];
         $eventCategoryies = EventForm::whereIn('type_activity', $typeActivity)->where('status_activity', 'akan datang')->orderBy('view_count', 'desc')->take(6)->get();
         $uniqueEventCategories = $eventCategoryies->unique('type_activity');
 
- 
         $eventSeminar = EventForm::where('type_activity', 'seminar')->where('status_activity', 'akan datang')->get();
         $eventNasional = EventForm::where('type_activity', 'nasional')->where('status_activity', 'akan datang')->get();
         $eventPameran = EventForm::where('type_activity', 'pameran')->where('status_activity', 'akan datang')->get();
@@ -46,7 +46,8 @@ class MagazineController extends Controller
         $eventComingNext = EventForm::where('status_activity', 'akan datang')->orderBy('date_activity', 'desc')->take(3)->get();
 
         $latestEvent = EventForm::where('status_activity', 'akan datang')->orderBy('created_at', 'desc')->take(4)->get();
-        // dd($uniqueEventCategories);
+
+        // dd($eventPopLarge);
         return view('main-home.home', [
             'date'=> $date,
             'user' => $user,
@@ -98,8 +99,7 @@ class MagazineController extends Controller
      */
     public function show($name_activity)
     {
-        $eventDetail = EventForm::where('name_activity', $name_activity)
-        ->with('profile')->first();
+        $eventDetail = EventForm::where('name_activity', $name_activity)->with('profile')->first();
         $eventDetail->view_count =  (int) ++$eventDetail->view_count;
         $createdAt = Carbon::create($eventDetail->created_at)->setTimezone('Asia/Jakarta')->translatedFormat('l, d F Y');
         $dateAct = Carbon::create($eventDetail->date_activity)->setTimezone('Asia/Jakarta')->translatedFormat('l, d F Y');
@@ -108,8 +108,7 @@ class MagazineController extends Controller
 
         $mostPopularEvent = EventForm::orderBy('view_count', 'desc')->where('status_activity', 'akan datang')->with('profile')->take(3)->get();
         $eventComingNext = EventForm::where('status_activity', 'akan datang')->orderBy('date_activity', 'desc')->take(3)->get();
-
-
+        $socialMedia = Social::where('profile_id', $eventDetail->profile->id)->get();
 
         // user not logged in
         if(empty(auth()->user()->role)){
@@ -136,7 +135,8 @@ class MagazineController extends Controller
             'dataRegist'=>$dataRegist, 
             'userRole'=>$userRole,
             'mostPopularEvent'=>$mostPopularEvent,
-            'eventComingNext'=>$eventComingNext
+            'eventComingNext'=>$eventComingNext,
+            'socialMedia' =>$socialMedia,
         ]);
 
     }

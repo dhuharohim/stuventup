@@ -141,7 +141,7 @@
                                         <input type="hidden" value="{{ $social->id }}" name="socialId[]">
                                     </div>
                                     <div class="col-2" style="align-self: center;">
-                                        <a id="removeRow" onclick="deleteRow(this)" style="display: flex; justify-content:center;">
+                                        <a id="removeRow" onclick="deleteRow(this, {{ $social->id }})" style="display: flex; justify-content:center;">
                                             <i class='bx bxs-minus-circle' style="font-size: 2rem;"></i>
                                         </a>
                                     </div>
@@ -208,8 +208,36 @@
             $('#platformForm').append(html);
         });
 
-        function deleteRow(el) {
+        function deleteRow(el, social) {
+            // console.log(social);
             $(el).parent().parent().remove();
+            $.ajax({
+                type: 'POST',
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    "socialId": social
+                },
+                url: "{{ route('delete.media') }}",
+                success: function(res) {
+                    iziToast.show({
+                        title: "Sukses",
+                        position: 'topCenter',
+                        color: 'green',
+                        message: 'Berhasil menghapus sosial media'
+                    });
+                    window.location.href = "/profile"
+                },
+                error: function(res) {
+                    iziToast.show({
+                        title: "Error",
+                        position: 'topCenter',
+                        color: 'red',
+                        message: 'Gagal menghapus sosial media'
+                    });
+                    window.location.href = "/profile"
+                }
+            });
+            
         }
 
         $( "#bioHimpunan" ).on( "keyup", function(e) {

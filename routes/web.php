@@ -41,6 +41,11 @@ Route::get('/profile',[ProfileController::class, 'index'])->name('profile.index'
 Route::post('/profile/update/{id}', [ProfileController::class, 'update'])->name('profile.store');
 Route::post('/crop', [ProfileController::class,'crop'])->name('update.image');
 Route::post('/reset', [ProfileController::class,'resetPhoto'])->name('reset.image');
+Route::post('/delete-media-social', [ProfileController::class,'deleteMedia'])->name('delete.media');
+
+Route::get('/profile/{himpunan}',[ProfileController::class, 'profileHimpunan'])->name('profile.admin');
+Route::get('profile/{general}',[ProfileController::class, 'profileGeneral'])->name('profile.general');
+
 
 
 //setting

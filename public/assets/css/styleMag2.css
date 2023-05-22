@@ -1219,7 +1219,7 @@ section {
   display: inline-block;
   background-color: #73c15e;
   border-radius: 50%;
-  margin-left: 1rem;
+  margin-left: 0.5rem;
   height: 3px;
   vertical-align: middle;
   position: relative;
@@ -1227,7 +1227,7 @@ section {
   width: 3px;
 }
 .post .meta li:not(:last-child) {
-  margin-right: 0.8rem;
+  margin-right: 0.2rem;
 }
 .post .meta li img.author {
   margin-right: 12px;

@@ -120,13 +120,17 @@
                                                 <h6 class="post-title my-0"><a
                                                         href="{{ route('news.detail', $event->name_activity) }}">{{ $event->name_activity }}</a>
                                                 </h6>
-                                                <div class="meta list-inline mt-1 mb-0">
-                                                    <p class="list-inline-item">
-                                                        {{ $event->profile->name_himpunan }} <span
-                                                            style="margin-left: 1rem;" class="list-inline-item"> <i
-                                                                class="icon-eye"></i> {{ $event->view_count }} </span>
-                                                    </p>
-
+                                                <ul class="meta list-inline mt-1 mb-0">
+                                                    <li class="list-inline-item text-capitalize"> {{ $event->type_activity }} </li>
+                                                    <li class="list-inline-item">
+                                                        {{ $event->profile->nickname_himpunan }} 
+                                                    </li>
+                                                    <li class="list-inline-item">
+                                                        <i class="icon-eye"></i> {{ $event->view_count }} 
+                                                    </li>
+                                                </ul>
+                                                <div>
+                                                    <b> {{ $event->date_activity }}</b>
                                                 </div>
                                             </div>
                                         </div>
@@ -142,7 +146,7 @@
                                         <div class="thumb circle">
                                             <a href="{{ route('news.detail', $event->name_activity) }}">
                                                 <div class="inner">
-                                                    <img src="assets/img/bg.jpg" alt="post-title" />
+                                                    <img src="/assets/img/poster/{{ $event->profile['name_himpunan'] }}/{{ $event['img_activity'] == '' ? 'default.png' : $event['img_activity'] }}" alt="post-title" />
                                                 </div>
                                             </a>
                                         </div>
@@ -151,8 +155,12 @@
                                                     href="{{ route('news.detail', $event->name_activity) }}">{{ $event->name_activity }}</a>
                                             </h6>
                                             <ul class="meta list-inline mt-1 mb-0">
-                                                <li class="list-inline-item">{{ $event->created_at->diffForHumans() }}</li>
+                                                <li class="list-inline-item text-capitalize"> {{ $event->type_activity }} </li>
+                                                <li class="list-inline-item">
+                                                    {{ $event->profile->nickname_himpunan }} 
+                                                </li>
                                             </ul>
+                                            <b>{{ $event->created_at->diffForHumans() }}</b>
                                         </div>
                                     </div>
                                 @endforeach
@@ -191,12 +199,12 @@
                                                 <a href="{{ route('news.detail', $eventPop->name_activity) }}"
                                                     class="category-badge position-absolute">Lainnya :
                                                     {{ $eventPop->other_type }}</a>
-                                            @else
+                                        @else
                                                 <a style="text-transform: capitalize;"
                                                     href="{{ route('news.detail', $eventPop->name_activity) }}"
                                                     class="category-badge position-absolute">
                                                     {{ $eventPop->type_activity }}</a>
-                                            @endif
+                                        @endif
                                         <span class="post-format">
                                             <i class="icon-picture"></i>
                                         </span>
@@ -207,10 +215,12 @@
                                         </a>
                                     </div>
                                     <ul class="meta list-inline mt-4 mb-0">
-                                        <li class="list-inline-item"><a href="{{ route('news.detail', $eventPop->name_activity) }}"><img style="width: 20px;
-                                            border-radius: 100%;"
-                                                    src="/assets/img/profile/{{ $eventPop->profile['photo'] == '' ? 'default.png' : $eventPop->profile['photo'] }}" class="author"
-                                                    alt="author" />{{ $eventPop->profile['name_himpunan'] }}</a></li>
+                                        <li class="list-inline-item"><a href="{{ route('news.detail', $eventPop->name_activity) }}">
+                                        <img style="width: 20px; border-radius: 100%;" src="/assets/img/profile/{{ $eventPop->profile['photo'] == '' ? 'default.png' : $eventPop->profile['photo'] }}" class="author" alt="author" />
+                                        {{ $eventPop->profile['nickname_himpunan'] }}</a></li>
+                                        <li class="list-inline-item"> {{ $eventPop->date_activity }} </li>
+                                        <li class="list-inline-item"> <i
+                                            class="icon-eye"></i> {{ $eventPop->view_count }}</li>
                                     </ul>
                                     <h5 class="post-title mb-3 mt-3"><a href="{{ route('news.detail', $eventPop->name_activity) }}">{{ $eventPop->name_activity }}</a></h5>
                                     <input type="text" id="data-fetch-{{ $loop->iteration }}" value="{{ $eventPop->desc_activity }}" hidden>
@@ -228,24 +238,38 @@
                             @endforeach
                         </div>
                         <div class="row gy-5">
-                            @foreach($eventPopSmall as $eventPopSmall)
+                            @foreach($eventPopSmall as $eventPopSmalls)
                             <div class="col-sm-6">
                                 <!-- post -->
                                 <div class="post post-list-sm square before-seperator">
                                     <div class="thumb rounded">
-                                        <a href="{{ route('news.detail', $eventPopSmall->name_activity) }}">
+                                        <a href="{{ route('news.detail', $eventPopSmalls->name_activity) }}">
                                             <div class="inner">
                                                 <img style="
-                                                object-fit: cover;" src="/assets/img/poster/{{ $eventPopSmall->profile['name_himpunan'] }}/{{ $eventPopSmall['img_activity'] == '' ? 'default.png' : $eventPopSmall['img_activity'] }}" alt="post-title" />
+                                                object-fit: cover;" src="/assets/img/poster/{{ $eventPopSmalls->profile['name_himpunan'] }}/{{ $eventPopSmalls['img_activity'] == '' ? 'default.png' : $eventPopSmalls['img_activity'] }}" alt="post-title" />
                                             </div>
                                         </a>
                                     </div>
                                     <div class="details clearfix">
-                                        <h6 class="post-title my-0"><a href="{{ route('news.detail', $eventPopSmall->name_activity) }}">{{ $eventPopSmall->name_activity }}</a></h6>
+                                        <h6 class="post-title my-0"><a href="{{ route('news.detail', $eventPopSmalls->name_activity) }}">{{ $eventPopSmalls->name_activity }}</a></h6>
                                         <ul class="meta list-inline mt-1 mb-0">
-                                            <li class="list-inline-item">{{ $eventPopSmall->date_activity, "l, d F Y" }}</li>
+                                            <li class="list-inline-item">{{ $eventPopSmalls->profile['nickname_himpunan'] }}</li>
+                                            <li class="list-inline-item text-capitalize"> {{ $eventPopSmalls->type_activity }} </li>
+                                            <li class="list-inline-item"> <i class="icon-eye"></i> {{ $eventPopSmalls->view_count }}</li>
                                         </ul>
+                                        <div class="mt-2" id="output-small{{ $loop->iteration }}" style="overflow: hidden;
+                                            text-overflow: ellipsis;
+                                            display: -webkit-box;
+                                            -webkit-line-clamp: 3;
+                                                    line-clamp: 3; 
+                                            -webkit-box-orient: vertical;
+                                            text-align:justify;">
+                                        </div>
+                                        <a href="{{ route('news.detail', $eventPopSmalls->name_activity) }}">Lihat selengkapnya</a>
+
                                     </div>
+                                    <input type="text" id="data-fetch-small-{{ $loop->iteration }}" value="{{ $eventPopSmalls->desc_activity }}" hidden>
+                                   
                                 </div>
                             </div>
                             @endforeach
@@ -366,9 +390,9 @@
                                             {{ $uniqueEventCategory->name_activity }}
                                         </a></h6>
                                         <ul class="meta list-inline mt-1 mb-0">
-
+                                            <li class="list-inline-item">{{ $uniqueEventCategory->profile['nickname_himpunan'] }}</li>
                                             <li class="list-inline-item" style="text-transform:capitalize;">{{ $uniqueEventCategory->type_activity }}</li>
-                                            <span> <i class="icon-eye"></i> {{ $uniqueEventCategory->view_count }} </span>
+                                            <li class="list-inline-item"> <i class="icon-eye"></i> {{ $uniqueEventCategory->view_count }} </li>
                                         </ul>
                                     </div>
                                 </div>
@@ -478,14 +502,21 @@
 
             for(let i=1; i <= {{ count($latestEvent) }}; i++) {
                 var dataFetchLatest = $('#data-fetch-latest-'+i).val();
-                console.log(dataFetchLatest);
                 var outputFetchLatest = document.getElementById('output-latest-'+i);
                 outputFetchLatest.innerHTML = dataFetchLatest;
             }
             for(let i=1; i <= {{ count($eventPopLarge) }}; i++) {
                 var dataFetch = $('#data-fetch-'+i).val();
+                console.log(dataFetch);
+
                 var outputFetch = document.getElementById('output-'+i);
                 outputFetch.innerHTML = dataFetch;
+            }
+            for(let i=1; i <= {{ count($eventPopSmall) }}; i++) {
+                var dataFetchSmall = $('#data-fetch-small-'+i).val();
+                console.log(dataFetchSmall);
+                var outputFetchSmall = document.getElementById('output-small'+i);
+                outputFetchSmall.innerHTML = dataFetchSmall;
             }
 			// const text = $('#data-fetch').val();
             // const output = document.getElementById('output');
