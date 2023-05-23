@@ -110,6 +110,13 @@ class MagazineController extends Controller
         $eventComingNext = EventForm::where('status_activity', 'akan datang')->orderBy('date_activity', 'desc')->take(3)->get();
         $socialMedia = Social::where('profile_id', $eventDetail->profile->id)->get();
 
+        $eventSeminar = EventForm::where('type_activity', 'seminar')->where('status_activity', 'akan datang')->get();
+        $eventNasional = EventForm::where('type_activity', 'nasional')->where('status_activity', 'akan datang')->get();
+        $eventPameran = EventForm::where('type_activity', 'pameran')->where('status_activity', 'akan datang')->get();
+        $eventOlahraga = EventForm::where('type_activity', 'olahraga')->where('status_activity', 'akan datang')->get();
+        $eventPelatihan = EventForm::where('type_activity', 'pelatihan')->where('status_activity', 'akan datang')->get();
+        $eventLainnya = EventForm::where('type_activity', 'lainnya')->where('status_activity', 'akan datang')->get();
+
         // user not logged in
         if(empty(auth()->user()->role)){
             return view('main-home.detail', [
@@ -118,8 +125,15 @@ class MagazineController extends Controller
             'dateAct'=> $dateAct, 
             'today'=>$today,
             'mostPopularEvent'=>$mostPopularEvent,
-            'eventComingNext'=>$eventComingNext
-
+            'eventComingNext'=>$eventComingNext,
+            'socialMedia' =>$socialMedia,
+            'eventSeminar'=>$eventSeminar,
+            'eventNasional' =>$eventNasional,
+            'eventPameran' =>$eventPameran,
+            'eventOlahraga' => $eventOlahraga,
+            'eventPelatihan' => $eventPelatihan,
+            'eventLainnya' => $eventLainnya
+            
         ]);
         }
         $userRole = Auth::user()->role;

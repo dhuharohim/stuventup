@@ -221,7 +221,14 @@ class ProfileController extends Controller
     }
 
     public function profileHimpunan($himpunan) {
-        return view('profile.frontend.admin.index');
+        $profile = Profile::where('name_himpunan', $himpunan)->first();
+        $social = Social::where('profile_id', $profile->id)->get();
+        
+        return view('profile.frontend.admin.index', [
+            'profile' => $profile,
+            'social' => $social
+        ]);
+
     }
 
     public function profileGeneral($general) {

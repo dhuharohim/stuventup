@@ -96,18 +96,23 @@
 
                     <!-- header right section -->
                     <div class="header-right">
+                        @php
+                            $user = auth()->user();
+                        @endphp
                         <!-- header buttons -->
                         <div class="header-buttons">
-                            @if($user->role == 'admin')
-                                <a href="{{ route('profile.admin', $user->name) }}" class="search icon-button">
-                                    <img src="{{ asset('assets/img/person.svg') }}" alt="">
-                                </a>
-                            @elseif($user->role == 'masyarakat' || $user->role == 'umum')
-                                <a href="{{ route('profile.general') }}" class="search icon-button">
-                                    <img src="{{ asset('assets/img/person.svg') }}" alt="">
-                                </a>
-                            @elseif (empty($user))
-                                <a href="/login">Login sekarang</a>
+                            @if(!empty($user))
+                                @if($user->role == 'admin')
+                                    <a href="{{ route('profile.admin', $user->name) }}" class="search icon-button">
+                                        <img src="{{ asset('assets/img/person.svg') }}" alt="">
+                                    </a>
+                                @elseif($user->role == 'masyarakat' || $user->role == 'umum')
+                                    <a href="{{ route('profile.general') }}" class="search icon-button">
+                                        <img src="{{ asset('assets/img/person.svg') }}" alt="">
+                                    </a>
+                                @endif
+                            @else 
+                                    <a href="{{route('login')}}">Login sekarang</a>
                             @endif
                             <button class="burger-menu icon-button">
                                 <span class="burger-icon"></span>

@@ -311,7 +311,10 @@
                                             {{ $popular->name_activity }}
                                         </a></h6>
                                         <ul class="meta list-inline mt-1 mb-0">
+                                            <li class="list-inline-item text-capitalize">{{ $popular->type_activity }}</li>
                                             <li class="list-inline-item">{{ $popular->date_activity }}</li>
+                                            <li class="list-inline-item"><i
+                                                class="icon-eye"></i> {{ $popular->view_count }}</li>
                                         </ul>
                                     </div>
                                 </div>
@@ -327,12 +330,12 @@
                             </div>
                             <div class="widget-content">
                                 <ul class="list">
-                                    <li><a href="#">Seminar</a><span>(5)</span></li>
-                                    <li><a href="#">Pelatiham</a><span>(2)</span></li>
-                                    <li><a href="#">Olahraga</a><span>(4)</span></li>
-                                    <li><a href="#">Pameran</a><span>(1)</span></li>
-                                    <li><a href="#">Hari Nasional</a><span>(7)</span></li>
-                                    <li><a href="#">Lainnya</a><span>(3)</span></li>
+                                    <li><a href="#">Seminar</a><span>{{ count($eventSeminar) }}</span></li>
+                                    <li><a href="#">Pelatihan</a><span>{{ count($eventPelatihan) }}</span></li>
+                                    <li><a href="#">Olahraga</a><span>{{ count($eventOlahraga) }}</span></li>
+                                    <li><a href="#">Pameran</a><span>{{ count($eventPameran) }}</span></li>
+                                    <li><a href="#">Hari Nasional</a><span>{{ count($eventNasional) }}</span></li>
+                                    <li><a href="#">Lainnya</a><span>{{ count($eventLainnya) }}</span></li>
                                 </ul>
                             </div>
 
@@ -350,7 +353,7 @@
                                     @foreach($eventComingNext as $next)
                                     <div class="post post-carousel">
                                         <div class="thumb rounded">
-                                            <a href="{{ route('news.detail', $next->name_activity) }}" class="category-badge position-absolute">{{ $next->type_activity }}</a>
+                                            <a href="{{ route('news.detail', $next->name_activity) }}" class="category-badge position-absolute text-capitalize">{{ $next->type_activity }}</a>
                                             <a href="{{ route('news.detail', $next->name_activity) }}">
                                                 <div class="inner">
                                                     <img src="/assets/img/poster/{{ $next->profile['name_himpunan'] }}/{{ $next['img_activity']}}" alt="post-title" />
@@ -361,6 +364,8 @@
                                             {{ $next->name_activity }}
                                         </a></h5>
                                         <ul class="meta list-inline mt-2 mb-0">
+                                            <li class="list-inline-item">{{ $next->profile->nickname_himpunan }}</li>
+                                            <li class="list-inline-item text-capitalize">{{ $next->type_activity }}</li>
                                             <li class="list-inline-item">{{ $next->date_activity }}</li>
                                         </ul>
                                     </div>
