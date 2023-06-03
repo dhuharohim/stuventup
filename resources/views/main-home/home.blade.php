@@ -534,6 +534,28 @@
                 outputFetchSmall.innerHTML = dataFetchSmall;
             }
 
+            var lastItemId = 0;
+
+            $('#loadNewestEvent').click(function() {
+                $.ajax({
+                    url: '{{ route('load-more-data') }}',
+                    type: 'GET',
+                    dataType: 'json',
+                    data: { lastItemId: lastItemId },
+                    success: function(response) {
+                        if (response.length > 0) {
+                            lastItemId = response[response.length - 1].id;
+                            // Process and append the loaded data to your page
+                        } else {
+                            // No more data to load
+                            $('#loadNewestEvent').hide();
+                        }
+                    },
+                    error: function() {
+                        // Handle error if AJAX request fails
+                    }
+                });
+            });
         })
     </script>
 @endsection
