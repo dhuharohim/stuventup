@@ -81,4 +81,5 @@ Route::get('/invoice/{name_activity}', [MagazineController::class, 'indexInvoice
 //styling email
 Route::get('/style-email', [MagazineController::class, 'email'])->name('style.email');
 
-
+// Category
+Route::get('/category/{name_category}', [MagazineController::class, 'indexCategory'])->name('category.index');

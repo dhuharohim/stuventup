@@ -238,4 +238,142 @@ class MagazineController extends Controller
     public function email(){
         return view('mail.payment-ticket');
     }
+
+    public function indexCategory($name_category , Request $request) {
+        $eventCategory = new EventForm();
+        $eventSeminars = EventForm::where('type_activity', 'seminar')->where('status_activity', 'akan datang')->get();
+        $eventNasionals = EventForm::where('type_activity', 'nasional')->where('status_activity', 'akan datang')->get();
+        $eventPamerans = EventForm::where('type_activity', 'pameran')->where('status_activity', 'akan datang')->get();
+        $eventPelatihans = EventForm::where('type_activity', 'pelatihan')->where('status_activity', 'akan datang')->get();
+        $eventLainnyas = EventForm::where('type_activity', 'lainnya')->where('status_activity', 'akan datang')->get();
+        $eventOlahragas = EventForm::where('type_activity', 'lainnya')->where('status_activity', 'akan datang')->get();
+
+        if($name_category == 'olahraga') {
+            if(!empty($request->q)) {
+                $eventOlahraga = $eventCategory->where('name_activity', 'LIKE' , '%'. $request->q. '%')->paginate(6);
+            } else {
+                $eventOlahraga = $eventCategory->where('type_activity', 'olahraga')->orderBy('created_at', 'desc')->with('profile')->paginate(6);
+            }
+            $eventOlahragaPopuler = $eventCategory->where('type_activity','olahraga')->orderBy('view_count', 'desc')->take(3)->get();
+            $eventOlahragaComing = $eventCategory->where('type_activity','olahraga')->orderBy('date_activity', 'desc')->take(3)->get();
+            return view('main-home.category.olahraga', [
+                'category' => $name_category,
+                'eventOlahraga' => $eventOlahraga,
+                'eventOlahragaPopuler' => $eventOlahragaPopuler,
+                'eventSeminar' => $eventSeminars,
+                'eventPameran' => $eventPamerans,
+                'eventNasional' => $eventNasionals,
+                'eventPelatihan' => $eventPelatihans,
+                'eventLainnya' => $eventLainnyas,
+                'eventOlahragaComing' => $eventOlahragaComing
+            ]);
+        } else if ($name_category == 'seminar') {
+            if(!empty($request->q)) {
+                $eventSeminar = $eventCategory->where('type_activity', 'seminar')->where('name_activity', 'LIKE' , '%'. $request->q. '%')->paginate(6);
+            } else {
+                $eventSeminar = $eventCategory->where('type_activity', 'seminar')->orderBy('created_at', 'desc')->with('profile')->paginate(6);
+            }
+            $eventSeminarPopuler = $eventCategory->where('type_activity','seminar')->orderBy('view_count', 'desc')->take(3)->get();
+            $eventSeminarComing = $eventCategory->where('type_activity','seminar')->orderBy('date_activity', 'desc')->take(3)->get();
+            return view('main-home.category.seminar', [
+                'category' => $name_category,
+                'eventSeminar' => $eventSeminar,
+                'eventSeminarPopuler' => $eventSeminarPopuler,
+                'eventPameran' => $eventPamerans,
+                'eventNasional' => $eventNasionals,
+                'eventPelatihan' => $eventPelatihans,
+                'eventLainnya' => $eventLainnyas,
+                'eventOlahraga' => $eventOlahragas,
+                'eventSeminarComing' => $eventSeminarComing
+            ]);
+        } else if ($name_category == 'pameran') {
+            if(!empty($request->q)) {
+                $eventPameran = $eventCategory->where('name_activity', 'LIKE' , '%'. $request->q. '%')->paginate(6);
+            } else {
+                $eventPameran = $eventCategory->where('type_activity', 'pameran')->orderBy('created_at', 'desc')->with('profile')->paginate(6);
+            }
+            $eventPameranPopuler = $eventCategory->where('type_activity','pameran')->orderBy('view_count', 'desc')->take(3)->get();
+            $eventPameranComing = $eventCategory->where('type_activity','pameran')->orderBy('date_activity', 'desc')->take(3)->get();
+            return view('main-home.category.pameran', [
+                'category' => $name_category,
+                'eventPameran' => $eventPameran,
+                'eventPameranPopuler' => $eventPameranPopuler,
+                'eventOlahraga' => $eventOlahragas,
+                'eventNasional' => $eventNasionals,
+                'eventPelatihan' => $eventPelatihans,
+                'eventLainnya' => $eventLainnyas,
+                'eventSeminar' => $eventSeminars,
+                'eventPameranComing' => $eventPameranComing
+            ]);
+        } else if ($name_category == 'pelatihan') {
+            if(!empty($request->q)) {
+                $eventPelatihan = $eventCategory->where('name_activity', 'LIKE' , '%'. $request->q. '%')->paginate(6);
+            } else {
+                $eventPelatihan = $eventCategory->where('type_activity', 'pelatihan')->orderBy('created_at', 'desc')->with('profile')->paginate(6);
+            }
+            $eventPelatihanPopuler = $eventCategory->where('type_activity','pelatihan')->orderBy('view_count', 'desc')->take(3)->get();
+            $eventPelatihanComing = $eventCategory->where('type_activity','pelatihan')->orderBy('date_activity', 'desc')->take(3)->get();
+            return view('main-home.category.pelatihan', [
+                'category' => $name_category,
+                'eventPelatihan' => $eventPelatihan,
+                'eventPelatihanPopuler' => $eventPelatihanPopuler,
+                'eventOlahraga' => $eventOlahragas,
+                'eventNasional' => $eventNasionals,
+                'eventLainnya' => $eventLainnyas,
+                'eventSeminar' => $eventSeminars,
+                'eventPelatihanComing' => $eventPelatihanComing
+            ]);
+        }  else if ($name_category == 'nasional') {
+            if(!empty($request->q)) {
+                $eventNasional = $eventCategory->where('name_activity', 'LIKE' , '%'. $request->q. '%')->paginate(6);
+            } else {
+                $eventNasional = $eventCategory->where('type_activity', 'nasional')->orderBy('created_at', 'desc')->with('profile')->paginate(6);
+            }
+            $eventNasionalPopuler = $eventCategory->where('type_activity','nasional')->orderBy('view_count', 'desc')->take(3)->get();
+            $eventNasionalComing = $eventCategory->where('type_activity','nasional')->orderBy('date_activity', 'desc')->take(3)->get();
+            return view('main-home.category.hari-nasional', [
+                'category' => $name_category,
+                'eventNasional' => $eventNasional,
+                'eventNasionalPopuler' => $eventNasionalPopuler,
+                'eventOlahraga' => $eventOlahragas,
+                'eventPameran' => $eventPamerans,
+                'eventPelatihan' => $eventPelatihans,
+                'eventSeminar' => $eventSeminars,
+                'eventLainnya' => $eventLainnyas,
+                'eventNasionalComing' => $eventNasionalComing
+            ]);
+        } else if ($name_category == 'lainnya') {
+            if(!empty($request->q)) {
+                $eventLainnya = $eventCategory->where('name_activity', 'LIKE' , '%'. $request->q. '%')->paginate(6);
+            } else {
+                $eventLainnya = $eventCategory->where('type_activity', 'lainnya')->orderBy('created_at', 'desc')->with('profile')->paginate(6);
+            }
+            $eventLainnyaPopuler = $eventCategory->where('type_activity','lainnya')->orderBy('view_count', 'desc')->take(3)->get();
+            $eventLainnyaComing = $eventCategory->where('type_activity','lainnya')->orderBy('date_activity', 'desc')->take(3)->get();
+            return view('main-home.category.lainnya', [
+                'category' => $name_category,
+                'eventLainnya' => $eventLainnya,
+                'eventLainnyaPopuler' => $eventLainnyaPopuler,
+                'eventOlahraga' => $eventOlahragas,
+                'eventPameran' => $eventPamerans,
+                'eventPelatihan' => $eventPelatihans,
+                'eventNasional' => $eventNasionals,
+                'eventSeminar' => $eventSeminars,
+                'eventLainnyaComing' => $eventLainnyaComing
+            ]);
+        } 
+        
+    }
+
+    public function loadMoreNewestEvent(Request $request) 
+    {
+        $lastItemId = $request->input('lastItemId');
+        $limit = 8; // Number of items to load
+    
+        $data = EventForm::where('status_activity', 'akan datang')->orderBy('created_at', 'desc')->where('id', '>', $lastItemId)
+                        ->limit($limit)
+                        ->get();
+    
+        return response()->json($data);
+    }
 }

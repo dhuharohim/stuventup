@@ -130,7 +130,13 @@
                                                     </li>
                                                 </ul>
                                                 <div>
-                                                    <b> {{ $event->date_activity }}</b>
+                                                    <b> 
+                                                        @php
+                                                            $dateEventPop = \Carbon\Carbon::createFromFormat('Y-m-d', $event->date_activity)->isoFormat('DD MMMM YYYY');
+                                                            echo $dateEventPop;
+                                                        @endphp
+                                                        {{-- {{ $dateEventpop }} --}}
+                                                    </b>
                                                 </div>
                                             </div>
                                         </div>
@@ -218,7 +224,12 @@
                                         <li class="list-inline-item"><a href="{{ route('news.detail', $eventPop->name_activity) }}">
                                         <img style="width: 20px; border-radius: 100%;" src="/assets/img/profile/{{ $eventPop->profile['photo'] == '' ? 'default.png' : $eventPop->profile['photo'] }}" class="author" alt="author" />
                                         {{ $eventPop->profile['nickname_himpunan'] }}</a></li>
-                                        <li class="list-inline-item"> {{ $eventPop->date_activity }} </li>
+                                        <li class="list-inline-item"> 
+                                            @php
+                                                $datePopLarge = \Carbon\Carbon::createFromFormat('Y-m-d', $eventPop->date_activity)->isoFormat('DD MMMM YYYY');;
+                                                echo $datePopLarge;
+                                            @endphp
+                                        </li>
                                         <li class="list-inline-item"> <i
                                             class="icon-eye"></i> {{ $eventPop->view_count }}</li>
                                     </ul>
@@ -316,10 +327,14 @@
                                         <ul class="meta list-inline mb-3">
                                             <li class="list-inline-item"><a href="{{ route('news.detail', $latest->name_activity) }}"><img style="width: 20px;"
                                                         src="/assets/img/profile/{{ $latest->profile['photo'] == '' ? 'default.png' : $latest->profile['photo'] }}" class="author"
-                                                        alt="author" />{{ $latest->profile['name_himpunan'] }}</a></li>
-                                                 
+                                                        alt="author" />{{ $latest->profile['nickname_himpunan'] }}</a></li>
                                             <li class="list-inline-item"><a href="{{ route('news.detail', $latest->name_activity) }}" style="text-transform: capitalize;">{{ $latest->type_activity }}</a></li>
-                                            <li class="list-inline-item">{{ $latest->date_activity }}</li>
+                                            <li class="list-inline-item">
+                                                @php
+                                                    $dateLatest = \Carbon\Carbon::createFromFormat('Y-m-d', $latest->date_activity)->isoFormat('DD MMMM YYYY');;
+                                                    echo $dateLatest;
+                                                @endphp
+                                            </li>
                                         </ul>
                                         <h5 class="post-title"><a href="{{ route('news.detail', $latest->name_activity) }}">{{ $latest->name_activity }}</a></h5>
                                         <input type="text" id="data-fetch-latest-{{ $loop->iteration }}" value="{{ $latest->desc_activity }}" hidden>
@@ -345,11 +360,9 @@
                         </div>
                         <!-- load more button -->
                         <div class="text-center">
-                            <button class="btn btn-simple">Load More</button>
+                            <button class="btn btn-simple" id="loadNewestEvent">Muat lebih banyak</button>
                         </div>
-
                     </div>
-
                 </div>
                 <div class="col-lg-4">
 
@@ -442,7 +455,12 @@
                                         </div>
                                         <h5 class="post-title mb-0 mt-4"><a href="{{ route('news.detail', $eventNext->name_activity) }}">{{ $eventNext->name_activity }}</a></h5>
                                         <ul class="meta list-inline mt-2 mb-0">
-                                            <li class="list-inline-item">{{ $eventNext->date_activity }}</li>
+                                            <li class="list-inline-item">
+                                                @php
+                                                    $dateNext = \Carbon\Carbon::createFromFormat('Y-m-d', $eventNext->date_activity)->isoFormat('DD MMMM YYYY');;
+                                                    echo $dateNext;
+                                                @endphp
+                                            </li>
                                         </ul>
                                     </div>
                                     @endforeach
@@ -469,9 +487,7 @@
                     </div>
 
                 </div>
-
             </div>
-
         </div>
     </section>
 
@@ -499,7 +515,6 @@
 @section('custom_js')
     <script>
         $(document).ready(function() {
-
             for(let i=1; i <= {{ count($latestEvent) }}; i++) {
                 var dataFetchLatest = $('#data-fetch-latest-'+i).val();
                 var outputFetchLatest = document.getElementById('output-latest-'+i);
@@ -518,23 +533,7 @@
                 var outputFetchSmall = document.getElementById('output-small'+i);
                 outputFetchSmall.innerHTML = dataFetchSmall;
             }
-			// const text = $('#data-fetch').val();
-            // const output = document.getElementById('output');
-            // output.innerHTML = text;
 
-            
-
-            // const text2 = $('#data-fetch-latest-2').val();
-            // const output2 = document.getElementById('output-latest-2');
-            // output2.innerHTML = text2;
-
-            // const text3 = $('#data-fetch-latest-3').val();
-            // const output3 = document.getElementById('output-latest-3');
-            // output3.innerHTML = text3;
-
-            // const text4 = $('#data-fetch-latest-4').val();
-            // const output4 = document.getElementById('output-latest-4');
-            // output4.innerHTML = text4;
         })
     </script>
 @endsection

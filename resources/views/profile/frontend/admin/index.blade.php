@@ -1,75 +1,4 @@
 @extends('profile.frontend.base-frontend')
-@section('header-content')
-<header class="header-personal light">
-    <div class="container-xl header-top">
-        <div class="row align-items-center">
-
-            <div class="col-4 d-none d-md-block d-lg-block">
-                <!-- social icons -->
-                @foreach($social as $socials)
-                <ul class="social-icons list-unstyled list-inline mb-0">
-                    <li class="list-inline-item"><a href="{{ $socials->social_link }}"><i class="fab fa-{{ $socials->social_name }}"></i></a></li>
-                </ul>
-                @endforeach
-            </div>
-
-            <div class="col-md-4 col-sm-12 col-xs-12 text-center">
-            <!-- site logo -->
-                <a class="navbar-brand" href="#"><img style="width: 20%;" src="/assets/img/profile/{{ $profile['photo'] == '' ? 'default.png' : $profile['photo'] }}" alt="logo" /></a>
-                <a href="#" class="d-block text-logo">{{ $profile->nickname_himpunan }}</a>
-                <span class="slogan d-block text-white">{{ $profile->name_himpunan }}</span>
-            </div>
-
-            <div class="col-md-4 col-sm-12 col-xs-12">
-                <!-- header buttons -->
-                <div class="header-buttons float-md-end mt-4 mt-md-0">
-                    <button class="search icon-button">
-                        <i class="icon-magnifier"></i>
-                    </button>
-                    <button class="burger-menu icon-button ms-2 float-end float-md-none">
-                        <span class="burger-icon"></span>
-                    </button>
-                </div>
-            </div>
-
-        </div>
-    </div>
-
-    <nav class="navbar navbar-expand-lg">
-        <div class="container-xl">
-           
-            <div class="collapse navbar-collapse justify-content-center centered-nav " >
-                <!-- menus -->
-                <ul class="nav nav-tabs navbar-nav" id="myTab" role="tablist">
-                    <li class="nav-item dropdown active">
-                        <a class="nav-link dropdown-toggle" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Post</a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle"  href="#">Kategori</a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="">Seminar</a></li>
-                            <li><a class="dropdown-item" href="">Pelatihan</a></li>
-                            <li><a class="dropdown-item" href="blog-single-alt.html">Olahraga</a></li>
-                            <li><a class="dropdown-item" href="about.html">Pameran</a></li>
-                            <li><a class="dropdown-item" href="contact.html">Hari Nasional</a></li>
-                            <li><a class="dropdown-item" href="contact.html">Lainnya</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Kontak</a>
-                    </li>
-                </ul>
-            </div>
-            <div class="tab-content" id="myTabContent">
-                <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab"></div>
-                <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">Lorem ipsum dolor sit amet consectetur adipisicing elit. In assumenda aperiam, inventore praesentium reprehenderit modi ab eum aliquam quibusdam fugiat nesciunt qui debitis dolorem quae culpa totam error veritatis pariatur!</div>
-                <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">lor</div>
-            </div>
-
-        </div>
-    </nav>
-</header>
-@endsection
 
 @section('hero-content')
 <section class="hero data-bg-image d-flex align-items-center" data-bg-image="images/other/hero.jpg">
@@ -90,11 +19,8 @@
 @section('main-content')
 <section class="main-content mt-5">
     <div class="container-xl">
-
         <div class="row gy-4">
-
             <div class="col-lg-8">
-
                 <div class="row gy-4">
                     <div class="col-sm-6">
                         <!-- post -->

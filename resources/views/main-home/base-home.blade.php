@@ -65,31 +65,34 @@
             <nav class="navbar navbar-expand-lg">
                 <div class="container-xl">
                     <!-- site logo -->
-                    <img src="{{ asset('assets/img/stuvent.png') }}" alt="logo" style="width:5%;" />
+                    <img src="{{ asset('assets/img/stuvent.png') }}" style="width: 3rem;" alt="logo" />
+                    <a href="{{ route('magazine.index') }}" style="margin-left: 1rem;" class="d-block text-logo">STUVENT<span class="dot">.</span> UP</a>
 
                     <div class="collapse navbar-collapse">
                         <!-- menus -->
                         <ul class="navbar-nav mr-auto">
                             <li class="nav-item dropdown active">
-                                <a class="nav-link" href="#">Home</a>
+                                <a class="nav-link" href="{{ route('magazine.index') }}">Home</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle"  href="#">Kategori</a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="{{ route('category.index', 'seminar') }}">Seminar</a></li>
+                                    <li><a class="dropdown-item" href="{{ route('category.index', 'pelatihan') }}">Pelatihan</a></li>
+                                    <li><a class="dropdown-item" href="{{ route('category.index', 'olahraga') }}">Olahraga</a></li>
+                                    <li><a class="dropdown-item" href="{{ route('category.index', 'pameran') }}">Pameran</a></li>
+                                    <li><a class="dropdown-item" href="{{ route('category.index', 'nasional') }}">Hari Nasional</a></li>
+                                    <li><a class="dropdown-item" href="{{ route('category.index', 'lainnya') }}">Lainnya</a></li>
+                                </ul>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="category.html">Seminar/Webinar</a>
+                                <a class="nav-link" href="category.html">Daftar Himpunan</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="category.html">Pelatihan</a>
+                                <a class="nav-link" href="#">Tentang</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">Olahraga</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="">Pameran</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="">Hari Nasional</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="">Lainnya</a>
+                                <a class="nav-link" href="">Kontak</a>
                             </li>
                         </ul>
                     </div>
@@ -161,12 +164,20 @@
         <nav>
             <ul class="vertical-menu">
                 <li><a href="category.html">Home</a></li>
-                <li><a href="category.html">Seminar/Webinar</a></li>
-                <li><a href="contact.html">Pelatihan</a></li>
-                <li><a href="contact.html">Olahraga</a></li>
-                <li><a href="contact.html">Pameran</a></li>
-                <li><a href="contact.html">Hari Nasional</a></li>
-                <li><a href="contact.html">Lainnya</a></li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle"  href="#">Kategori</a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="">Seminar</a></li>
+                        <li><a class="dropdown-item" href="">Pelatihan</a></li>
+                        <li><a class="dropdown-item" href="blog-single-alt.html">Olahraga</a></li>
+                        <li><a class="dropdown-item" href="about.html">Pameran</a></li>
+                        <li><a class="dropdown-item" href="contact.html">Hari Nasional</a></li>
+                        <li><a class="dropdown-item" href="contact.html">Lainnya</a></li>
+                    </ul>
+                </li>
+                <li><a href="contact.html">Daftar Himpunan</a></li>
+                <li><a href="contact.html">Tentang</a></li>
+                <li><a href="contact.html">Kontak</a></li>
             </ul>
         </nav>
         <div style="display: flex;
