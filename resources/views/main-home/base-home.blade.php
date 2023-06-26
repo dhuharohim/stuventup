@@ -130,6 +130,27 @@
 
     @yield('content-portal')
 
+    
+    <!-- footer -->
+    <footer>
+        <div class="container-xl">
+            <div class="footer-inner">
+                <div class="row d-flex align-items-center gy-4">
+                    <!-- copyright text -->
+                    <div class="col-md-6">
+                        <span class="copyright">© 2023 Stuvent UP</span>
+                    </div>
+
+                    <!-- go to top button -->
+                    <div class="col-md-6">
+                        <a href="#" id="return-to-top" class="float-md-end"><i class="icon-arrow-up"></i>Back to
+                            Top</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
     <!-- search popup area -->
     <div class="search-popup">
         <!-- close button -->
@@ -165,7 +186,7 @@
             <ul class="vertical-menu">
                 <li><a href="category.html">Home</a></li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle"  href="#">Kategori</a>
+                    <a class="nav-link dropdown-toggle">Kategori</a>
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="">Seminar</a></li>
                         <li><a class="dropdown-item" href="">Pelatihan</a></li>

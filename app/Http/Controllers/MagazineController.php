@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\EventComment;
 use App\Models\EventForm;
+use App\Models\Profile;
 use App\Models\ProfileMahasiswa;
 use App\Models\ProfileUmum;
 use App\Models\RegistrationEvent;
+use App\Models\RepliedComment;
 use App\Models\Social;
 use App\Models\User;
 use Carbon\Carbon;
@@ -97,7 +100,7 @@ class MagazineController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function show($name_activity)
+    public function show($name_activity, Request $request)
     {
         $eventDetail = EventForm::where('name_activity', $name_activity)->with('profile')->first();
         $eventDetail->view_count =  (int) ++$eventDetail->view_count;
@@ -117,6 +120,14 @@ class MagazineController extends Controller
         $eventPelatihan = EventForm::where('type_activity', 'pelatihan')->where('status_activity', 'akan datang')->get();
         $eventLainnya = EventForm::where('type_activity', 'lainnya')->where('status_activity', 'akan datang')->get();
 
+        // comment
+        $eventComment = EventComment::where('event_forms_id', $eventDetail->id)->orderBy('created_at', 'DESC')->with(['profile', 'profileGeneral', 'profileMhs'])->get();
+        $eventCommentIds = EventComment::where('event_forms_id', $eventDetail->id)
+                                        ->orderBy('created_at', 'DESC')
+                                        ->pluck('id')
+                                        ->toArray();
+        $repliedComment = RepliedComment::whereIn('event_comment_id', $eventCommentIds)->with(['profile', 'profileGeneral', 'profileMhs'])->get();
+
         // user not logged in
         if(empty(auth()->user()->role)){
             return view('main-home.detail', [
@@ -132,8 +143,9 @@ class MagazineController extends Controller
             'eventPameran' =>$eventPameran,
             'eventOlahraga' => $eventOlahraga,
             'eventPelatihan' => $eventPelatihan,
-            'eventLainnya' => $eventLainnya
-            
+            'eventLainnya' => $eventLainnya,
+            'eventComments' => $eventComment,
+            'repliedComments' => $repliedComment
         ]);
         }
         $userRole = Auth::user()->role;
@@ -151,6 +163,14 @@ class MagazineController extends Controller
             'mostPopularEvent'=>$mostPopularEvent,
             'eventComingNext'=>$eventComingNext,
             'socialMedia' =>$socialMedia,
+            'eventSeminar'=>$eventSeminar,
+            'eventNasional' =>$eventNasional,
+            'eventPameran' =>$eventPameran,
+            'eventOlahraga' => $eventOlahraga,
+            'eventPelatihan' => $eventPelatihan,
+            'eventLainnya' => $eventLainnya,
+            'eventComments'=>$eventComment,
+            'repliedComments' => $repliedComment
         ]);
 
     }
@@ -321,6 +341,7 @@ class MagazineController extends Controller
                 'eventNasional' => $eventNasionals,
                 'eventLainnya' => $eventLainnyas,
                 'eventSeminar' => $eventSeminars,
+                'eventPameran' => $eventPamerans,
                 'eventPelatihanComing' => $eventPelatihanComing
             ]);
         }  else if ($name_category == 'nasional') {
@@ -365,15 +386,95 @@ class MagazineController extends Controller
         
     }
 
-    public function loadMoreNewestEvent(Request $request) 
+    public function loadMoreNewestEvent(Request $request)
     {
-        $lastItemId = $request->input('lastItemId');
-        $limit = 8; // Number of items to load
-    
-        $data = EventForm::where('status_activity', 'akan datang')->orderBy('created_at', 'desc')->where('id', '>', $lastItemId)
-                        ->limit($limit)
-                        ->get();
-    
+        $page = $request->input('page');
+        $perPage = 10; // Jumlah data yang akan dimuat per halaman
+        $offset = ($page - 1) * $perPage;
+        $latestEvent = EventForm::skip($offset)->take($perPage)->get();
+
+        $data = [];
+
+        foreach ($latestEvent as $key => $latest) {
+            $item = [
+                'route' => route('news.detail', $latest->name_activity),
+                'imgSrc' => '/assets/img/poster/' . $latest->profile['name_himpunan'] . '/' . $latest['img_activity'],
+                'authorImg' => '/assets/img/profile/' . ($latest->profile['photo'] == '' ? 'default.png' : $latest->profile['photo']),
+                'authorName' => $latest->profile['nickname_himpunan'],
+                'activityType' => $latest->type_activity,
+                'activityDate' => \Carbon\Carbon::createFromFormat('Y-m-d', $latest->date_activity)->isoFormat('DD MMMM YYYY'),
+                'activityName' => $latest->name_activity,
+                'activityDesc' => $latest->desc_activity,
+                'iteration' => $key + 1
+            ];
+
+            $data[] = $item;
+        }
+
+        // Kembalikan data sebagai respon JSON
         return response()->json($data);
+    }
+
+    public function sendComment(Request $request) {
+        $user = Auth::user();
+        $profile = Profile::where('user_id', $user->id)->first();
+        $profileMhs = ProfileMahasiswa::where('user_id', $user->id)->first();
+        $profileGeneral = ProfileUmum::where('user_id', $user->id)->first();
+
+        if(empty($user)) {
+            return response()->json([
+                'error' => true,
+                'msg' => 'Silahkan login terlebih dahulu'
+            ]);
+        };
+        $request->validate([
+            'idEvent' => 'required',
+            'comment' => 'required|max:255'
+        ]);
+        
+        $eventComment = new EventComment();
+        $eventComment->user_id = $user->id;
+        $eventComment->event_forms_id = $request->idEvent;
+        $eventComment->comment = $request->comment;
+        $eventComment->is_replied = 0;
+        $eventComment->profile_id = empty($profile) ? null : $profile->id;
+        $eventComment->profile_mhs_id = empty($profileMhs) ? null : $profileMhs->id;;
+        $eventComment->profile_general_id = empty($profileGeneral) ? null : $profileGeneral->id;
+        $eventComment->save();
+    }
+
+    public function sendSubComment(Request $request) {
+        $user = Auth::user();
+        $profile = Profile::where('user_id', $user->id)->first();
+        $profileMhs = ProfileMahasiswa::where('user_id', $user->id)->first();
+        $profileGeneral = ProfileUmum::where('user_id', $user->id)->first();
+
+        if(empty($user)) {
+            return response()->json([
+                'error' => true,
+                'msg' => 'Silahkan login terlebih dahulu'
+            ]);
+        };
+        $request->validate([
+            'idEvent' => 'required',
+            'parentCommentId' => 'required',
+            'comment' => 'required|max:255'
+        ]);
+        
+        $eventComment = EventComment::where('id', $request->parentCommentId)->first();
+        
+        $repliedComment = new RepliedComment();
+        $repliedComment->user_id = $user->id;
+        $repliedComment->event_comment_id = $eventComment->id;
+        $repliedComment->event_forms_id = $request->idEvent;
+        $repliedComment->comment = $request->comment;
+        $repliedComment->profile_id = empty($profile) ? null : $profile->id;
+        $repliedComment->profile_mhs_id = empty($profileMhs) ? null : $profileMhs->id;;
+        $repliedComment->profile_general_id = empty($profileGeneral) ? null : $profileGeneral->id;
+        if($repliedComment->save()) {
+            $eventComment->is_replied = true;
+            $eventComment->save();
+        };
+
     }
 }

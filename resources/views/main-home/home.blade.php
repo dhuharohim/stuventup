@@ -308,7 +308,7 @@
                     </div>
 
                     <div class="padding-30 rounded bordered">
-                        <div class="row">
+                        <div class="row" id="data-container">
                             @foreach($latestEvent as $latest)
                             <div class="col-md-12 col-sm-6">
                                 <!-- post -->
@@ -360,7 +360,7 @@
                         </div>
                         <!-- load more button -->
                         <div class="text-center">
-                            <button class="btn btn-simple" id="loadNewestEvent">Muat lebih banyak</button>
+                            <button class="btn btn-simple" id="loadNewestEvent" data-page="1">Muat lebih banyak</button>
                         </div>
                     </div>
                 </div>
@@ -490,26 +490,6 @@
             </div>
         </div>
     </section>
-
-    <!-- footer -->
-    <footer>
-        <div class="container-xl">
-            <div class="footer-inner">
-                <div class="row d-flex align-items-center gy-4">
-                    <!-- copyright text -->
-                    <div class="col-md-6">
-                        <span class="copyright">© 2023 Stuvent UP</span>
-                    </div>
-
-                    <!-- go to top button -->
-                    <div class="col-md-6">
-                        <a href="#" id="return-to-top" class="float-md-end"><i class="icon-arrow-up"></i>Back to
-                            Top</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </footer>
 @endsection
 
 @section('custom_js')
@@ -534,28 +514,73 @@
                 outputFetchSmall.innerHTML = dataFetchSmall;
             }
 
-            var lastItemId = 0;
+   
+            var page = 1;
+            var container = $("#data-container");
+            var button = $("#loadNewestEvent");
 
-            $('#loadNewestEvent').click(function() {
+            button.click(function() {
+                button.text("Loading..."); // Ubah teks tombol menjadi "Loading..."
                 $.ajax({
-                    url: '{{ route('load-more-data') }}',
-                    type: 'GET',
-                    dataType: 'json',
-                    data: { lastItemId: lastItemId },
-                    success: function(response) {
-                        if (response.length > 0) {
-                            lastItemId = response[response.length - 1].id;
-                            // Process and append the loaded data to your page
-                        } else {
-                            // No more data to load
-                            $('#loadNewestEvent').hide();
-                        }
-                    },
-                    error: function() {
-                        // Handle error if AJAX request fails
+                url: "{{ route('load.more.data') }}?page=" + page,
+                method: "GET",
+                dataType: "json",
+                data: {
+                    page: page
+                },
+                success: function(data) {
+                    console.log(data.length);
+                    if(data.length !== 0) {
+                         // Loop melalui data yang diterima dan buat elemen HTML yang sesuai
+                    data.forEach(function(item) {
+                    var html = '<div class="col-md-12 col-sm-6">' +
+                        '<div class="post post-list clearfix">' +
+                        '<div class="thumb rounded">' +
+                        '<span class="post-format-sm">' +
+                        '<i class="icon-picture"></i>' +
+                        '</span>' +
+                        '<a href="' + item.route + '">' +
+                        '<div class="inner">' +
+                        '<img src="' + item.imgSrc + '" alt="post-title" />' +
+                        '</div>' +
+                        '</a>' +
+                        '</div>' +
+                        '<div class="details">' +
+                        '<ul class="meta list-inline mb-3">' +
+                        '<li class="list-inline-item"><a href="' + item.route + '"><img style="width: 20px;" src="' + item.authorImg + '" class="author" alt="author" />' + item.authorName + '</a></li>' +
+                        '<li class="list-inline-item"><a href="' + item.route + '" style="text-transform: capitalize;">' + item.activityType + '</a></li>' +
+                        '<li class="list-inline-item">' + item.activityDate + '</li>' +
+                        '</ul>' +
+                        '<h5 class="post-title"><a href="' + item.route + '">' + item.activityName + '</a></h5>' +
+                        '<div class="excerpt mb-0" style="overflow: hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-line-clamp: 3;line-clamp: 3;-webkit-box-orient: vertical;text-align:justify;">'+ item.activityDesc +'</div>' +
+                        '<input type="text" id="data-fetch-latest-' + item.iteration + '" value="' + item.activityDesc + '" hidden>' +
+                        '<div id="output-latest-' + item.iteration + '" class="excerpt mb-0" style="overflow: hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-line-clamp: 3;line-clamp: 3;-webkit-box-orient: vertical;text-align:justify;"></div>' +
+                        '<div class="post-bottom clearfix d-flex align-items-center">' +
+                        '<div class="more-button float-end">' +
+                        '<a href="' + item.route + '"><span class="icon-options"></span></a>' +
+                        '</div>' +
+                        '</div>' +
+                        '</div>' +
+                        '</div>';
+
+                    container.append(html); // Menambahkan HTML ke dalam container
+                    });
+
+                    button.text("Load More"); // Mengembalikan teks tombol menjadi "Load More"
+                    page++; // Menambahkan nomor halaman
+                    } else {
+                        button.text('Tidak ada data event terbaru lagi');
+                        button.prop('disabled', true);
                     }
+                   
+                },
+                error: function() {
+                    button.text("Error! Try Again"); // Menampilkan pesan kesalahan jika terjadi masalah
+                }
                 });
             });
+
+
         })
     </script>
 @endsection

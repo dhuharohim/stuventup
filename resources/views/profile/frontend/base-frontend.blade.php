@@ -64,18 +64,15 @@
 		<div class="container-xl header-top">
 			<div class="row align-items-center">
 	
-				<div class="col-4 d-none d-md-block d-lg-block">
-					<!-- social icons -->
-					@foreach($social as $socials)
-					<ul class="social-icons list-unstyled list-inline mb-0">
-						<li class="list-inline-item"><a href="{{ $socials->social_link }}"><i class="fab fa-{{ $socials->social_name }}"></i></a></li>
-					</ul>
-					@endforeach
+				<div class="col-4 d-none d-md-flex d-lg-flex" style="gap: 1rem;">
+					{{-- <a href="{{ route('magazine.index') }}" style="margin-left: 1rem;" class="d-block text-logo">STUVENT<span class="dot">.</span> UP</a> --}}
+				
 				</div>
 	
 				<div class="col-md-4 col-sm-12 col-xs-12 text-center">
 				<!-- site logo -->
-					<a class="navbar-brand" href="#"><img style="width: 20%;" src="/assets/img/profile/{{ $profile['photo'] == '' ? 'default.png' : $profile['photo'] }}" alt="logo" /></a>
+					<a class="navbar-brand" href="#"><img style="width: 20%; border-radius: 100%;
+						margin-bottom: 1rem;" src="/assets/img/profile/{{ $profile['photo'] == '' ? 'default.png' : $profile['photo'] }}" alt="logo" /></a>
 					<a href="#" class="d-block text-logo">{{ $profile->nickname_himpunan }}</a>
 					<span class="slogan d-block text-white">{{ $profile->name_himpunan }}</span>
 				</div>
@@ -86,10 +83,12 @@
 						<a class="search icon-button" href="{{ route('magazine.index') }}">
 							<i class="icon-home"></i>
 						</a>
-						@if(auth()->user()->role == 'admin')
-						<a href="{{ route('home') }}" class="settings icon-button">
-							<i class="icon-settings"></i>
-						</a>
+						@if(!empty(auth()->user()))
+							@if(auth()->user()->role == 'admin')
+							<a href="{{ route('home') }}" class="settings icon-button">
+								<i class="icon-settings"></i>
+							</a>
+							@endif
 						@endif
 						<button class="burger-menu icon-button float-end float-md-none" >
 							<span class="burger-icon"></span>
@@ -105,18 +104,18 @@
 				<div class="collapse navbar-collapse justify-content-center centered-nav " >
 					<!-- menus -->
 					<ul class=" navbar-nav" >
-						<li class="nav-item dropdown active">
-							<a class="nav-link" href="{{ route('profile.admin', $profile->name_himpunan) }}">Home</a>
+						<li class="nav-item dropdown @if($active == 'home') active @endif">
+							<a class="nav-link" href="{{ route('profile.admin',['himpunan' => $profile->name_himpunan,'nav_home' => 'home']) }}">Home</a>
 						</li>
-						<li class="nav-item dropdown">
-							<a class="nav-link dropdown-toggle"  href="#">Kategori</a>
+						<li class="nav-item dropdown @if($active !== 'home') active @endif">
+							<a class="nav-link dropdown-toggle">Kategori</a>
 							<ul class="dropdown-menu">
-								<li><a class="dropdown-item" href="">Seminar</a></li>
-								<li><a class="dropdown-item" href="">Pelatihan</a></li>
-								<li><a class="dropdown-item" href="blog-single-alt.html">Olahraga</a></li>
-								<li><a class="dropdown-item" href="about.html">Pameran</a></li>
-								<li><a class="dropdown-item" href="contact.html">Hari Nasional</a></li>
-								<li><a class="dropdown-item" href="contact.html">Lainnya</a></li>
+								<li><a class="dropdown-item @if($active == 'seminar') active @endif" href="{{ route('profile.admin',['himpunan' => $profile->name_himpunan,'category' => 'seminar']) }}">Seminar</a></li>
+								<li><a class="dropdown-item @if($active == 'pelatihan') active @endif" href="{{ route('profile.admin',['himpunan' => $profile->name_himpunan,'category' => 'pelatihan']) }}">Pelatihan</a></li>
+								<li><a class="dropdown-item @if($active == 'olahraga') active @endif" href="{{ route('profile.admin',['himpunan' => $profile->name_himpunan,'category' => 'olahraga']) }}">Olahraga</a></li>
+								<li><a class="dropdown-item @if($active == 'pameran') active @endif" href="{{ route('profile.admin',['himpunan' => $profile->name_himpunan,'category' => 'pameran']) }}">Pameran</a></li>
+								<li><a class="dropdown-item @if($active == 'hari nasional') active @endif" href="{{ route('profile.admin',['himpunan' => $profile->name_himpunan,'category' => 'hari nasional']) }}">Hari Nasional</a></li>
+								<li><a class="dropdown-item @if($active == 'lainnya') active @endif" href="{{ route('profile.admin',['himpunan' => $profile->name_himpunan,'category' => 'lainnya']) }}">Lainnya</a></li>
 							</ul>
 						</li>
 						<li class="nav-item">
@@ -156,8 +155,8 @@
 
 </div><!-- end site wrapper -->
 
-<!-- search popup area -->
-<div class="search-popup">
+ <!-- search popup area -->
+{{-- <div class="search-popup">
 	<!-- close button -->
 	<button type="button" class="btn-close" aria-label="Close"></button>
 	<!-- content -->
@@ -171,7 +170,7 @@
 			<button class="btn btn-default btn-lg" type="submit"><i class="icon-magnifier"></i></button>
 		</form>
 	</div>
-</div>
+</div> --}}
 
     <!-- canvas menu -->
     <div class="canvas-menu d-flex align-items-end flex-column">
@@ -190,8 +189,8 @@
             <ul class="vertical-menu">
                 <li><a href="category.html">Home</a></li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle"  href="#">Kategori</a>
-                    <ul class="dropdown-menu">
+                    <a href="#">Kategori</a>
+                    <ul class="submenu">
                         <li><a class="dropdown-item" href="">Seminar</a></li>
                         <li><a class="dropdown-item" href="">Pelatihan</a></li>
                         <li><a class="dropdown-item" href="blog-single-alt.html">Olahraga</a></li>
@@ -225,5 +224,6 @@
 <script src="{{ asset('assets/js/custom.js') }}"></script>
 <script src="https://cdn.tutorialjinni.com/izitoast/1.4.0/js/iziToast.min.js" type="text/javascript"></script>
 
+@yield('custom_js')
 </body>
 </html>

@@ -5,10 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class EventComment extends Model
+class RepliedComment extends Model
 {
     use HasFactory;
-    protected $table = "event_comment";
+    protected $table = "replied_comment";
     
     protected $fillable = [
         'user_id',
@@ -17,6 +17,7 @@ class EventComment extends Model
         'profile_id',
         'profile_mhs_id',
         'profile_genereal_id',
+        'event_comment_id'
     ];
 
     public function user() {
@@ -25,6 +26,10 @@ class EventComment extends Model
 
     public function eventForms() {
         return $this->hasOne(EventForm::class, 'id', 'event_forms_id');
+    }
+
+    public function eventComment() {
+        return $this->belongsTo(EventComment::class, 'id', 'event_comment_id');
     }
 
     public function profile() {
@@ -38,5 +43,4 @@ class EventComment extends Model
     public function profileGeneral() {
         return $this->belongsTo(ProfileUmum::class, 'profile_general_id', 'id');
     }
-
 }

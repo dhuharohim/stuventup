@@ -9,10 +9,10 @@
 	<input id="name_act" type="text" value="{{ $eventDetail->name_activity }}" hidden>
     <section class="main-content mt-3">
         <div class="container-xl">
-
+            <input type="hidden" name="idEvent" id="idEvent" value="{{ $eventDetail->id }}">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                    <li class="breadcrumb-item"><a href="#">Home</a></li> 
                     <li class="breadcrumb-item"><a href="#">{{ $eventDetail->name_activity }}</a></li>
                 </ol>
             </nav>
@@ -27,7 +27,7 @@
                             <h1 class="title mt-0 mb-3">{{ $eventDetail->name_activity }}</h1>
                             <ul class="meta list-inline mb-0">
                                 <li class="list-inline-item">
-                                    <a href="#">
+                                    <a href="{{ route('profile.admin', $eventDetail->profile->name_himpunan ) }}">
                                         <img alt="image"
                                             src="/assets/img/profile/{{ $eventDetail->profile['photo'] == '' ? 'default.png' : $eventDetail->profile['photo'] }}"
                                             class="author" height="25" width="25" />
@@ -152,7 +152,7 @@
                             <img src="/assets/img/profile/{{ $eventDetail->profile['photo'] == '' ? 'default.png' : $eventDetail->profile['photo'] }}" alt="Katen Doe" />
                         </div>
                         <div class="details">
-                            <h4 class="name"><a href="#">{{ $eventDetail->profile->name_himpunan }}</a></h4>
+                            <h4 class="name"><a href="{{ route('profile.admin', $eventDetail->profile->name_himpunan ) }}">{{ $eventDetail->profile->name_himpunan }}</a></h4>
                             <p>{{ $eventDetail->profile->bio_himpunan }}</p>
                             <!-- social icons -->
                             <ul class="social-icons list-unstyled list-inline mb-0">
@@ -167,110 +167,136 @@
 
                     <!-- section header -->
                     <div class="section-header">
-                        <h3 class="section-title">Komentar (3)</h3>
+                        <h3 class="section-title">Komentar ({{ count($eventComments) + count($repliedComments) }})</h3>
                         <img src="{{ asset('assets/images/wave.svg') }}" class="wave" alt="wave" />
                     </div>
                     <!-- post comments -->
+                    @if (count($eventComments) > 0)
                     <div class="comments bordered padding-30 rounded">
 
                         <ul class="comments">
                             <!-- comment item -->
+                            @foreach($eventComments as $comment)
+                            <input type="hidden" name="comment" id="parentComment" value="{{ $comment->id }}">
                             <li class="comment rounded">
-                                <div class="thumb">
-                                    <img src="images/other/comment-1.png" alt="John Doe" />
-                                </div>
-                                <div class="details">
-                                    <h4 class="name"><a href="#">John Doe</a></h4>
-                                    <span class="date">Jan 08, 2021 14:41 pm</span>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam vitae odio ut tortor
-                                        fringilla cursus sed quis odio.</p>
-                                    <a href="#" class="btn btn-default btn-sm">Reply</a>
+                                <div class="details" style="margin: 0;">
+                                    <div class="row">
+                                        <div class="col-md-2" style="width:12%;">
+                                            @if(!empty($comment->profile))
+                                                <img src="/assets/img/profile/{{ $comment->profile['photo'] == '' ? 'default.png' : $comment->profile['photo'] }}" alt="John Doe" />
+                                            @elseif(!empty($comment->profileMhs))
+                                                <img src="/assets/img/profile/{{ $comment->profileMhs['photo'] == '' ? 'default.png' : $comment->profileMhs['photo'] }}" alt="John Doe" />
+
+                                            @elseif(!empty($comment->profileGeneral))
+                                                <img src="/assets/img/profile/{{ $comment->profileGeneral['photo'] == '' ? 'default.png' : $comment->profileGeneral['photo'] }}" alt="John Doe" />
+                                            @endif
+                                        </div>
+                                        <div class="col-md-10">
+                                            @if(!empty($comment->profile))
+                                            <h4 class="name"><a href="#">{{ $comment->profile->nickname_himpunan }}
+                                                @if($comment->profile->name_himpunan == $eventDetail->profile->name_himpunan)
+                                                    <span style="    border: 1px solid #73c15e;
+                                                    border-radius: 12px;
+                                                    margin: 0 0 0 1rem;
+                                                    padding: 0.2rem 0.5rem;
+                                                    font-size: 12px;
+                                                    font-weight: 600;">Owner</span> 
+                                                @endif
+                                            </a></h4>
+                                            @elseif(!empty($comment->profileMhs))
+                                            <h4 class="name"><a href="#">{{ $comment->profileMhs->first_name }} {{ $comment->profileMhs->last_name  }}</a></h4>
+                                            @elseif(!empty($comment->profileGeneral))
+                                            <h4 class="name"><a href="#">{{  $comment->profileGeneral->first_name  }} {{ $comment->profileGeneral->last_name  }}</a></h4>
+                                            @endif
+                                            <span class="date">{{ $comment->created_at }}</span>
+                                            <p>{{ $comment->comment }}</p>
+                                            <a id="repliedComment" class="btn btn-default btn-sm">Reply</a>
+                                            <div id="appendReplied">
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </li>
-                            <!-- comment item -->
-                            <li class="comment child rounded">
-                                <div class="thumb">
-                                    <img src="images/other/comment-2.png" alt="John Doe" />
-                                </div>
-                                <div class="details">
-                                    <h4 class="name"><a href="#">Helen Doe</a></h4>
-                                    <span class="date">Jan 08, 2021 14:41 pm</span>
-                                    <p>Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet
-                                        adipiscing sem neque sed ipsum.</p>
-                                    <a href="#" class="btn btn-default btn-sm">Reply</a>
-                                </div>
-                            </li>
-                            <!-- comment item -->
-                            <li class="comment rounded">
-                                <div class="thumb">
-                                    <img src="images/other/comment-3.png" alt="John Doe" />
-                                </div>
-                                <div class="details">
-                                    <h4 class="name"><a href="#">Anna Doe</a></h4>
-                                    <span class="date">Jan 08, 2021 14:41 pm</span>
-                                    <p>Cras ultricies mi eu turpis hendrerit fringilla. Vestibulum ante ipsum primis in
-                                        faucibus orci luctus et ultrices posuere cubilia.</p>
-                                    <a href="#" class="btn btn-default btn-sm">Reply</a>
-                                </div>
-                            </li>
+                            @endforeach
+                            @if(!empty($repliedComments))
+                                @foreach($repliedComments as $replied)
+                                <!-- sub comment item -->
+                                <li class="comment child rounded" style="margin:1rem 0 0 0;">
+                                    <div class="details">
+                                        <div class="row">
+                                            <div class="col-md-2" style="width:12%;">
+                                                @if(!empty($replied->profile))
+                                                    <img src="/assets/img/profile/{{ $replied->profile['photo'] == '' ? 'default.png' : $replied->profile['photo'] }}" alt="John Doe" />
+                                                @elseif(!empty($replied->profileMhs))
+                                                    <img src="/assets/img/profile/{{ $replied->profileMhs['photo'] == '' ? 'default.png' : $replied->profileMhs['photo'] }}" alt="John Doe" />
+    
+                                                @elseif(!empty($replied->profileGeneral))
+                                                    <img src="/assets/img/profile/{{ $replied->profileGeneral['photo'] == '' ? 'default.png' : $replied->profileGeneral['photo'] }}" alt="John Doe" />
+                                                @endif
+                                            </div>
+                                            <div class="col-md-10">
+                                                @if(!empty($replied->profile))
+                                                <h4 class="name"><a href="#">{{ $replied->profile->nickname_himpunan }}
+                                                    @if($replied->profile->name_himpunan == $eventDetail->profile->name_himpunan)
+                                                        <span style="    border: 1px solid #73c15e;
+                                                        border-radius: 12px;
+                                                        margin: 0 0 0 1rem;
+                                                        padding: 0.2rem 0.5rem;
+                                                        font-size: 12px;
+                                                        font-weight: 600;">Owner</span> 
+                                                    @endif
+                                                </a></h4>
+                                                @elseif(!empty($replied->profileMhs))
+                                                <h4 class="name"><a href="#">{{ $replied->profileMhs->first_name }} {{ $replied->profileMhs->last_name  }}</a></h4>
+                                                @elseif(!empty($replied->profileGeneral))
+                                                <h4 class="name"><a href="#">{{  $replied->profileGeneral->first_name  }} {{ $replied->profileGeneral->last_name  }}</a></h4>
+                                                @endif
+                                                <span class="date">{{ $replied->created_at }}</span>
+                                                <p>{{ $replied->comment }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                @endforeach
+                            @endif
                         </ul>
                     </div>
+                    @endif
 
                     <div class="spacer" data-height="50"></div>
 
                     <!-- section header -->
                     <div class="section-header">
-                        <h3 class="section-title">Leave Comment</h3>
+                        <h3 class="section-title">Komentar anda</h3>
                         <img src="{{ asset('assets/images/wave.svg') }}" class="wave" alt="wave" />
                     </div>
                     <!-- comment form -->
+                    @if(empty(auth()->user()))
+                        <div class="comment-form rounded bordered padding-30 text-center">
+                            <p style="border-radius: 6px;
+                            width: 100%; "> Mohon <a href="{{ route('login') }}">login disini</a> untuk memberikan komentar pada postingan ini</p>
+                            <span>Belum punya akun? <a href="{{ route('register') }}"> daftar sekarang </a></span>
+                        </div>
+                    @else
                     <div class="comment-form rounded bordered padding-30">
-
-                        <form id="comment-form" class="comment-form" method="post">
-
+                        <div id="comment-form" class="comment-form" method="post">
                             <div class="messages"></div>
-
                             <div class="row">
-
                                 <div class="column col-md-12">
                                     <!-- Comment textarea -->
-                                    <div class="form-group">
+                                    <div class="form-group text-right">
                                         <textarea name="InputComment" id="InputComment" class="form-control" rows="4"
-                                            placeholder="Your comment here..." required="required"></textarea>
+                                            placeholder="Sertakan Komentar anda disini..." required="required" maxlength="255"></textarea>
+                                            <small style="margin-right: 1rem;">Jumlah Karakter: <span id="characterCount">0/255</span></small>
                                     </div>
                                 </div>
-
-                                <div class="column col-md-6">
-                                    <!-- Email input -->
-                                    <div class="form-group">
-                                        <input type="email" class="form-control" id="InputEmail" name="InputEmail"
-                                            placeholder="Email address" required="required">
-                                    </div>
-                                </div>
-
-                                <div class="column col-md-6">
-                                    <!-- Name input -->
-                                    <div class="form-group">
-                                        <input type="text" class="form-control" name="InputWeb" id="InputWeb"
-                                            placeholder="Website" required="required">
-                                    </div>
-                                </div>
-
-                                <div class="column col-md-12">
-                                    <!-- Email input -->
-                                    <div class="form-group">
-                                        <input type="text" class="form-control" id="InputName" name="InputName"
-                                            placeholder="Your name" required="required">
-                                    </div>
-                                </div>
-
                             </div>
-
-                            <button type="submit" name="submit" id="submit" value="Submit"
-                                class="btn btn-default">Submit</button><!-- Submit Button -->
-
-                        </form>
+                            <button name="submit" id="submitComment" value="Submit"
+                                class="btn btn-default">Kirim</button><!-- Submit Button -->
+                        </div>
                     </div>
+
+                    @endif
                 </div>
 
                 <div class="col-lg-4">
@@ -398,43 +424,16 @@
 
         </div>
     </section>
-
-    <!-- footer -->
-    <footer>
-        <div class="container-xl">
-            <div class="footer-inner">
-                <div class="row d-flex align-items-center gy-4">
-                    <!-- copyright text -->
-                    <div class="col-md-4">
-                        <span class="copyright">© 2022 Stuvent.</span>
-                    </div>
-
-                    <!-- social icons -->
-                    <div class="col-md-4 text-center">
-                        <ul class="social-icons list-unstyled list-inline mb-0">
-                            <li class="list-inline-item"><a href="#"><i class="fab fa-facebook-f"></i></a></li>
-                            <li class="list-inline-item"><a href="#"><i class="fab fa-twitter"></i></a></li>
-                            <li class="list-inline-item"><a href="#"><i class="fab fa-instagram"></i></a></li>
-                            <li class="list-inline-item"><a href="#"><i class="fab fa-pinterest"></i></a></li>
-                            <li class="list-inline-item"><a href="#"><i class="fab fa-medium"></i></a></li>
-                            <li class="list-inline-item"><a href="#"><i class="fab fa-youtube"></i></a></li>
-                        </ul>
-                    </div>
-
-                    <!-- go to top button -->
-                    <div class="col-md-4">
-                        <a href="#" id="return-to-top" class="float-md-end"><i class="icon-arrow-up"></i>Back to
-                            Top</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </footer>
 @endsection
 
 @section('custom_js')
     <script>
-		$(document).ready(function() {
+		$(document).ready(function() 
+        {
+            $('#InputComment').on('input', function() {
+                var count = $(this).val().length;
+                $('#characterCount').text(count + '/255');
+            });
 			const text = $('#data-fetch').val();
             const output = document.getElementById('output');
             output.innerHTML = text;
@@ -501,6 +500,97 @@
                     }
                 })
             });
+            $('#submitComment').click(function(e) {
+                var sendComment = $('#InputComment').val();
+                var idEvent = $('#idEvent').val();
+                $.ajax({
+                    url: "{{ route('send-comment') }}",
+                    type: 'POST',
+                    data: {
+						"_token": "{{ csrf_token() }}",
+                        "comment" : sendComment,
+                        "idEvent" : idEvent
+                    },
+                    success: function(res) {
+                        iziToast.show({
+                            title: "Sukses",
+                            position: 'topLeft',
+                            message: 'Berhasil kirim komentar',
+                            color: 'green'
+                        })
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 3000);
+                    },
+                    error: function(res) {
+                        iziToast.show({
+                            title: "Error",
+                            position: 'topLeft',
+                            message: "Gagal kirim komentar",
+                            color: 'red'
+                        })
+                    }
+                });
+            })
         })
+
+        $(document).on('click', '#repliedComment', function(e) {
+            var newDiv = `
+                <div class="comment-form rounded bordered" style="padding: 1rem; margin-top: 1rem;">
+                    <div id="comment-form" class="comment-form" method="post">
+                        <div class="messages"></div>
+                        <div class="row">
+                            <div class="column col-md-12">
+                                <!-- Comment textarea -->
+                                <div class="form-group text-right" style="margin:0;">
+                                    <textarea name="InputSubComment" id="InputSubComment" class="form-control" rows="4"
+                                        placeholder="Sertakan Komentar anda disini..." required="required" maxlength="255"></textarea>
+                                    <small style="margin-right: 1rem;">Jumlah Karakter: <span id="characterCount">0/255</span></small>
+                                </div>
+                            </div>
+                        </div>
+                        <button name="submit" id="submitSubComment" value="Submit" class="btn btn-default">Kirim</button><!-- Submit Button -->
+                    </div>
+                </div>
+            `;
+            $('#appendReplied').append(newDiv);
+            $(this).hide();
+        });
+
+        $(document).on('click', '#submitSubComment', function(e) {
+            var sendSubComment = $('#InputSubComment').val();
+            var idEvent = $('#idEvent').val();
+            var parentCommentId = $('#parentComment').val();
+            $.ajax({
+                method: 'POST',
+                url: "{{ route('send-sub-comment') }}",
+                data: {
+					"_token": "{{ csrf_token() }}",
+                    "comment" : sendSubComment,
+                    "idEvent" : idEvent,
+                    "parentCommentId" : parentCommentId
+                },
+                success: function(res) {
+                    iziToast.show({
+                        title: "Sukses",
+                        position: 'topLeft',
+                        message: 'Berhasil kirim komentar',
+                        color: 'green'
+                    })
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 3000);
+                },
+                error: function(res) {
+                    iziToast.show({
+                        title: "Error",
+                        position: 'topLeft',
+                        message: "Gagal kirim komentar",
+                        color: 'red'
+                    })
+                }
+
+            })
+        });
     </script>
 @endsection

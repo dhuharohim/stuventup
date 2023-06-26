@@ -19,6 +19,6 @@ class Profile extends Model
         return $this->belongsTo(User::class, 'id', 'user_id');
     }
     public function event(){
-        return $this->hasMany(EventForm::class, 'id', 'profile_id');
+        return $this->hasMany(EventForm::class, 'profile_id', 'id');
     }
 }

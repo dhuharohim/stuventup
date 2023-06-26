@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\EventForm;
 use App\Models\Profile;
 use App\Models\Social;
 use App\Models\User;
@@ -220,13 +221,35 @@ class ProfileController extends Controller
         return redirect()->back();
     }
 
-    public function profileHimpunan($himpunan) {
-        $profile = Profile::where('name_himpunan', $himpunan)->first();
+    public function profileHimpunan(Request $request, $himpunan) {
+        // dd($request->all());
+        $profile = Profile::where('name_himpunan', $himpunan)->with('event')->first();
+
+        $events = EventForm::where('profile_id', $profile->id);
+        $eventCount = $events->get();
+        $active = '';
+        $eventPop = $events->where('view_count', '>' , 50)->take(3)->get();
+        $eventComings = $events->where('status_activity', 'akan datang')->orderBy('date_activity', 'desc')->take(4)->get();
+        if(!empty($request->category)) {
+            $events->where('type_activity','LIKE', '%'.$request->category.'%');
+            $active = $request->category;
+        }
+        if(!empty($request->nav_home)) {
+            $active = 'home';
+        }
+        $events = $events->orderBy('id', 'desc')->paginate(6);
+
+
         $social = Social::where('profile_id', $profile->id)->get();
         
         return view('profile.frontend.admin.index', [
             'profile' => $profile,
-            'social' => $social
+            'social' => $social,
+            'events' => $events,
+            'active' => $active,
+            'eventPop' => $eventPop,
+            'eventCount' => $eventCount,
+            'eventComings' => $eventComings
         ]);
 
     }

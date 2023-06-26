@@ -73,10 +73,15 @@ Route::post('/konfirmasi-pembayaran',[DataRegistController::class, 'confirmPayme
 Route::get('/news', [MagazineController::class, 'index'])->name('magazine.index');
 Route::get('/news-detail/{name_activity}', [MagazineController::class, 'show'])->name('news.detail');
 Route::post('regist-event', [DataRegistController::class, 'store'])->name('regist.event');
+Route::post('/send-comment', [MagazineController::class, 'sendComment'])->name('send-comment');
+Route::post('/send-sub-comment', [MagazineController::class, 'sendSubComment'])->name('send-sub-comment');
+
 
 //ticket invoice
 Route::post('/ticket-invoice', [MagazineController::class, 'invoiceTicket'])->name('ticket.invoice');
 Route::get('/invoice/{name_activity}', [MagazineController::class, 'indexInvoice'])->name('invoice.index');
+Route::match(['get', 'post'], '/load-more-data', 'DataController@loadMoreData')->name('load.more.data');
+
 
 //styling email
 Route::get('/style-email', [MagazineController::class, 'email'])->name('style.email');
