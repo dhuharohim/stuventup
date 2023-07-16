@@ -5,14 +5,24 @@
     <div class="container-xl">
         <!-- call to action -->
         <div class="cta text-center">
+            @if ($active == 'home')
             <h5 class="mt-0 mb-4 mt-4" style="color:white; font-size: 12px; font-weight:500;">{{ $profile->bio_himpunan }}</h5>
+            @endif
+            @if ($active == 'kontak')
+            <h6 style="color: white; font-size: 12px; margin-bottom:0; margin-top: 2rem; font-weight:400;"> Nomor Telepon :  </h6>
+            <a href="https://wa.me/{{ $profile->handphone }} " style="color: white; font-size: 12px; margin-bottom:0; margin-top: 2rem; font-weight:400;"> (+62) {{ $profile->handphone }}  </a>
 
-            <h6 class="mt-8 mb-2" style="color: white; font-size: 12px; margin-top: 2rem; font-weight:400;">Media sosial :</h6>
+            <h6 class="mt-4 mb-2" style="color: white; font-size: 12px; margin-top: 2rem; font-weight:400;">Media sosial :</h6>
             <ul class="social-icons list-unstyled list-inline mb-0">
                 @foreach($social as $socials)
-                <li class="list-inline-item"><a href="{{ $socials->social_link }}"><i style="font-size: 18px; color: white;" class="fab fa-{{ $socials->social_name }}"></i></a></li>
+                <li class="list-inline-item">
+                    <a href="{{ $socials->social_link }}">
+                        <i style="font-size: 18px; color: white;" class="fab fa-{{ $socials->social_name }}"></i>
+                    </a>
+                </li>
                 @endforeach
             </ul>
+            @endif
         </div>
     </div>
     <!-- animated mouse wheel -->

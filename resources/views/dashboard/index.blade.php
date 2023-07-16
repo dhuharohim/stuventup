@@ -123,152 +123,20 @@
                 </div>
 
                 <div class="row" data-aos="fade-up" data-aos-delay="100">
-
+                    @php 
+                        use App\Models\Profile;
+                        $himpunan = Profile::all();
+                    @endphp
+                    @foreach($himpunan as $daftar)
                     <div class="col-md-6 col-lg-4">
-                        <a href="https://www.instagram.com/hmteup/" target="__blank">
+                        <a href="{{ route('profile.admin', ['himpunan' => $daftar->name_himpunan, 'nav'=> 'home'] ) }}" target="__blank">
                             <div class="feature-block">
-
-                                <img src="assets/img/himpunan/elektro.png" alt="img">
-                                <h4>Himpunan Mahasiswa Teknik Elektro</h4>
-
-
+                                <img src="/assets/img/profile/{{ $daftar->photo == '' ? 'default.png' : $daftar->photo }}" alt="img">
+                                <h4>{{ $daftar->name_himpunan }}</h4>
                             </div>
                         </a>
                     </div>
-
-                    <div class="col-md-6 col-lg-4">
-                        <a href="https://www.instagram.com/geofisikaorthonorm/" target="__blank">
-                            <div class="feature-block">
-                                <img src="assets/img/himpunan/geofis.png" alt="img">
-                                <h4>Himpunan Mahasiswa Teknik Geofisika</h4>
-                            </div>
-                        </a>
-
-                    </div>
-
-                    <div class="col-md-6 col-lg-4">
-                        <a href="https://www.instagram.com/hmik.up/" target="__blank">
-                            <div class="feature-block">
-                                <img src="assets/img/himpunan/himakom.jpeg" alt="img">
-                                <h4>Himpunan Mahasiswa Ilmu Komputer</h4>
-                            </div>
-                        </a>
-
-                    </div>
-
-                    <div class="col-md-6 col-lg-4">
-                        <a href="https://www.instagram.com/himalog.up/" target="__blank">
-                            <div class="feature-block">
-                                <img src="assets/img/himpunan/himalog.png" alt="img">
-                                <h4>Himpunan Mahasiswa Teknik Logistik</h4>
-                            </div>
-                        </a>
-
-                    </div>
-
-                    <div class="col-md-6 col-lg-4">
-                        <a href="https://www.instagram.com/hmtg.mahandraga/" target="__blank">
-                            <div class="feature-block">
-                                <img src="assets/img/himpunan/geologi.jpeg" alt="img">
-                                <h4>Himpunan Mahasiswa Teknik Geologi</h4>
-                            </div>
-                        </a>
-
-                    </div>
-
-                    <div class="col-md-6 col-lg-4">
-                        <a href="https://www.instagram.com/hmhi.up/" target="__blank">
-                            <div class="feature-block">
-                                <img src="assets/img/himpunan/hmhi.jpeg" alt="img">
-                                <h4>Himpunan Mahasiswa Hubungan Internasional</h4>
-                            </div>
-                        </a>
-
-                    </div>
-
-                    <div class="col-md-6 col-lg-4">
-                        <a href="https://www.instagram.com/hmk.up/" target="__blank">
-                            <div class="feature-block">
-                                <img src="assets/img/himpunan/hmtk.jpeg" alt="img">
-                                <h4>Himpunan Mahasiswa Ilmu Kimia</h4>
-                            </div>
-                        </a>
-
-                    </div>
-
-                    <div class="col-md-6 col-lg-4">
-                        <a href="https://www.instagram.com/hmts.up/" target="__blank">
-                            <div class="feature-block">
-                                <img src="assets/img/himpunan/hmts.jpeg" alt="img">
-                                <h4>Himpunan Mahasiswa Teknik Sipil</h4>
-                            </div>
-                        </a>
-
-                    </div>
-                    <div class="col-md-6 col-lg-4">
-                        <a href="https://www.instagram.com/himakom.up/" target="__blank">
-                            <div class="feature-block">
-                                <img src="assets/img/himpunan/komunikasi.png" alt="img">
-                                <h4>Himpunan Mahasiswa Ilmu Komunikasi</h4>
-                            </div>
-                        </a>
-
-                    </div>
-                    <div class="col-md-6 col-lg-4">
-                        <a href="https://www.instagram.com/manajemen.up/" target="__blank">
-                            <div class="feature-block">
-                                <img src="assets/img/himpunan/manajemen.png" alt="img">
-                                <h4>Himpunan Mahasiswa Manajemen</h4>
-                            </div>
-                        </a>
-
-                    </div>
-                    <div class="col-md-6 col-lg-4">
-                        <a href="https://www.instagram.com/economics.pertamina/" target="__blank">
-                            <div class="feature-block">
-                                <img src="assets/img/himpunan/ekonomi.png" alt="img">
-                                <h4>Himpunan Mahasiswa Ilmu Ekonomi</h4>
-                            </div>
-                        </a>
-
-                    </div>
-                    <div class="col-md-6 col-lg-4">
-                        <a href="https://www.instagram.com/mesin.up/" target="__blank">
-                            <div class="feature-block">
-                                <img src="assets/img/himpunan/mesin.png" alt="img">
-                                <h4>Himpunan Mahasiswa Teknik Mesin</h4>
-                            </div>
-                        </a>
-
-                    </div>
-                    <div class="col-md-6 col-lg-4">
-                        <a href="https://www.instagram.com/hmtk.up/" target="__blank">
-                            <div class="feature-block">
-                                <img src="assets/img/himpunan/tekling.png" alt="img">
-                                <h4>Himpunan Mahasiswa Teknik Kimia</h4>
-                            </div>
-                        </a>
-
-                    </div>
-                    <div class="col-md-6 col-lg-4">
-                        <a href="https://www.instagram.com/hmtl.up/" target="__blank">
-                            <div class="feature-block">
-                                <img src="assets/img/himpunan/hmtl.png" alt="img">
-                                <h4>Himpunan Mahasiswa Teknik Lingkungan</h4>
-                            </div>
-                        </a>
-
-                    </div>
-                    <div class="col-md-6 col-lg-4">
-                        <a href="https://www.instagram.com/hmtmspruda/" target="__blank">
-                            <div class="feature-block">
-                                <img src="assets/img/himpunan/hmtm.png" alt="img">
-                                <h4>Himpunan Mahasiswa Teknik Perminyakan</h4>
-                            </div>
-                        </a>
-
-                    </div>
-
+                    @endforeach
                 </div>
             </div>
         </section><!-- End Features Section -->

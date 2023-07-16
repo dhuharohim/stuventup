@@ -111,10 +111,10 @@
 							</ul>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="contact.html">Daftar Himpunan</a>
+							<a class="nav-link" href="/#features">Daftar Himpunan</a>
 						</li>
                         <li class="nav-item">
-							<a class="nav-link" href="contact.html">Tentang</a>
+							<a class="nav-link" href="/#get-started">Tentang</a>
 						</li>
                         <li class="nav-item">
 							<a class="nav-link" href="contact.html">Kontak</a>
@@ -279,8 +279,8 @@
 					<li><a class="dropdown-item" href="contact.html">Lainnya</a></li>
 				</ul>
 			</li>
-			<li><a href="contact.html">Daftar Himpunan</a></li>
-			<li><a href="contact.html">Tentang</a></li>
+			<li><a href="/#features">Daftar Himpunan</a></li>
+			<li><a href="/#get-started">Tentang</a></li>
 			<li><a href="contact.html">Kontak</a></li>
 		</ul>
 	</nav>

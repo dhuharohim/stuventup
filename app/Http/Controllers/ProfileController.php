@@ -230,13 +230,14 @@ class ProfileController extends Controller
         $active = '';
         $eventPop = $events->where('view_count', '>' , 50)->take(3)->get();
         $eventComings = $events->where('status_activity', 'akan datang')->orderBy('date_activity', 'desc')->take(4)->get();
-        if(!empty($request->category)) {
-            $events->where('type_activity','LIKE', '%'.$request->category.'%');
-            $active = $request->category;
+        if(!empty($request->nav)) {
+            if($request->nav == 'seminar' || $request->nav == 'olahraga' || $request->nav == 'pameran'
+            || $request->nav == 'pelatihan' || $request->nav == 'hari nasional' || $request->nav == 'lainnya') {
+                $events->where('type_activity','LIKE', '%'.$request->nav.'%');
+            }
+            $active = $request->nav;
         }
-        if(!empty($request->nav_home)) {
-            $active = 'home';
-        }
+
         $events = $events->orderBy('id', 'desc')->paginate(6);
 
 

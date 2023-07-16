@@ -105,21 +105,22 @@
 					<!-- menus -->
 					<ul class=" navbar-nav" >
 						<li class="nav-item dropdown @if($active == 'home') active @endif">
-							<a class="nav-link" href="{{ route('profile.admin',['himpunan' => $profile->name_himpunan,'nav_home' => 'home']) }}">Home</a>
+							<a class="nav-link" href="{{ route('profile.admin',['himpunan' => $profile->name_himpunan,'nav' => 'home']) }}">Home</a>
 						</li>
-						<li class="nav-item dropdown @if($active !== 'home') active @endif">
+						<li class="nav-item dropdown @if($active == 'category' || $active == 'seminar' || $active == 'pelatihan' 
+						|| $active == 'olahraga' || $active == 'pameran' || $active == 'hari nasional' || $active == 'lainnya') active @endif">
 							<a class="nav-link dropdown-toggle">Kategori</a>
 							<ul class="dropdown-menu">
-								<li><a class="dropdown-item @if($active == 'seminar') active @endif" href="{{ route('profile.admin',['himpunan' => $profile->name_himpunan,'category' => 'seminar']) }}">Seminar</a></li>
-								<li><a class="dropdown-item @if($active == 'pelatihan') active @endif" href="{{ route('profile.admin',['himpunan' => $profile->name_himpunan,'category' => 'pelatihan']) }}">Pelatihan</a></li>
-								<li><a class="dropdown-item @if($active == 'olahraga') active @endif" href="{{ route('profile.admin',['himpunan' => $profile->name_himpunan,'category' => 'olahraga']) }}">Olahraga</a></li>
-								<li><a class="dropdown-item @if($active == 'pameran') active @endif" href="{{ route('profile.admin',['himpunan' => $profile->name_himpunan,'category' => 'pameran']) }}">Pameran</a></li>
-								<li><a class="dropdown-item @if($active == 'hari nasional') active @endif" href="{{ route('profile.admin',['himpunan' => $profile->name_himpunan,'category' => 'hari nasional']) }}">Hari Nasional</a></li>
-								<li><a class="dropdown-item @if($active == 'lainnya') active @endif" href="{{ route('profile.admin',['himpunan' => $profile->name_himpunan,'category' => 'lainnya']) }}">Lainnya</a></li>
+								<li><a class="dropdown-item @if($active == 'seminar') active @endif" href="{{ route('profile.admin',['himpunan' => $profile->name_himpunan,'nav' => 'seminar']) }}">Seminar</a></li>
+								<li><a class="dropdown-item @if($active == 'pelatihan') active @endif" href="{{ route('profile.admin',['himpunan' => $profile->name_himpunan,'nav' => 'pelatihan']) }}">Pelatihan</a></li>
+								<li><a class="dropdown-item @if($active == 'olahraga') active @endif" href="{{ route('profile.admin',['himpunan' => $profile->name_himpunan,'nav' => 'olahraga']) }}">Olahraga</a></li>
+								<li><a class="dropdown-item @if($active == 'pameran') active @endif" href="{{ route('profile.admin',['himpunan' => $profile->name_himpunan,'nav' => 'pameran']) }}">Pameran</a></li>
+								<li><a class="dropdown-item @if($active == 'hari nasional') active @endif" href="{{ route('profile.admin',['himpunan' => $profile->name_himpunan,'nav' => 'hari nasional']) }}">Hari Nasional</a></li>
+								<li><a class="dropdown-item @if($active == 'lainnya') active @endif" href="{{ route('profile.admin',['himpunan' => $profile->name_himpunan,'nav' => 'lainnya']) }}">Lainnya</a></li>
 							</ul>
 						</li>
-						<li class="nav-item">
-							<a class="nav-link" id="profile-tab" data-toggle="tab" href="#" role="tab" aria-controls="profile" aria-selected="false">Kontak</a>
+						<li class="nav-item @if($active == 'kontak') active @endif"">
+							<a class="nav-link" id="profile-tab" data-toggle="tab" href="{{ route('profile.admin',['himpunan' => $profile->name_himpunan,'nav' => 'kontak']) }}" role="tab" aria-controls="profile" aria-selected="false">Kontak</a>
 						</li>
 					</ul>
 				</div> 
@@ -187,21 +188,20 @@
         <!-- menu -->
         <nav>
             <ul class="vertical-menu">
-                <li><a href="category.html">Home</a></li>
+                <li><a href="{{ route('profile.admin',['himpunan' => $profile->name_himpunan,'nav' => 'home']) }}">Home</a></li>
                 <li class="nav-item dropdown">
                     <a href="#">Kategori</a>
                     <ul class="submenu">
-                        <li><a class="dropdown-item" href="">Seminar</a></li>
-                        <li><a class="dropdown-item" href="">Pelatihan</a></li>
-                        <li><a class="dropdown-item" href="blog-single-alt.html">Olahraga</a></li>
-                        <li><a class="dropdown-item" href="about.html">Pameran</a></li>
-                        <li><a class="dropdown-item" href="contact.html">Hari Nasional</a></li>
-                        <li><a class="dropdown-item" href="contact.html">Lainnya</a></li>
+						<li><a class="dropdown-item"  href="{{ route('profile.admin',['himpunan' => $profile->name_himpunan,'nav' => 'seminar']) }}">Seminar</a></li>
+						<li><a class="dropdown-item" href="{{ route('profile.admin',['himpunan' => $profile->name_himpunan,'nav' => 'pelatihan']) }}">Pelatihan</a></li>
+						<li><a class="dropdown-item" href="{{ route('profile.admin',['himpunan' => $profile->name_himpunan,'nav' => 'olahraga']) }}">Olahraga</a></li>
+						<li><a class="dropdown-item"  href="{{ route('profile.admin',['himpunan' => $profile->name_himpunan,'nav' => 'pameran']) }}">Pameran</a></li>
+						<li><a class="dropdown-item" href="{{ route('profile.admin',['himpunan' => $profile->name_himpunan,'nav' => 'hari nasional']) }}">Hari Nasional</a></li>
+						<li><a class="dropdown-item"  href="{{ route('profile.admin',['himpunan' => $profile->name_himpunan,'nav' => 'lainnya']) }}">Lainnya</a></li>
                     </ul>
                 </li>
-                <li><a href="contact.html">Daftar Himpunan</a></li>
-                <li><a href="contact.html">Tentang</a></li>
-                <li><a href="contact.html">Kontak</a></li>
+                <li><a href="/#features">Daftar Himpunan</a></li>
+                <li><a href="/#get-started">Tentang</a></li>
             </ul>
         </nav>
         <div style="display: flex;

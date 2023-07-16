@@ -27,7 +27,7 @@
                             <h1 class="title mt-0 mb-3">{{ $eventDetail->name_activity }}</h1>
                             <ul class="meta list-inline mb-0">
                                 <li class="list-inline-item">
-                                    <a href="{{ route('profile.admin', $eventDetail->profile->name_himpunan ) }}">
+                                    <a href="{{ route('profile.admin', ['himpunan' => $eventDetail->profile->name_himpunan , 'nav' => 'home']) }}">
                                         <img alt="image"
                                             src="/assets/img/profile/{{ $eventDetail->profile['photo'] == '' ? 'default.png' : $eventDetail->profile['photo'] }}"
                                             class="author" height="25" width="25" />

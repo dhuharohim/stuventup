@@ -86,13 +86,10 @@
                                 </ul>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="category.html">Daftar Himpunan</a>
+                                <a class="nav-link" href="/#features">Daftar Himpunan</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">Tentang</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="">Kontak</a>
+                                <a class="nav-link" href="/#get-started">Tentang</a>
                             </li>
                         </ul>
                     </div>
@@ -184,27 +181,26 @@
         <!-- menu -->
         <nav>
             <ul class="vertical-menu">
-                <li><a href="category.html">Home</a></li>
+                <li><a href="/news">Home</a></li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle">Kategori</a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="">Seminar</a></li>
-                        <li><a class="dropdown-item" href="">Pelatihan</a></li>
-                        <li><a class="dropdown-item" href="blog-single-alt.html">Olahraga</a></li>
-                        <li><a class="dropdown-item" href="about.html">Pameran</a></li>
-                        <li><a class="dropdown-item" href="contact.html">Hari Nasional</a></li>
-                        <li><a class="dropdown-item" href="contact.html">Lainnya</a></li>
+                    <a href="#">Kategori</a>
+                    <ul class="submenu">
+                        <li><a class="dropdown-item" href="{{ route('category.index', 'seminar') }}">Seminar</a></li>
+                        <li><a class="dropdown-item" href="{{ route('category.index', 'pelatihan') }}">Pelatihan</a></li>
+                        <li><a class="dropdown-item" href="{{ route('category.index', 'olahraga') }}">Olahraga</a></li>
+                        <li><a class="dropdown-item" href="{{ route('category.index', 'pameran') }}">Pameran</a></li>
+                        <li><a class="dropdown-item" href="{{ route('category.index', 'nasional') }}">Hari Nasional</a></li>
+                        <li><a class="dropdown-item" href="{{ route('category.index', 'lainnya') }}">Lainnya</a></li>
                     </ul>
                 </li>
-                <li><a href="contact.html">Daftar Himpunan</a></li>
-                <li><a href="contact.html">Tentang</a></li>
-                <li><a href="contact.html">Kontak</a></li>
+                <li><a href="/#features">Daftar Himpunan</a></li>
+                <li><a href="/#get-started">Tentang</a></li>
             </ul>
         </nav>
         <div style="display: flex;
         justify-content: space-between;" class="social-icons list-unstyled list-inline mb-0 mt-auto w-100">
             <a href="/">Menu utama</a>
-            @if(!empty($user))
+            @if(!empty(auth()->user()))
             <a href="{{ route('logout') }}">Logout</a>
             @else
             <a href="/login">Login</a>
