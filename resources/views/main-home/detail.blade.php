@@ -27,7 +27,7 @@
                             <h1 class="title mt-0 mb-3">{{ $eventDetail->name_activity }}</h1>
                             <ul class="meta list-inline mb-0">
                                 <li class="list-inline-item">
-                                    <a href="{{ route('profile.admin', ['himpunan' => $eventDetail->profile->name_himpunan , 'nav' => 'home']) }}">
+                                    <a href="{{ route('profile.admin', ['himpunan' => $eventDetail->profile->name_himpunan , 'nav' => 'home', 'tipe' => 'home']) }}">
                                         <img alt="image"
                                             src="/assets/img/profile/{{ $eventDetail->profile['photo'] == '' ? 'default.png' : $eventDetail->profile['photo'] }}"
                                             class="author" height="25" width="25" />
@@ -103,7 +103,7 @@
 										<span>Belum punya akun? <a href="{{ route('register') }}"> daftar sekarang </a></span>
 									</div>
 								@endif
-								@if(!empty($userRole))
+								@if(!empty($userRole) && $userRole !== 'admin')
                                     @if(empty($dataRegist) )
                                         @if($eventDetail->ticket == 'no' && $eventDetail->date_activity > $today)
                                         <div class="card-footer" id="card-footer">
@@ -152,7 +152,7 @@
                             <img src="/assets/img/profile/{{ $eventDetail->profile['photo'] == '' ? 'default.png' : $eventDetail->profile['photo'] }}" alt="Katen Doe" />
                         </div>
                         <div class="details">
-                            <h4 class="name"><a href="{{ route('profile.admin', $eventDetail->profile->name_himpunan ) }}">{{ $eventDetail->profile->name_himpunan }}</a></h4>
+                            <h4 class="name"><a href="{{ route('profile.admin', ['himpunan' => $eventDetail->profile->name_himpunan , 'nav' => 'home', 'tipe' => 'home']) }}">{{ $eventDetail->profile->name_himpunan }}</a></h4>
                             <p>{{ $eventDetail->profile->bio_himpunan }}</p>
                             <!-- social icons -->
                             <ul class="social-icons list-unstyled list-inline mb-0">

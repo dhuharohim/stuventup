@@ -129,7 +129,7 @@
                     @endphp
                     @foreach($himpunan as $daftar)
                     <div class="col-md-6 col-lg-4">
-                        <a href="{{ route('profile.admin', ['himpunan' => $daftar->name_himpunan, 'nav'=> 'home'] ) }}" target="__blank">
+                        <a href="{{ route('profile.admin', ['himpunan' => $daftar->name_himpunan, 'nav'=> 'home', 'tipe'=> 'umum'] ) }}" target="__blank">
                             <div class="feature-block">
                                 <img src="/assets/img/profile/{{ $daftar->photo == '' ? 'default.png' : $daftar->photo }}" alt="img">
                                 <h4>{{ $daftar->name_himpunan }}</h4>

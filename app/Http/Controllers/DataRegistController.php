@@ -23,16 +23,16 @@ class DataRegistController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($name_activity)
+    public function index($id)
     {
         $user_id = Auth::user()->id;
         $user = User::where('id', $user_id)->first();
         $today = Carbon::today()->format('Y-m-d');
         $profile = Profile::where('user_id', $user_id)->first();  
-        $event = EventForm::where('name_activity', $name_activity)->first();
+        $event = EventForm::where('id', $id)->first();
         $registMhs = RegistrationEvent::where('event_id', $event->id)->where('profile_general_id', null)->with('profileMahasiswa')->paginate(5);
         $registUmum = RegistrationEvent::where('event_id', $event->id)->where('profile_mhs_id', null)->with('profileGeneral')->paginate(5);
-
+        dd($registUmum);
         $totalRegisMhs = RegistrationEvent::where('event_id', $event->id)->where('status_regist','terkonfirmasi')->where('profile_general_id', null)->get();
         $totalRegisUmum = RegistrationEvent::where('event_id', $event->id)->where('status_regist','terkonfirmasi')->where('profile_mhs_id', null)->get();
 

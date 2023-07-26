@@ -97,10 +97,17 @@
             <div class="">
                 <form id="eventForm" class="form-group" enctype="multipart/form-data" method="POST">
                     <div class="row">
-                        <div class="mb-4 col-md-12 form-group">
+                        <div class="mb-4 col-md-6 form-group">
                             <label for="name" class="form-label">{{ __('Nama Kegiatan') }}</label>
                             <input class="form-control" type="text" id="name_activity" name="name_activity" autofocus
                                 required />
+                        </div>
+                        <div class="mb-4 col-md-6 form-group">
+                            <label for="name" class="form-label">{{ __('Atur Registrasi') }}</label>
+                            <select class="form-control" id="regist">
+                                <option value="umum">Umum</option>
+                                <option value="mahasiswa">Mahasiswa</option>
+                            </select>
                         </div>
                         <div class="mb-4 col-md-12 form-group">
                             <label for="desc" class="form-label">{{ __('Deskripsi Kegiatan') }}</label>
@@ -155,6 +162,14 @@
                                     <option value="{{ $type }}" class="form-control">{{ $type }}</option>
                                 @endforeach
                             </select>
+                        </div>
+                        <div id="info-nasional"
+                            style="display:none; justify-content: end;
+                        margin-top: -1rem;
+                        margin-bottom: 1rem;
+                        color: green;
+                        font-size: 11px;">
+                            Event Nasional membuat registrasi menjadi umum
                         </div>
                         <div class="mb-4 col-md-6 form-group" id="showOthers" style="display: none;">
                             <label for="others" class="form-label">{{ __('Jenis Kegiatan Lainnya') }}</label>
@@ -229,6 +244,12 @@
             } else {
                 $("#showOthers").hide();
             }
+            if($(this).val() == 'nasional') {
+                $('#regist').val('umum');
+                $('#info-nasional').show();
+            } else {
+                $('#info-nasional').hide();
+            }
 
         });
         //ticket
@@ -269,14 +290,15 @@
             $('#upload_img').click(function() {
                 $('input#img_activity').click();
             });
+
             $('#img_activity').change(function() {
                 let img = $(this).val().replace("C:", '').replace('fakepath', '').replace('\\\\', '');
                 $('#posterName').show();
                 $('#file_name').val(img);
                 console.log($(this).prop('files')[0]);
             });
+
             $('#save').click(function(e) {
-                console.log($('input#img_activity')[0].files);
                 var start = $('#time_start_activity').val();
                 var end = $('#time_end_activity').val();
                 if (end < start) {
@@ -296,6 +318,7 @@
                 var fd = new FormData();
                 fd.append("_token", CSRF_TOKEN);
                 fd.append('name_activity', $('#name_activity').val());
+                fd.append('can_regist_by', $('#regist').val());
                 fd.append('desc_activity', tinyRichText);
                 fd.append('date_activity', $('#date_activity').val());
                 fd.append('type_activity', $('#type').find('option:selected').val());

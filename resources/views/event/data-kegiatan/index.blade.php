@@ -123,7 +123,6 @@
                             <th>Nama</th>
                             <th>Tanggal</th>
                             <th>Waktu</th>
-                            <th>Tempat</th>
                             <th>Jenis</th>
                             <th>PIC</th>
                             <th>Status</th>
@@ -145,7 +144,6 @@
                                             {{ date('H:i', strtotime($event->time_end_activity)) }}
                                     </td>
                             @endif
-                            <td>{{ $event->place_activity }}</td>
                             @if ($event->type_activity == 'lainnya')
                                 <td style="text-transform:capitalize;">{{ $event->type_activity }} :
                                     {{ $event->other_type }}</td>
@@ -164,6 +162,8 @@
                                         bg-label-success me-1 @endif">
                                     {{ $event->status_activity }}
                                 </span>
+                                <span class="badge
+                                @if($event->can_regist_by == 'umum') bg-label-info me-1 @else bg-label-danger me-1 @endif" >{{ $event->can_regist_by }}</span>
                             </td>
 
                             <td>
@@ -173,10 +173,9 @@
                                 </button>
                                 <ul class="dropdown-menu dropdown-menu-end px-4" aria-labelledby="dropdownMenu">
 
-                                    <li><a class="showEventDrawer" data-bs-toggle="offcanvas"
-                                            data-bs-target="#offcanvasEnd-{{ $event->id }}"
-                                            style="cursor: pointer; color: green">Edit</a></li>
-                                    <li><a href="{{route('regist.index', $event->name_activity)}}">Data Registrasi</a></li>
+                                    <li><a 
+                                            href="{{ route('event.details', $event->id) }}"
+                                            style="cursor: pointer;">Lihat</a></li>
                                     <li><a onclick="deleteEvent($event->id)" id="deleteEvent" style="cursor: pointer;">Delete</a></li>
                                 </ul>
                             </td>
@@ -195,7 +194,9 @@
             </div>
         </div>
     </div>
-    @foreach ($dataEvent as $events)
+
+    {{-- Edit event --}}
+    {{-- @foreach ($dataEvent as $events)
         <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasEnd-{{ $events->id }}"
             aria-labelledby="offcanvasEndLabel" style="visibility: visible;" aria-modal="true" role="dialog">
             <div class="offcanvas-header">
@@ -208,7 +209,7 @@
                     <form id="eventForm" class="form-group">
                         <div class="row">
                             <div class="mb-4 col-md-12 form-group">
-                                {{-- <input type="text" name="idEventEdit" id="idEventEdit" value="{{ $events->id }}"> --}}
+                                <input type="hidden" name="idEventEdit" id="idEventEdit" value="{{ $events->id }}" >
                                 <label for="name" class="form-label">{{ __('Nama Kegiatan') }}</label>
                                 <input class="form-control" type="text" id="name_activity" name="name_activity" autofocus
                                     required value="{{ $events->name_activity }}" />
@@ -218,22 +219,40 @@
                                 <textarea name="desc_activity" id="desc_activity" class="form-control" style="overflow: hidden;" required
                                     value="{{ $events->desc_activity }}">{{ $events->desc_activity }}</textarea>
                             </div>
-                            <div class="mb-4 col-md-6 form-group">
+                            <div class="mb-4 col-md-4 form-group">
                                 <label for="date" class="form-label">{{ __('Tanggal Kegiatan') }}</label>
                                 <input class="form-control" type="date" id="date_activity" name="date_activity"
                                     min="{{ $today }}" required autofocus value="{{ $events->date_activity }}" />
                             </div>
                             <div class="mb-4 col-md-3 form-group">
                                 <label for="time-start" class="form-label">{{ __('Waktu Mulai') }}</label>
-                                <input class="form-control" type="time" id="time_start_activity"
-                                    name="time_start_activity" required autofocus
-                                    value="{{ $events->time_start_activity }}" />
+                                <input value="{{ $events->time_start_activity }}" class="form-control" type="time" id="time_start_activity" name="time_start_activity"
+                                    required autofocus />
                             </div>
                             <div class="mb-4 col-md-3 form-group">
                                 <label for="time-end" class="form-label">{{ __('Waktu Selesai') }}</label>
-                                <input class="form-control" type="time" id="time_end_activity"
-                                    name="time_end_activity" required autofocus
-                                    value="{{ $events->time_end_activity }}" />
+                                <input value="{{ $events->time_end_activity }}" class="form-control" type="time" id="time_end_activity" name="time_end_activity"
+                                    required autofocus />
+                            </div>
+                            <div class="col-md-2" style="display: flex; align-items:center;">
+                                <button type="button" class="btn btn-info d-grid w-100" id="checkTime">
+                                    Cek
+                                </button>
+                            </div>
+                            <div id="validate-time"
+                                style="display:none; justify-content: end;
+                            margin-top: -1rem;
+                            color: red;
+                            font-size: 11px;"
+                                class="col-md-12">
+                                Tolong isi waktu mulai dan waktu selesai dengan benar
+                            </div>
+                            <div id="validate-success"
+                                style="display:none; justify-content: end;
+                            margin-top: -1rem;
+                            color: green;
+                            font-size: 11px;">
+                                Waktu telah sesuai
                             </div>
                             <div class="mb-4 col-md-6 form-group">
                                 <label for="type" class="form-label">{{ __('Jenis Kegiatan') }}</label>
@@ -269,10 +288,16 @@
                                 <input class="form-control" type="text" id="place_activity" name="place_activity"
                                     autofocus required value="{{ $events->place_activity }}" />
                             </div>
-                            <div class="mb-4 col-md-12 form-group">
+                            <div class="mb-4 col-md-6 form-group">
                                 <label for="img" class="form-label">{{ __('Poster/Flyer Kegiatan') }}</label>
-                                <input class="form-control" type="file" id="img_activity" name="img_activity"
-                                    autofocus value="{{ $events->img_activity }}" />
+                                <br>
+                                <a class="btn btn-info text-white" id="upload_img" style="cursor: pointer;">Upload gambar</a>
+                                <input class="form-control" type="file" id="img_activity" value="{{ $events->img_activity }}" name="img_activity" autofocus
+                                    hidden />
+                            </div>
+                            <div class="mb-4 col-md-6 form-group" id="posterName" style="display: none;">
+                                <input type="text" name="file_name" id="file_name" class="form-control"
+                                    style="margin-top: 1.7rem">
                             </div>
                             <div class="mb-4 col-md-6 form-group">
                                 <label for="ticket" class="form-label">{{ __('Apakah terdapat tiket?') }}</label>
@@ -331,14 +356,45 @@
                 </div>
             </div>
         </div>
-    @endforeach
+    @endforeach --}}
     <!-- / Layout wrapper -->
 @endsection
 
 @section('custom_js')
     <script>
         $(document).ready(function() {
-            console.log('test')
+            $('#checkTime').click(function() {
+                var start = $('#time_start_activity').val();
+                var end = $('#time_end_activity').val();
+                if (end < start) {
+                    $('#validate-time').show().css({
+                        "display": "flex"
+                    });
+                    $('#save').prop('disabled', true);
+                    $('#eventForm input[type="text"]').prop('disabled', true);
+                } else {
+                    $('#validate-success').show().css({
+                        "display": "flex"
+                    });
+                    setTimeout(() => {
+                        $('#validate-success').hide();
+                    }, 2000);
+                    $('#validate-time').hide();
+                    $('#save').prop('disabled', false);
+                    $('#eventForm input[type="text"]').prop('disabled', false);
+                }
+            });
+
+            $('#upload_img').click(function() {
+                $('input#img_activity').click();
+            });
+            
+            $('#img_activity').change(function() {
+                let img = $(this).val().replace("C:", '').replace('fakepath', '').replace('\\\\', '');
+                $('#posterName').show();
+                $('#file_name').val(img);
+                console.log($(this).prop('files')[0]);
+            });
             //acara selesai
             $('#confirmNow').click(function(e) {
                 e.preventDefault();
@@ -444,7 +500,7 @@
                         'date_activity': $('#date_activity').val(),
                         'type_activity': $('#type').find('option:selected').val(),
                         'other_type': $('#other_type').val(),
-                        'img_activity': $('#img_activity').val(),
+                        'img_activity': $('input#img_activity').prop('files')[0],
                         'name_activity': $('#name_activity').val(),
                         'ticket': $('#isTicket').find('option:selected').val(),
                         'price_ticket': $('#price_ticket').val(),

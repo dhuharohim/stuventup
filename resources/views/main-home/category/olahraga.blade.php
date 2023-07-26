@@ -29,7 +29,7 @@
                     </div>
                     <div class="details">
                         <ul class="meta list-inline mb-0">
-                            <li class="list-inline-item"><a href="{{ route('profile.admin', $olahraga->profile->nickname_himpunan) }}"><img style="width: 20px;"
+                            <li class="list-inline-item"><a href="{{ route('profile.admin', ['himpunan' => $olahraga->profile->name_himpunan , 'nav' => 'home', 'tipe' => 'home']) }}"><img style="width: 20px;"
                                 src="/assets/img/profile/{{ $olahraga->profile['photo'] == '' ? 'default.png' : $olahraga->profile['photo'] }}" class="author"
                                 alt="author" />{{ $olahraga->profile['nickname_himpunan'] }}</a></li>
                             <li class="list-inline-item">{{$olahraga->date_activity}}</li>

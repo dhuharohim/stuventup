@@ -95,6 +95,7 @@ class EventFormController extends Controller
         }
         $eventForm->name_pic = $request->name_pic;
         $eventForm->contact_pic = $request->contact_pic;
+        $eventForm->can_regist_by = $request->can_regist_by;
         $eventForm->save();
     }
 
@@ -181,6 +182,7 @@ class EventFormController extends Controller
     public function edit(Request $request)
     {
         $user_id = Auth::user()->id;
+        $user = User::where('id', $user_id)->first();
         $profile = Profile::where('user_id', $user_id)->first();
         $dataEvent = EventForm::where('id', $request->idEventEdit)->first();
         $today = Carbon::today()->format('Y-m-d');
@@ -199,7 +201,13 @@ class EventFormController extends Controller
             $dataEvent->status_activity = 'akan datang';
         }
 
-        $dataEvent->img_activity = $request->img_activity;
+        if($request->hasFile('img_activity')) {
+            $file = $request->file('img_activity');
+            $path = 'assets/img/poster/' . $user->name;
+            $file->move(public_path($path), $request->file_name);
+        }
+        
+        $dataEvent->img_activity = $request->file_name;
 
         $dataEvent->type_activity = $request->type_activity;
         if ($request->type_activity == 'lainnya') {
@@ -212,6 +220,8 @@ class EventFormController extends Controller
         }
         $dataEvent->name_pic = $request->name_pic;
         $dataEvent->contact_pic = $request->contact_pic;
+        $dataEvent->status_activity = $request->status;
+        $dataEvent->can_regist_by = $request->can_regist_by;
         $dataEvent->save();
     }
 
@@ -237,5 +247,15 @@ class EventFormController extends Controller
     {
         $eventDelete = $eventForm->where('id', $request->id);
         $eventDelete->delete();
+    }
+
+    public function eventDetails( Request $request, $id) {
+        $eventDetail = EventForm::where('id',$id)->with(['profile', 'profile.user'])->first();
+        return view('event.data-kegiatan.edit', [
+            'event' => $eventDetail,
+            'profile' => $eventDetail->profile,
+            'user' => $eventDetail->profile->user,
+            'isEdit' => $request->isEdit == '1' ? true : false,
+        ]);
     }
 }

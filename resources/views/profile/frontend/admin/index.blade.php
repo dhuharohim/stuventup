@@ -178,14 +178,14 @@
                                 @foreach($eventComings as $come)
                                 <div class="post post-carousel">
                                     <div class="thumb rounded">
-                                        <a href="{{ route('news.detail', $pop->name_activity) }}" class="category-badge position-absolute text-capitalize">{{ $come->type_activity }}</a>
-                                        <a href="{{ route('news.detail', $pop->name_activity) }}">
+                                        <a href="{{ route('news.detail', $come->name_activity) }}" class="category-badge position-absolute text-capitalize">{{ $come->type_activity }}</a>
+                                        <a href="{{ route('news.detail', $come->name_activity) }}">
                                             <div class="inner">
-                                                <img src="/assets/img/poster/{{ $pop->profile['name_himpunan'] }}/{{ $pop['img_activity'] == '' ? 'default.png' : $pop['img_activity'] }}" alt="post-title" />
+                                                <img src="/assets/img/poster/{{ $come->profile['name_himpunan'] }}/{{ $come['img_activity'] == '' ? 'default.png' : $come['img_activity'] }}" alt="post-title" />
                                             </div>
                                         </a>
                                     </div>
-                                    <h5 class="post-title mb-0 mt-4"><a href="{{ route('news.detail', $pop->name_activity) }}">{{ $come->name_activity }}</a></h5>
+                                    <h5 class="post-title mb-0 mt-4"><a href="{{ route('news.detail', $come->name_activity) }}">{{ $come->name_activity }}</a></h5>
                                     <ul class="meta list-inline mt-2 mb-0">
                                         <li class="list-inline-item"><a href="#">{{ $profile->nickname_himpunan }}</a></li>
                                         <li class="list-inline-item">{{ $come->date_activity }}</li>

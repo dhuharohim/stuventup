@@ -58,6 +58,7 @@ Route::get('/event', [EventFormController::class, 'index'])->name('event.index')
 Route::post('upload-poster', [EventFormController::class,'uploadPoster'])->name('upload.poster');
 Route::post('event-store', [EventFormController::class, 'store'])->name('event.store');
 Route::get('/event-data', [EventFormController::class, 'show'])->name('event.data');
+Route::get('/event-data/{id}', [EventFormController::class, 'eventDetails'])->name('event.details');
 Route::post('update-status', [EventFormController::class, 'updateStatus'])->name('status.update');
 Route::post('update-berlangsung', [EventFormController::class, 'updateBerlangsung'])->name('status.berlangsung');
 
@@ -65,7 +66,7 @@ Route::post('update-event', [EventFormController::class, 'edit'])->name('event.u
 Route::post('delete-event', [EventFormController::class, 'destroy'])->name('delete.event');
 
 //registrasi
-Route::get('/data-registrasi/{name_activity}', [DataRegistController::class, 'index'])->name('regist.index');
+Route::get('/data-registrasi/{id}', [DataRegistController::class, 'index'])->name('regist.index');
 Route::post('/konfirmasi-pembayaran',[DataRegistController::class, 'confirmPayment']);
 
 

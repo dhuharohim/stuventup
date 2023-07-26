@@ -29,7 +29,7 @@
                     </div>
                     <div class="details">
                         <ul class="meta list-inline mb-0">
-                            <li class="list-inline-item"><a href="{{ route('profile.admin', $seminar->profile->nickname_himpunan) }}"><img style="width: 20px;"
+                            <li class="list-inline-item"><a href="{{ route('', $seminar->profile->nickname_himpunan) }}"><img style="width: 20px;"
                                 src="/assets/img/profile/{{ $seminar->profile['photo'] == '' ? 'default.png' : $seminar->profile['photo'] }}" class="author"
                                 alt="author" />{{ $seminar->profile['nickname_himpunan'] }}</a></li>
                             <li class="list-inline-item">{{$seminar->date_activity}}</li>

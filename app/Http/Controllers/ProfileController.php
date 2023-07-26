@@ -222,21 +222,24 @@ class ProfileController extends Controller
     }
 
     public function profileHimpunan(Request $request, $himpunan) {
-        // dd($request->all());
+        $tipe = 'umum';
+        if($request->tipe == 'mahasiswa') {
+            $tipe = $request->tipe;
+        }
         $profile = Profile::where('name_himpunan', $himpunan)->with('event')->first();
-
-        $events = EventForm::where('profile_id', $profile->id);
+        $events = EventForm::where('profile_id', $profile->id)->where('can_regist_by', $tipe);
         $eventCount = $events->get();
         $active = '';
-        $eventPop = $events->where('view_count', '>' , 50)->take(3)->get();
-        $eventComings = $events->where('status_activity', 'akan datang')->orderBy('date_activity', 'desc')->take(4)->get();
+        $eventPop = EventForm::where('view_count', '>' , 50)->where('profile_id', $profile->id)->where('can_regist_by', $tipe)->take(3)->get();
+        $eventComings = EventForm::where('status_activity', 'akan datang')->where('profile_id', $profile->id)->where('can_regist_by', $tipe)->orderBy('date_activity', 'desc')->take(4)->get();
         if(!empty($request->nav)) {
             if($request->nav == 'seminar' || $request->nav == 'olahraga' || $request->nav == 'pameran'
             || $request->nav == 'pelatihan' || $request->nav == 'hari nasional' || $request->nav == 'lainnya') {
-                $events->where('type_activity','LIKE', '%'.$request->nav.'%');
+                $events = $events->where('type_activity', $request->nav);
             }
             $active = $request->nav;
         }
+        
 
         $events = $events->orderBy('id', 'desc')->paginate(6);
 
@@ -250,7 +253,8 @@ class ProfileController extends Controller
             'active' => $active,
             'eventPop' => $eventPop,
             'eventCount' => $eventCount,
-            'eventComings' => $eventComings
+            'eventComings' => $eventComings,
+            'tipe' => $tipe
         ]);
 
     }

@@ -25,7 +25,8 @@ class EventForm extends Model
         'name_pic',
         'contact_pic',
         'other_type',
-        'profile_id'
+        'profile_id',
+        'can_regist_by'
     ];
     public function profile(){
         return $this->belongsTo(Profile::class, 'profile_id', 'id');
